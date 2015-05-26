@@ -1,0 +1,526 @@
+version: 1
+
+dn: cn=hpd,ou=schema
+objectclass: metaSchema
+objectclass: top
+cn: hpd
+m-dependencies: system
+
+dn: ou=attributeTypes,cn=hpd,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: attributetypes
+
+dn: ou=comparators,cn=hpd,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: comparators
+
+dn: ou=ditContentRules,cn=hpd,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: ditcontentrules
+
+dn: ou=ditStructureRules,cn=hpd,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: ditstructurerules
+
+dn: ou=matchingRules,cn=hpd,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: matchingrules
+
+dn: ou=matchingRuleUse,cn=hpd,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: matchingruleuse
+
+dn: ou=nameForms,cn=hpd,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: nameforms
+
+dn: ou=normalizers,cn=hpd,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: normalizers
+
+dn: ou=objectClasses,cn=hpd,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: objectClasses
+
+dn: ou=syntaxCheckers,cn=hpd,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: syntaxcheckers
+
+dn: ou=syntaxes,cn=hpd,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: syntaxes
+
+dn: m-oid=1.3.6.1.4.1.1466.115.121.1.1.6,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.1466.115.121.1.1.6
+m-description: date from which new mail will be rejected
+m-equality: generalizedTimeMatch
+m-length: 0
+m-name: hpdRejectMailFrom
+m-ordering: generalizedTimeOrderingMatch
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.24
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.1,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.1
+m-description: Maintain status of provider in directory. Values are defined 
+ in table 3.58.4.1.2.3-1
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: hpdProviderStatus
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.2,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.2
+m-description: Languages that the provider supports. Recommended best practi
+ ce is to use RFC 3066 [RFC 3066] which, in conjunction with ISO 639 [ISO639
+ ], defines two- and three-letter primary language tags with optional subtag
+ s. Examples include "en" or "eng" for English, "akk" for Akkadian, and "en-
+  GB" for English used in the United Kingdom."
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: hpdProviderLanguageSupported
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.20,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.20
+m-description: Unique Identifier for Membership
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: hpdMemberId
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.21,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.21
+m-description: Reference for Individual Provider (R)
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: hpdHasAProvider
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.22,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.22
+m-description: Reference for Organizational Provider (R)
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: hpdHasAnOrg
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.23,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.23
+m-description: Individual-Organization Electroinc Service Information
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: hpdHasAService
+m-singlevalue: FALSE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.24,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.24
+m-description: An identifier assigned by the provider directory whose purpos
+ e is to uniquely identify a unique Electronic Service Object
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: hpdServiceId
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.25,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.25
+m-description: The electronic service address possibly in URI or email addre
+ ss form
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: hpdServiceAddress
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.26,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.26
+m-description: A coded value set whice describes the integration profile.  S
+ tore as a delimited string, like and address:  IntegrationProfile%Integrati
+ onProfileVersion$IntegrationProfileOptions.  Values are defined through loc
+ al configuration.
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: hpdIntegrationProfile
+m-singlevalue: FALSE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.27,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.27
+m-description: A coded value set whice describes the content profile.  Store
+  as a delimited string, like and address:  ContentProfile%ContentProfileVer
+ sion$ContentProfileConstraints.  Values are defined through local configura
+ tion.
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: hpdContentProfile
+m-singlevalue: FALSE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.28,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.28
+m-description: Public Digital Certificate for this service
+m-equality: octetStringMatch
+m-length: 0
+m-name: hpdCertificate
+m-singlevalue: FALSE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.40
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.29,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.29
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: hpdProviderLegalAddress
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.41
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.3,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.3
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: hpdProviderBillingAddress
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.41
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.30,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.30
+m-description: An identifier assigned by the provider directory whose purpos
+ e is to uniquely identify a unique Credential Object
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: hpdCredentialId
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.31,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.31
+m-description: A coded value set which describes the Security Profile of a s
+  ervice. Stored as a delimited string, like and address:  SecurityProfile%S
+  ecurityProfileVersion$SecurityProfileConstraints.  Values are defined thro
+  ugh local configuration.
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: hpdSecurityProfile
+m-singlevalue: FALSE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.4,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.4
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: hpdProviderPracticeAddress
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.41
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.5,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.5
+m-description: Electronic mailing address of provider where medical records 
+ can be sent
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: hpdMedicalRecordsDeliveryEmailAddress
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.6,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.6
+m-description: Group to which provider is a member of. A provider can be a m
+ ember of zero, one or many groups.
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: memberOf
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.7,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.7
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: hpdProviderMailingAddress
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.41
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1.8,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1.8
+m-description: Detailed Health related credentials earned by provider. DN to
+  one or more credential entries in the HPDProviderCredential class
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: hpdCredential
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.2.1,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.2.1
+m-description: Type of Credential<degree, certificate, credential>
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: credentialType
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.2.2,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.2.2
+m-description: Name of Credential, degree, or certification that belongs to 
+ providerFollows the ISO21091 naming format as that of the HCStandardRole:cr
+ edentialName@organization_domain_namewhere credentialName is the standard n
+ ame of the credential, andorganization_domain_name is the domain name of th
+ e organization forthose credentials local to the organization, orcredential
+ @Localitywhere credential is the standard name of the structural role if ap
+ plicable to theLocality (i.e., state).
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: credentialName
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.2.3,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.2.3
+m-description: Credential Identifier Follows the ISO 21091 UID format: (Issu
+ ing Authority OID: ID) The issuing authority OID could be used to identify 
+ the issuing agency, state and country.
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: credentialNumber
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.2.4,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.2.4
+m-description: Additional information on the credential
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: credentialDescription
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.2.5,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.2.5
+m-description: Date when credential was issued to the provider
+m-equality: generalizedTimeMatch
+m-length: 0
+m-name: credentialIssueDate
+m-ordering: generalizedTimeOrderingMatch
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.24
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.2.6,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.2.6
+m-description: Date when credential is due renewal
+m-equality: generalizedTimeMatch
+m-length: 0
+m-name: credentialRenewalDate
+m-ordering: generalizedTimeOrderingMatch
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.24
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.2.7,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.2.7
+m-description: Values are defined in table 3.58.4.1.2.3-1
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: credentialStatus
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=2.16.840.1.113883.3.3731.1.2.5,ou=attributeTypes,cn=hpd,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 2.16.840.1.113883.3.3731.1.2.5
+m-description: The KSA Registered Nationality
+m-equality: caseIgnoreMatch
+m-substr: caseIgnoreSubstringsMatch
+m-length: 0
+m-name: KSANationality
+m-singlevalue: FALSE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.3.6.1.4.1.1466.115.121.1.1.7,ou=objectClasses,cn=hpd,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.3.6.1.4.1.1466.115.121.1.1.7
+m-description: object class holding the hpdRejectMailFrom attribute
+m-must: hpdRejectMailFrom
+m-name: hpdMailPerson
+m-typeobjectclass: AUXILIARY
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.1,ou=objectClasses,cn=hpd,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.1
+m-may: hpdProviderStatus
+m-may: hpdProviderLanguageSupported
+m-may: hpdProviderBillingAddress
+m-may: hpdProviderMailingAddress
+m-may: hpdProviderPracticeAddress
+m-may: hpdMedicalRecordsDeliveryEmailAddress
+m-may: memberOf
+m-may: hpdProviderLegalAddress
+m-may: hpdHasAService
+m-may: hpdCredential
+m-name: HPDProvider
+m-supobjectclass: top
+m-typeobjectclass: AUXILIARY
+
+dn: m-oid=2.16.840.1.113883.3.3731.1.2.3,ou=objectClasses,cn=hpd,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 2.16.840.1.113883.3.3731.1.2.3
+m-may: HL7Religion
+m-may: KSANationality
+m-must: businessCategory
+m-name: KSAHPDProvider
+m-supobjectclass: HPDProvider
+m-typeobjectclass: AUXILIARY
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.2,ou=objectClasses,cn=hpd,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.2
+m-may: credentialIssueDate
+m-may: credentialRenewalDate
+m-may: credentialStatus
+m-may: credentialDescription
+m-must: credentialName
+m-must: credentialNumber
+m-must: credentialType
+m-name: HPDProviderCredential
+m-supobjectclass: top
+m-typeobjectclass: STRUCTURAL
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.4,ou=objectClasses,cn=hpd,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.4
+m-may: hpdHasAService
+m-may: telephoneNumber
+m-may: facsimileTelephoneNumber
+m-may: mobile
+m-may: pager
+m-may: mail
+m-must: hpdMemberId
+m-must: hpdHasAProvider
+m-must: hpdHasAnOrg
+m-name: HPDProviderMembership
+m-supobjectclass: top
+m-typeobjectclass: STRUCTURAL
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.5,ou=objectClasses,cn=hpd,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.5
+m-may: hpdCertificate
+m-may: hpdContentProfile
+m-may: hpdIntegrationProfile
+m-must: hpdServiceAddress
+m-must: hpdServiceId
+m-name: HPDElectronicService
+m-supobjectclass: top
+m-typeobjectclass: STRUCTURAL
+

@@ -1,0 +1,843 @@
+version: 1
+
+dn: cn=hc,ou=schema
+objectclass: metaSchema
+objectclass: top
+cn: hc
+m-dependencies: system
+m-dependencies: inetorgperson
+m-dependencies: core
+
+dn: ou=attributeTypes,cn=hc,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: attributetypes
+
+dn: ou=comparators,cn=hc,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: comparators
+
+dn: ou=ditContentRules,cn=hc,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: ditcontentrules
+
+dn: ou=ditStructureRules,cn=hc,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: ditstructurerules
+
+dn: ou=matchingRules,cn=hc,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: matchingrules
+
+dn: ou=matchingRuleUse,cn=hc,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: matchingruleuse
+
+dn: ou=nameForms,cn=hc,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: nameforms
+
+dn: ou=normalizers,cn=hc,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: normalizers
+
+dn: ou=objectClasses,cn=hc,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: objectClasses
+
+dn: ou=syntaxCheckers,cn=hc,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: syntaxcheckers
+
+dn: ou=syntaxes,cn=hc,ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: syntaxes
+
+dn: m-oid=1.0.21091.2.0.1,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.0.1
+m-description: The health care identifier. Where this is a regulated health 
+ care professional, this must minimally contain an entry indicating the iden
+ tifier assigned by the regulating authority (issuing authority:Type:ID:- st
+ atus)
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcIdentifier
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.0.10,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.0.10
+m-description: Date of closure of the organization or date when the organiza
+ tion changed name/affiliation
+m-equality: generalizedTimeMatch
+m-length: 0
+m-name: HcClosureDate
+m-ordering: generalizedTimeOrderingMatch
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.24
+
+dn: m-oid=1.0.21091.2.0.11,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.0.11
+m-description: DN of successor entry
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: HcSuccessorName
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.0.21091.2.0.12,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.0.12
+m-description: Times in GMT format that the user may act under this role
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcRoleValidTime
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.0.13,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.0.13
+m-description: Location restrictions from where the role is valid (i.e. from
+  the emergency department only, from IP address, etc.)
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcRoleLocationRestriction
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.0.2,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.0.2
+m-description: Location of service(s) offering biometric or other identifica
+ tion verification service
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcIdentificationService
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.0.3,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.0.3
+m-description: Public key and certificate for the users non- repudiation sig
+ ning certificate used for health transactions
+m-length: 0
+m-name: HcSigningCertificate
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.5
+
+dn: m-oid=1.0.21091.2.0.4,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.0.4
+m-description: Used for credentials, power of attorney, health care decision
+  maker, etc. Populated with P7 formatted certificate
+m-length: 0
+m-name: HcAttributeCertificate
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.5
+
+dn: m-oid=1.0.21091.2.0.5,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.0.5
+m-description: (Issuing authority: Code system: Code) Populate with HL-7 cod
+ ing for roles
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcRole
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.0.6,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.0.6
+m-description: (Issuing authority: Code system: Code) Populate with HL-7 cod
+ ing for specialization
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcSpecialisation
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.0.7,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.0.7
+m-description: The entry for the individual responsible for EDI administrati
+ on
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: EdiAdministrativeContact
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.0.21091.2.0.8,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.0.8
+m-description: The entry for the individual to contact with clinical issues
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: ClinicalInformationContact
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.0.21091.2.0.9,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.0.9
+m-description: Used for storing health care organization certificates
+m-length: 0
+m-name: HcOrganizationCertificates
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.5
+
+dn: m-oid=1.0.21091.2.1.1,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.1.1
+m-description: This may be an identifiable, anonymous, or pseudonymous ident
+ ifier. (Issuing authority:Type: ID)
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcConsumerID
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.1.11,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.1.11
+m-description: The HL-7 defined county code
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HL7CountyCode
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.1.16,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.1.16
+m-description: The HL-7 defined religion. While this attribute is important 
+ for spiritual aspects of patient care, it must be managed with the utmost p
+ rotection as this can be sensitive private information
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HL7Religion
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.1.2,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.1.2
+m-description: Location of the Master Patient Index Service(s) available to 
+ identify patient clinical records
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcMPILocation
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.1.22,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.1.22
+m-description: The HL-7 defined place of birth
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HL7BirthPlace
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.1.28,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.1.28
+m-description: The HL-7 defined patient death date and time
+m-equality: generalizedTimeMatch
+m-length: 0
+m-name: HL7PatientDeathDateandTime
+m-ordering: generalizedTimeOrderingMatch
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.24
+
+dn: m-oid=1.0.21091.2.1.3,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.1.3
+m-description: Record entry of person(s) able to sign/act on behalf of the s
+ ubject
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: HcSubstituteDecisionMaker
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.0.21091.2.1.5,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.1.5
+m-description: The HL-7 defined mothers maiden name
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HL7MothersMaidenName
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.1.6,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.1.6
+m-description: The hl-7 defined date and time of birth
+m-equality: generalizedTimeMatch
+m-length: 0
+m-name: HL7DateTimeofBirth
+m-ordering: generalizedTimeOrderingMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.24
+
+dn: m-oid=1.0.21091.2.1.7,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.1.7
+m-description: The HL-7 defined sex
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HL7Sex
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.1.8,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.1.8
+m-description: The HL-7 defined patient alias
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HL7PatientAlias
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.10.1,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.10.1
+m-description: Authority responsible for coding scheme
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcIssuingAuthority
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.10.2,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.10.2
+m-description: Date on which the reference vocabulary is/was effective
+m-equality: generalizedTimeMatch
+m-length: 0
+m-name: HcReferenceEffectiveDate
+m-singlevalue: TRUE
+m-substr: generalizedTimeOrderingMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.24
+
+dn: m-oid=1.0.21091.2.10.3,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.10.3
+m-description: concatenated value:Reference code:Description
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcReferenceDescription
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.10.4,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.10.4
+m-description: OID of the health care vocabulary used
+m-equality: objectIdentifierMatch
+m-length: 0
+m-name: HcVocabularyOID
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.38
+
+dn: m-oid=1.0.21091.2.10.5,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.10.5
+m-description: Date on which the reference vocabulary was issued
+m-equality: generalizedTimeMatch
+m-length: 0
+m-name: HcReferenceDateOfIssue
+m-ordering: generalizedTimeOrderingMatch
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.24
+
+dn: m-oid=1.0.21091.2.10.6,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.10.6
+m-description: Date on which the reference vocabulary is/was invalid
+m-equality: generalizedTimeMatch
+m-length: 0
+m-name: HcReferenceInvalidDate
+m-ordering: generalizedTimeOrderingMatch
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.24
+
+dn: m-oid=1.0.21091.2.10.7,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.10.7
+m-description: Version number of the coded reference
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcReferenceVersion
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.11.1,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.11.1
+m-description: DN of the individual to whom the device has been issued
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: HcDeviceIssuedTo
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.0.21091.2.11.2,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.11.2
+m-description: Date on which the device was issued to the recipient
+m-equality: generalizedTimeMatch
+m-length: 0
+m-name: HcDeviceDateOfIssue
+m-ordering: generalizedTimeOrderingMatch
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.24
+
+dn: m-oid=1.0.21091.2.11.3,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.11.3
+m-description: HcDeviceDateRecalled
+m-equality: generalizedTimeMatch
+m-length: 0
+m-name: HcDeviceDateRecalled
+m-ordering: generalizedTimeOrderingMatch
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.24
+
+dn: m-oid=1.0.21091.2.11.4,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.11.4
+m-description: Date on which the device was retrieved
+m-equality: generalizedTimeMatch
+m-length: 0
+m-name: HcDeviceDateRetrieved
+m-ordering: generalizedTimeOrderingMatch
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.24
+
+dn: m-oid=1.0.21091.2.11.5,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.11.5
+m-description: Device certificates issued
+m-length: 0
+m-name: HcDeviceCertificate
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.5
+
+dn: m-oid=1.0.21091.2.11.6,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.11.6
+m-description: (Issuer:Number) Tracking number assigned to the device
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcDeviceTrackingNumber
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.11.7,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.11.7
+m-description: Phone number assigned to the device (i.e. PDA)
+m-equality: telephoneNumberMatch
+m-length: 0
+m-name: HcDevicePhone
+m-substr: telephoneNumberSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.50
+
+dn: m-oid=1.0.21091.2.2.1,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.2.1
+m-description: Text representation of the user profession (issuing authority
+ : Code System: Code)
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcProfession
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.2.40,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.2.40
+m-description: Condition flag indicating the status of the regulatory credential restrictions, or other sanction indicators
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcRegistrationStatus
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.4.4,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.4.4
+m-description: Hours of operation of the organization
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcOperatingHours
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.2.3,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.2.3
+m-description: Use DN of the organization
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: HcPrincipalPracticeLocation
+m-singlevalue: TRUE
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.0.21091.2.2.4,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.2.4
+m-description: Use DN of the organization
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: HcPracticeLocation
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.0.21091.2.3.1,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.3.1
+m-description: Used to indicate organization DN of organization
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: HcOrganization
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.0.21091.2.4.1,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.4.1
+m-description: The legal name of the entity as registered with the health ca
+ re regulating authority
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcRegisteredName
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.4.2,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.4.2
+m-description: The address as registered with the regulatory authority. This
+  shall be structured the same as PostalAddress
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcRegisteredAddr
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.4.3,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.4.3
+m-description: Health care organizations where health care services are rend
+ ered
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: HcServiceLocations
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.0.21091.2.5.1,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.5.1
+m-description: Name of assigning authority:payers plan:ID
+m-equality: caseIgnoreMatch
+m-length: 0
+m-name: HcPayerProductID
+m-substr: caseIgnoreSubstringsMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+
+dn: m-oid=1.0.21091.2.7.1,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.0.21091.2.7.1
+m-description: DN of person or HCOrganizationalRole responsible for this ent
+ ry (medical staffing, legal review, contract staff, employee)
+m-equality: distinguishedNameMatch
+m-length: 0
+m-name: HcResponsibleParty
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.12
+
+dn: m-oid=1.3.6.1.4.1.19376.1.2.4.3.100,ou=attributeTypes,cn=hc,ou=schema
+objectclass: metaTop
+objectclass: metaAttributeType
+objectclass: top
+m-oid: 1.3.6.1.4.1.19376.1.2.4.3.100
+m-description: HPD Organization ID
+m-name: hpdOrgId
+m-singlevalue: TRUE
+m-supattributetype: uid
+
+dn: m-oid=1.0.21091.1.1,ou=objectClasses,cn=hc,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.0.21091.1.1
+m-may: HcAttributeCertificate
+m-may: HcIdentificationService
+m-may: HcMPILocation
+m-may: HcSigningCertificate
+m-must: HcConsumerID
+m-name: HCConsumer
+m-supobjectclass: inetOrgPerson
+
+dn: m-oid=1.0.21091.1.10,ou=objectClasses,cn=hc,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.0.21091.1.10
+m-may: HcReferenceDateOfIssue
+m-may: HcReferenceInvalidDate
+m-may: HcReferenceVersion
+m-may: HcVocabularyOID
+m-must: HcIssuingAuthority
+m-must: HcReferenceDescription
+m-must: HcReferenceEffectiveDate
+m-name: HCCodedReference
+m-supobjectclass: top
+m-typeobjectclass: AUXILIARY
+
+dn: m-oid=1.0.21091.1.11,ou=objectClasses,cn=hc,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.0.21091.1.11
+m-may: HcDeviceCertificate
+m-may: HcDeviceDateOfIssue
+m-may: HcDeviceDateRecalled
+m-may: HcDeviceDateRetrieved
+m-may: HcDeviceIssuedTo
+m-may: HcDevicePhone
+m-may: HcDeviceTrackingNumber
+m-name: HCDevice
+m-supobjectclass: top
+m-typeobjectclass: AUXILIARY
+
+dn: m-oid=1.0.21091.1.2,ou=objectClasses,cn=hc,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.0.21091.1.2
+m-may: HcAttributeCertificate
+m-may: HcIdentificationService
+m-may: HcPracticeLocation
+m-may: HcPrincipalPracticeLocation
+m-may: HcRole
+m-may: HcSigningCertificate
+m-may: HcSpecialisation
+m-must: HcIdentifier
+m-must: HcProfession
+m-must: HcRegistrationStatus
+m-name: HCProfessional
+m-supobjectclass: inetOrgPerson
+
+dn: m-oid=1.0.21091.1.3,ou=objectClasses,cn=hc,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.0.21091.1.3
+m-may: HcAttributeCertificate
+m-may: HcIdentificationService
+m-may: HcOrganization
+m-may: HcRole
+m-may: HcSigningCertificate
+m-must: HcIdentifier
+m-name: HCEmployee
+m-supobjectclass: inetOrgPerson
+
+dn: m-oid=1.0.21091.1.4,ou=objectClasses,cn=hc,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.0.21091.1.4
+m-may: ClinicalInformationContact
+m-may: EdiAdministrativeContact
+m-may: HcAttributeCertificate
+m-may: HcClosureDate
+m-may: HcOrganizationCertificates
+m-may: HcRegisteredAddr
+m-may: HcRegisteredName
+m-may: HcServiceLocations
+m-may: HcSigningCertificate
+m-may: HcSpecialisation
+m-may: HcSuccessorName
+m-may: HcOperatingHours
+m-must: HcIdentifier
+m-name: HCRegulatedOrganization
+m-supobjectclass: organization
+
+dn: m-oid=1.0.21091.1.5,ou=objectClasses,cn=hc,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.0.21091.1.5
+m-may: ClinicalInformationContact
+m-may: EdiAdministrativeContact
+m-may: HcAttributeCertificate
+m-may: HcClosureDate
+m-may: HcOrganizationCertificates
+m-may: HcPayerProductID
+m-may: HcSigningCertificate
+m-may: HcSuccessorName
+m-may: HcOperatingHours
+m-must: HcIdentifier
+m-name: HCPayer
+m-supobjectclass: organization
+
+dn: m-oid=1.0.21091.1.6,ou=objectClasses,cn=hc,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.0.21091.1.6
+m-may: ClinicalInformationContact
+m-may: EdiAdministrativeContact
+m-may: HcAttributeCertificate
+m-may: HcClosureDate
+m-may: HcOrganizationCertificates
+m-may: HcSigningCertificate
+m-may: HcSuccessorName
+m-may: HcOperatingHours
+m-must: HcIdentifier
+m-name: HCSupportingOrganization
+m-supobjectclass: organization
+
+dn: m-oid=1.0.21091.1.7,ou=objectClasses,cn=hc,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.0.21091.1.7
+m-may: HcAttributeCertificate
+m-may: HcResponsibleParty
+m-may: HcRole
+m-may: mail
+m-name: HCOrganizationalRole
+m-supobjectclass: organizationalRole
+
+dn: m-oid=1.0.21091.1.8,ou=objectClasses,cn=hc,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.0.21091.1.8
+m-may: HcRole
+m-may: HcRoleLocationRestriction
+m-may: HcRoleValidTime
+m-name: HCStandardRole
+m-supobjectclass: groupOfNames
+
+dn: m-oid=1.0.21091.1.9,ou=objectClasses,cn=hc,ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.0.21091.1.9
+m-may: HcRole
+m-may: HcRoleLocationRestriction
+m-may: HcRoleValidTime
+m-name: HCLocalRole
+m-supobjectclass: groupOfNames
+

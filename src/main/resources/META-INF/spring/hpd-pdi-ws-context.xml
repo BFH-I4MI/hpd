@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:sws="http://www.springframework.org/schema/web-services" xmlns:camel="http://camel.apache.org/schema/spring" xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:amq="http://activemq.apache.org/schema/core" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core"
+	xmlns:sec="http://www.springframework.org/schema/security" xmlns:csec="http://camel.apache.org/schema/spring-security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       	http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd
+       	http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       	http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.2.xsd
+       	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+       	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+       	http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd
+        http://camel.apache.org/schema/spring-security http://camel.apache.org/schema/spring-security/camel-spring-security.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<!-- JAXP Utility bean -->
+	<bean id="jaxpUtil" class="ch.vivates.tools.jaxp.JaxpUtil" init-method="printInfo" lazy-init="false" />
+
+	<!-- bridge spring property placeholder with Camel -->
+	<!-- you must NOT use the <context:property-placeholder at the same time -->
+	<bean id="bridgePropertyPlaceholder" class="org.apache.camel.spring.spi.BridgePropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreUnresolvablePlaceholders" value="false" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:hpd-pid-ws.cfg</value>
+				<value>classpath:hpd-pid-ws.${user.name}.cfg</value>
+				<value>file:${karaf.home}/etc/hpd-pid-ws.cfg</value>
+			</list>
+		</property>
+		<property name="fileEncoding" value="UTF-8" />
+	</bean>
+
+	<sws:static-wsdl id="wsdlDefinition" location="META-INF/wsdl/${hpd.pid.ws.service_name}.wsdl" />
+
+	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
+		<property name="soapVersion">
+			<util:constant static-field="org.springframework.ws.soap.SoapVersion.SOAP_12" />
+		</property>
+	</bean>
+
+	<bean id="messageReceiver" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+		<property name="endpointMappings" ref="endpointMapping" />
+	</bean>
+
+	<task:executor id="web-executor" pool-size="5-25" queue-capacity="10" rejection-policy="CALLER_RUNS" keep-alive="120" />
+
+	<bean id="httpServer" class="org.springframework.remoting.support.SimpleHttpServerFactoryBean">
+		<property name="contexts">
+			<map>
+				<entry key="/${hpd.pid.ws.contextroot}/${hpd.pid.ws.service_name}.wsdl" value-ref="wsdlHandler" />
+				<entry key="/${hpd.pid.ws.contextroot}/${hpd.pid.ws.service_name}" value-ref="soapHandler" />
+			</map>
+		</property>
+		<property name="port" value="${hpd.pid.ws.port}" />
+		<property name="executor" ref="web-executor" />
+	</bean>
+
+	<bean id="soapHandler" class="org.springframework.ws.transport.http.WebServiceMessageReceiverHttpHandler">
+		<property name="messageFactory" ref="messageFactory" />
+		<property name="messageReceiver" ref="messageReceiver" />
+	</bean>
+
+	<bean id="wsdlHandler" class="ch.vivates.tools.EndpointAwareWsdlDefinitionHttpHandler">
+		<property name="definition" ref="wsdlDefinition" />
+		<property name="serviceEndpoint" value="${hpd.pid.ws.scheme}://${hpd.pid.ws.host}:${hpd.pid.ws.port}/${hpd.pid.ws.contextroot}/${hpd.pid.ws.service_name}" />
+	</bean>
+
+	<!-- DSMLv2 Apache Engine -->
+	<bean id="dsmlEngine" class="ch.vivates.tools.dsmlv2.Dsmlv2Engine">
+		<property name="ldapConnectionPool" ref="ldapConnectionPool" />
+	</bean>
+
+	<!-- Active MQ pooled connection -->
+	<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${hpd.pid.queue.broker_url}" />
+	</bean>
+
+	<bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory" init-method="start" destroy-method="stop">
+		<property name="maxConnections" value="${hpd.pid.queue.max_connections}" />
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+	</bean>
+
+	<bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration">
+		<property name="connectionFactory" ref="pooledConnectionFactory" />
+		<property name="concurrentConsumers" value="${hpd.pid.queue.jms_concurrent_consumers}" />
+	</bean>
+
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="configuration" ref="jmsConfig" />
+	</bean>
+
+	<!-- Database connection -->
+	<!-- this is the JDBC data source which uses an in-memory only Apache Derby database -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://${hpd.pid.db.host}/hpd" />
+		<property name="username" value="${hpd.pid.db.username}" />
+		<property name="password" value="${hpd.pid.db.passwd}" />
+		<property name="timeBetweenEvictionRunsMillis" value="300000" />
+		<property name="initialSize" value="5" />
+		<property name="minIdle" value="5" />
+		<property name="poolPreparedStatements" value="true" />
+	</bean>
+
+	<bean id="sql" class="org.apache.camel.component.sql.SqlComponent">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- Processing beans -->
+	<bean id="batchRequestProcessor" class="ch.vivates.ihe.hpd.pid.BatchRequestProcessor">
+		<property name="dsmlEngine" ref="dsmlEngine" />
+	</bean>
+	<bean id="transactionHistoryEntryExtractor" class="ch.vivates.ihe.hpd.pid.TransactionsHistoryItemExtractor" />
+	<bean id="downloadRequestProcessor" class="ch.vivates.ihe.hpd.pid.DownloadRequestProcessor">
+		<property name="fromMonthLimit" value="${hpd.pid.ws.download_limit_months}" />
+	</bean>
+
+	<!-- WS security -->
+	<bean id="identityExtractor" class="ch.vivates.tools.sec.WsSecurityHeaderProcessor">
+		<property name="debugEnabled" value="${hpd.pid.ws.debug_mode_enabled}" />
+	</bean>
+
+	<bean id="authenticationManager" class="ch.vivates.tools.sec.ExtendedAuthenticationManager">
+		<property name="keystorepath" value="${hpd.pid.ws.ts.path}" />
+		<property name="keystorepass" value="${hpd.pid.ws.ts.passwd}" />
+		<property name="gracePeriod" value="${hpd.pid.ws.saml.grace.millis}" />
+		<property name="verifySignature" value="${hpd.pid.ws.saml.signature}" />
+		<property name="verifyConditions" value="${hpd.pid.ws.saml.conditions}" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="accessDecisionManager" class="ch.vivates.tools.sec.ContextualAccessDecisionManager">
+		<property name="ldapConnectionPool" ref="ldapConnectionPool" />
+		<property name="basePath" value="${hpd.pid.ldap.base}" />
+		<property name="relRdn" value="${hpd.pid.ldap.rel_rdn}" />
+		<property name="orgRdn" value="${hpd.pid.ldap.org_rdn}" />
+		<property name="hpRdn" value="${hpd.pid.ldap.hp_rdn}" />
+	</bean>
+
+	<csec:authorizationPolicy id="scope" access="SCOPE" authenticationManager="authenticationManager"
+		accessDecisionManager="accessDecisionManager" />
+		
+	<csec:authorizationPolicy id="public" access="PUBLIC" authenticationManager="authenticationManager"
+		accessDecisionManager="accessDecisionManager" />
+
+	<!-- LDAP connection (used for policy enforcement) -->
+	<bean id="ldapConnectionConfig" class="org.apache.directory.ldap.client.api.LdapConnectionConfig">
+		<property name="ldapHost" value="${hpd.pid.ldap.host}" />
+		<property name="ldapPort" value="${hpd.pid.ldap.port}" />
+		<property name="useSsl" value="${hpd.pid.ldap.use_ssl}" />
+		<property name="name" value="${hpd.pid.ldap.bind_dn}" />
+		<property name="credentials" value="${hpd.pid.ldap.bind_passwd}" />
+	</bean>
+
+	<bean id="ldapConnectionFactory" class="org.apache.directory.ldap.client.api.DefaultPoolableLdapConnectionFactory">
+		<constructor-arg ref="ldapConnectionConfig" />
+	</bean>
+	
+	<bean id="ldapPoolConfig" class="org.apache.commons.pool.impl.GenericObjectPool.Config" factory-bean="ldapPoolConfigFactoryBean" factory-method="getConfig"/>
+	
+	<bean id="ldapPoolConfigFactoryBean" class="ch.vivates.tools.dsmlv2.LdapConnectionPoolFactoryBean">
+		<property name="minIdle" value="5" />
+		<property name="maxIdle" value="10" />
+		<property name="maxActive" value="10" />
+		<property name="maxWait" value="10000" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="true" />
+		<property name="testWhileIdle" value="true" />
+		<property name="timeBetweenEvictionRunsMillis" value="300000" />
+		<property name="minEvictableIdleTimeMillis" value="-1" />
+		<property name="softMinEvictableIdleTimeMillis" value="600000" />
+	</bean>
+	
+	<bean id="ldapConnectionPool" class="org.apache.directory.ldap.client.api.LdapConnectionPool">
+		<constructor-arg ref="ldapConnectionFactory" />
+		<constructor-arg ref="ldapPoolConfig" />
+	</bean>
+
+	<!-- Camel-tuned End-point mapping -->
+	<bean id="endpointMapping" class="org.apache.camel.component.spring.ws.bean.WSACamelEndpointMapping" />
+
+	<bean id="staticSuccessResponse" class="ch.vivates.ihe.hpd.pid.StaticResourceProcessor">
+		<property name="location" value="META-INF/xml/successResponse.xml" />
+	</bean>
+
+	<!-- Death letter channel -->
+
+	<bean id="deadLetterErrorHandler" class="org.apache.camel.builder.DeadLetterChannelBuilder">
+		<property name="deadLetterUri" value="jms:queue:failed_feeds" />
+		<property name="redeliveryPolicy" ref="redeliveryPolicyConfig" />
+	</bean>
+
+	<bean id="redeliveryPolicyConfig" class="org.apache.camel.processor.RedeliveryPolicy">
+		<property name="maximumRedeliveries" value="3" />
+		<property name="redeliveryDelay" value="5000" />
+	</bean>
+
+	<bean id="ldapOpException" class="org.apache.directory.api.ldap.model.exception.LdapException" scope="prototype" />
+
+	<camelContext xmlns="http://camel.apache.org/schema/spring" allowUseOriginalMessage="false" streamCache="true">
+		<dataFormats>
+			<jaxb id="jaxb" prettyPrint="true" contextPath="ch.vivates.ihe.hpd.pid.model.cs" />
+		</dataFormats>
+
+		<route id="providerInformationQuery" startupOrder="100">
+			<from uri="spring-ws:action:urn:ihe:iti:2010:ProviderInformationQuery?endpointMapping=#endpointMapping" />
+			<setExchangePattern pattern="InOut" />
+			<process ref="identityExtractor" />
+			<log message="New query received" loggingLevel="INFO" logName="routeTracer" />
+			<log message="Received WS call to 'ProviderInformationQuery'.\n=== Header ===\n$simple{headers}\n=== Body ===\n$simple{body}"
+				loggingLevel="TRACE" logName="routeTracer" />
+			<unmarshal ref="jaxb" />
+			<policy ref="public">
+				<marshal ref="jaxb" />
+				<bean ref="batchRequestProcessor" method="processQueryRequest" />
+			</policy>
+		</route>
+
+		<route id="providerInformationFeed" startupOrder="101">
+			<from uri="spring-ws:action:urn:ihe:iti:2010:ProviderInformationFeed?endpointMapping=#endpointMapping" />
+			<setExchangePattern pattern="InOnly" />
+			<process ref="identityExtractor" />
+			<setHeader headerName="HpdPidInDate">
+				<simple>${date:now:yyyy-MM-dd'T'HH:mm:ss.SSSZ}</simple>
+			</setHeader>
+			<log message="Received WS call to 'ProviderInformationFeed'.\n=== Header ===\n$simple{headers}\n=== Body ===\n$simple{body}"
+				loggingLevel="TRACE" logName="routeTracer" />
+			<unmarshal ref="jaxb" />
+			<policy ref="scope">
+				<log message="New feed received" loggingLevel="INFO" logName="routeTracer" />
+				<marshal ref="jaxb" />
+				<to uri="activemq:feed_requests" />
+				<setExchangePattern pattern="InOut" />
+				<bean ref="staticSuccessResponse" method="processRequest" />
+			</policy>
+		</route>
+
+		<route id="providerInformationFeedSplitter" startupOrder="102" errorHandlerRef="deadLetterErrorHandler">
+			<from uri="activemq:feed_requests" />
+			<setExchangePattern pattern="InOnly" />
+			<log message="Processing 'ProviderInformationFeed' transaction(s) from feed_request queue." loggingLevel="TRACE" logName="routeTracer" />
+			<setHeader headerName="requestID">
+				<xpath>/dsml:batchRequest/@requestID</xpath>
+			</setHeader>
+			<setHeader headerName="processing">
+				<xpath>/dsml:batchRequest/@processing</xpath>
+			</setHeader>
+			<setHeader headerName="responseOrder">
+				<xpath>/dsml:batchRequest/@responseOrder</xpath>
+			</setHeader>
+			<setHeader headerName="onError">
+				<xpath>/dsml:batchRequest/@onError</xpath>
+			</setHeader>
+			<split parallelProcessing="false" shareUnitOfWork="true" stopOnException="true" inheritErrorHandler="true">
+				<xpath>/dsml:batchRequest/*</xpath>
+				<bean ref="batchRequestProcessor" method="prepareFeedRequest" />
+				<setExchangePattern pattern="InOnly" />
+				<setHeader headerName="originalBody">
+					<simple>${body}</simple>
+				</setHeader>
+				<bean ref="batchRequestProcessor" method="processFeedRequest" />
+				<bean ref="batchRequestProcessor" method="processResponse" />
+				<choice>
+					<when>
+						<simple>${body[resultCode]} != '0'</simple>
+						<log message="Error executing transaction. ResultCode: $simple{body[resultCode]} Error message:\n$simple{body[errorMessage]}"
+							loggingLevel="ERROR" logName="routeTracer" />
+						<setBody>
+							<simple>${header[originalBody]}</simple>
+						</setBody>
+						<throwException ref="ldapOpException" inheritErrorHandler="true" />
+					</when>
+					<otherwise>
+						<setBody>
+							<simple>${header[originalBody]}</simple>
+						</setBody>
+						<bean ref="transactionHistoryEntryExtractor" method="convert" />
+						<to uri="sql:{{sql.insertEntry}}?dataSource=#dataSource" />
+						<log message="Logged successful transaction:\n$simple{body[tr_body]}" loggingLevel="TRACE" logName="routeTracer" />
+					</otherwise>
+				</choice>
+			</split>
+		</route>
+
+		<route id="providerInformationDownload" startupOrder="110">
+			<from uri="spring-ws:action:urn:ihe:iti:2010:ProviderInformationDownload?endpointMapping=#endpointMapping" />
+			<setExchangePattern pattern="InOut" />
+			<process ref="identityExtractor" />
+			<log message="Received WS call to 'ProviderInformationUpdatesDownload'.\n=== Header ===\n$simple{headers}\n=== Body ===\n$simple{body}"
+				loggingLevel="TRACE" logName="routeTracer" />
+			<unmarshal ref="jaxb" />
+			<policy ref="public">
+				<marshal ref="jaxb" />
+				<log message="New download request received" loggingLevel="INFO" logName="routeTracer" />
+				<bean beanType="ch.vivates.ihe.hpd.pid.DownloadRequestProcessor" method="extractParams" />
+				<to uri="sql:{{sql.selectByRange}}?dataSource=#dataSource" />
+				<bean beanType="ch.vivates.ihe.hpd.pid.DownloadRequestProcessor" method="processResponse" />
+			</policy>
+		</route>
+
+	</camelContext>
+</beans>
+

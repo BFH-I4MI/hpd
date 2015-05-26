@@ -1,0 +1,917 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project activeEnvironment="Default" name="HPD_PDI" resourceRoot="" soapui-version="5.0.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="ProviderInformationDirectory_Binding" type="wsdl" bindingName="{urn:ihe:iti:hpd:2010}ProviderInformationDirectory_Binding" soapVersion="1_2" anonymous="optional" definition="http://localhost:8080/hpd-ws/ProviderInformationDirectoryService.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/hpd-ws/ProviderInformationDirectoryService.wsdl"><con:part><con:url>http://localhost:8080/hpd-ws/ProviderInformationDirectoryService.wsdl</con:url><con:content><![CDATA[<definitions name="HPDProviderInformationDirectory" targetNamespace="urn:ihe:iti:hpd:2010" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:ihe:iti:hpd:2010" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core" xmlns:cs="urn:ehealth-suisse:names:tc:CS:1" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <documentation>IHE HPD Provider Information Directory</documentation>
+  <types>
+    <xsd:schema targetNamespace="urn:oasis:names:tc:DSML:2:0:core" elementFormDefault="qualified" xmlns="urn:oasis:names:tc:DSML:2:0:core">
+      <!--Copyright (C) The Organization for the Advancement of Structured Information Standards [OASIS] 2001. All Rights Reserved.-->
+      <!--DSML Requests-->
+      <xsd:group name="DSMLRequests">
+        <xsd:choice>
+          <xsd:element name="authRequest" type="AuthRequest"/>
+          <xsd:group ref="BatchRequests"/>
+        </xsd:choice>
+      </xsd:group>
+      <xsd:group name="BatchRequests">
+        <xsd:choice>
+          <xsd:element name="searchRequest" type="SearchRequest"/>
+          <xsd:element name="modifyRequest" type="ModifyRequest"/>
+          <xsd:element name="addRequest" type="AddRequest"/>
+          <xsd:element name="delRequest" type="DelRequest"/>
+          <xsd:element name="modDNRequest" type="ModifyDNRequest"/>
+          <xsd:element name="compareRequest" type="CompareRequest"/>
+          <xsd:element name="abandonRequest" type="AbandonRequest"/>
+          <xsd:element name="extendedRequest" type="ExtendedRequest"/>
+        </xsd:choice>
+      </xsd:group>
+      <!--DSML Responses-->
+      <xsd:group name="DSMLResponses">
+        <xsd:choice>
+          <xsd:element name="authResponse" type="LDAPResult"/>
+          <xsd:element name="searchResultEntry" type="SearchResultEntry"/>
+          <xsd:element name="searchResultReference" type="SearchResultReference"/>
+          <xsd:element name="searchResultDone" type="LDAPResult"/>
+          <xsd:element name="modifyResponse" type="LDAPResult"/>
+          <xsd:element name="addResponse" type="LDAPResult"/>
+          <xsd:element name="delResponse" type="LDAPResult"/>
+          <xsd:element name="modDNResponse" type="LDAPResult"/>
+          <xsd:element name="compareResponse" type="LDAPResult"/>
+          <xsd:element name="extendedResponse" type="ExtendedResponse"/>
+          <xsd:element name="errorResponse" type="ErrorResponse"/>
+        </xsd:choice>
+      </xsd:group>
+      <!--*************** Batch Envelopes *********************-->
+      <xsd:element name="batchRequest" type="BatchRequest"/>
+      <xsd:element name="batchResponse" type="BatchResponse"/>
+      <!--**** Batch Request Envelope ****-->
+      <xsd:complexType name="BatchRequest">
+        <xsd:sequence>
+          <xsd:element name="authRequest" type="AuthRequest" minOccurs="0" maxOccurs="1"/>
+          <xsd:group ref="BatchRequests" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="requestID" type="RequestID" use="optional"/>
+        <xsd:attribute name="processing" use="optional" default="sequential">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="sequential"/>
+              <xsd:enumeration value="parallel"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="responseOrder" use="optional" default="sequential">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="sequential"/>
+              <xsd:enumeration value="unordered"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="onError" use="optional" default="exit">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="resume"/>
+              <xsd:enumeration value="exit"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:complexType>
+      <!--**** Batch Response Envelope ****-->
+      <xsd:complexType name="BatchResponse">
+        <xsd:sequence>
+          <xsd:group ref="BatchResponses" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="requestID" type="RequestID" use="optional"/>
+      </xsd:complexType>
+      <!--**** Batch Responses ****-->
+      <xsd:group name="BatchResponses">
+        <xsd:choice>
+          <xsd:element name="searchResponse" type="SearchResponse"/>
+          <xsd:element name="authResponse" type="LDAPResult"/>
+          <xsd:element name="modifyResponse" type="LDAPResult"/>
+          <xsd:element name="addResponse" type="LDAPResult"/>
+          <xsd:element name="delResponse" type="LDAPResult"/>
+          <xsd:element name="modDNResponse" type="LDAPResult"/>
+          <xsd:element name="compareResponse" type="LDAPResult"/>
+          <xsd:element name="extendedResponse" type="ExtendedResponse"/>
+          <xsd:element name="errorResponse" type="ErrorResponse"/>
+        </xsd:choice>
+      </xsd:group>
+      <!--**** Search Response ****-->
+      <xsd:complexType name="SearchResponse">
+        <xsd:sequence>
+          <xsd:element name="searchResultEntry" type="SearchResultEntry" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="searchResultReference" type="SearchResultReference" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="searchResultDone" type="LDAPResult"/>
+        </xsd:sequence>
+        <xsd:attribute name="requestID" type="RequestID" use="optional"/>
+      </xsd:complexType>
+      <!--***** DsmlDN *****-->
+      <xsd:simpleType name="DsmlDN">
+        <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+      <!--***** DsmlRDN *****-->
+      <xsd:simpleType name="DsmlRDN">
+        <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+      <!--***** Request ID *****-->
+      <xsd:simpleType name="RequestID">
+        <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+      <!--***** AttributeDescriptionValue *****-->
+      <xsd:simpleType name="AttributeDescriptionValue">
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="((([0-2](\.[0-9]+)+)|([a-zA-Z]+([a-zA-Z0-9]|[-])*))(;([a-zA-Z0-9]|[-])+)*)"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="NumericOID">
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[0-2]\.[0-9]+(\.[0-9]+)*"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <!--***** MAX Integer *****-->
+      <xsd:simpleType name="MAXINT">
+        <xsd:restriction base="xsd:unsignedInt">
+          <xsd:maxInclusive value="2147483647"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <!--**** DSML Value ****-->
+      <xsd:simpleType name="DsmlValue">
+        <xsd:union memberTypes="xsd:string xsd:base64Binary xsd:anyURI"/>
+      </xsd:simpleType>
+      <!--**** DSML Control ****-->
+      <xsd:complexType name="Control">
+        <xsd:sequence>
+          <xsd:element name="controlValue" type="xsd:anyType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="type" type="NumericOID" use="required"/>
+        <xsd:attribute name="criticality" type="xsd:boolean" use="optional" default="false"/>
+      </xsd:complexType>
+      <!--**** DSML Filter ****-->
+      <xsd:complexType name="Filter">
+        <xsd:group ref="FilterGroup"/>
+      </xsd:complexType>
+      <xsd:group name="FilterGroup">
+        <xsd:sequence>
+          <xsd:choice>
+            <xsd:element name="and" type="FilterSet"/>
+            <xsd:element name="or" type="FilterSet"/>
+            <xsd:element name="not" type="Filter"/>
+            <xsd:element name="equalityMatch" type="AttributeValueAssertion"/>
+            <xsd:element name="substrings" type="SubstringFilter"/>
+            <xsd:element name="greaterOrEqual" type="AttributeValueAssertion"/>
+            <xsd:element name="lessOrEqual" type="AttributeValueAssertion"/>
+            <xsd:element name="present" type="AttributeDescription"/>
+            <xsd:element name="approxMatch" type="AttributeValueAssertion"/>
+            <xsd:element name="extensibleMatch" type="MatchingRuleAssertion"/>
+          </xsd:choice>
+        </xsd:sequence>
+      </xsd:group>
+      <xsd:complexType name="FilterSet">
+        <xsd:sequence>
+          <xsd:group ref="FilterGroup" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AttributeValueAssertion">
+        <xsd:sequence>
+          <xsd:element name="value" type="DsmlValue"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="AttributeDescriptionValue" use="required"/>
+      </xsd:complexType>
+      <xsd:complexType name="AttributeDescription">
+        <xsd:attribute name="name" type="AttributeDescriptionValue" use="required"/>
+      </xsd:complexType>
+      <xsd:complexType name="SubstringFilter">
+        <xsd:sequence>
+          <xsd:element name="initial" type="DsmlValue" minOccurs="0"/>
+          <xsd:element name="any" type="DsmlValue" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="final" type="DsmlValue" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="AttributeDescriptionValue" use="required"/>
+      </xsd:complexType>
+      <xsd:complexType name="MatchingRuleAssertion">
+        <xsd:sequence>
+          <xsd:element name="value" type="DsmlValue"/>
+        </xsd:sequence>
+        <xsd:attribute name="dnAttributes" type="xsd:boolean" use="optional" default="false"/>
+        <xsd:attribute name="matchingRule" type="xsd:string" use="optional"/>
+        <xsd:attribute name="name" type="AttributeDescriptionValue" use="optional"/>
+      </xsd:complexType>
+      <!--*************** DSML MESSAGE ********************-->
+      <xsd:complexType name="DsmlMessage">
+        <xsd:sequence>
+          <xsd:element name="control" type="Control" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="requestID" type="RequestID" use="optional"/>
+      </xsd:complexType>
+      <!--*************** LDAP RESULT *********************-->
+      <xsd:simpleType name="LDAPResultCode">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="success"/>
+          <xsd:enumeration value="operationsError"/>
+          <xsd:enumeration value="protocolError"/>
+          <xsd:enumeration value="timeLimitExceeded"/>
+          <xsd:enumeration value="sizeLimitExceeded"/>
+          <xsd:enumeration value="compareFalse"/>
+          <xsd:enumeration value="compareTrue"/>
+          <xsd:enumeration value="authMethodNotSupported"/>
+          <xsd:enumeration value="strongAuthRequired"/>
+          <xsd:enumeration value="referral"/>
+          <xsd:enumeration value="adminLimitExceeded"/>
+          <xsd:enumeration value="unavailableCriticalExtension"/>
+          <xsd:enumeration value="confidentialityRequired"/>
+          <xsd:enumeration value="saslBindInProgress"/>
+          <xsd:enumeration value="noSuchAttribute"/>
+          <xsd:enumeration value="undefinedAttributeType"/>
+          <xsd:enumeration value="inappropriateMatching"/>
+          <xsd:enumeration value="constraintViolation"/>
+          <xsd:enumeration value="attributeOrValueExists"/>
+          <xsd:enumeration value="invalidAttributeSyntax"/>
+          <xsd:enumeration value="noSuchObject"/>
+          <xsd:enumeration value="aliasProblem"/>
+          <xsd:enumeration value="invalidDNSyntax"/>
+          <xsd:enumeration value="aliasDerefencingProblem"/>
+          <xsd:enumeration value="inappropriateAuthentication"/>
+          <xsd:enumeration value="invalidCredentials"/>
+          <xsd:enumeration value="insufficientAccessRights"/>
+          <xsd:enumeration value="busy"/>
+          <xsd:enumeration value="unavailable"/>
+          <xsd:enumeration value="unwillingToPerform"/>
+          <xsd:enumeration value="loopDetect"/>
+          <xsd:enumeration value="namingViolation"/>
+          <xsd:enumeration value="objectClassViolation"/>
+          <xsd:enumeration value="notAllowedOnNonLeaf"/>
+          <xsd:enumeration value="notAllowedOnRDN"/>
+          <xsd:enumeration value="entryAlreadyExists"/>
+          <xsd:enumeration value="objectClassModsProhibited"/>
+          <xsd:enumeration value="affectMultipleDSAs"/>
+          <xsd:enumeration value="other"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ResultCode">
+        <xsd:attribute name="code" type="xsd:int" use="required"/>
+        <xsd:attribute name="descr" type="LDAPResultCode" use="optional"/>
+      </xsd:complexType>
+      <xsd:complexType name="LDAPResult">
+        <xsd:complexContent>
+          <xsd:extension base="DsmlMessage">
+            <xsd:sequence>
+              <xsd:element name="resultCode" type="ResultCode"/>
+              <xsd:element name="errorMessage" type="xsd:string" minOccurs="0"/>
+              <xsd:element name="referral" type="xsd:anyURI" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="matchedDN" type="DsmlDN" use="optional"/>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ErrorResponse">
+        <xsd:sequence>
+          <xsd:element name="message" type="xsd:string" minOccurs="0"/>
+          <xsd:element name="detail" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:any/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="requestID" type="RequestID" use="optional"/>
+        <xsd:attribute name="type">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="notAttempted"/>
+              <xsd:enumeration value="couldNotConnect"/>
+              <xsd:enumeration value="connectionClosed"/>
+              <xsd:enumeration value="malformedRequest"/>
+              <xsd:enumeration value="gatewayInternalError"/>
+              <xsd:enumeration value="authenticationFailed"/>
+              <xsd:enumeration value="unresolvableURI"/>
+              <xsd:enumeration value="other"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:complexType>
+      <!--*************** Auth *********************-->
+      <xsd:complexType name="AuthRequest">
+        <xsd:complexContent>
+          <xsd:extension base="DsmlMessage">
+            <xsd:attribute name="principal" type="xsd:string" use="required"/>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <!--*************** Search *********************-->
+      <xsd:complexType name="AttributeDescriptions">
+        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+          <xsd:element name="attribute" type="AttributeDescription"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="SearchRequest">
+        <xsd:complexContent>
+          <xsd:extension base="DsmlMessage">
+            <xsd:sequence>
+              <xsd:element name="filter" type="Filter"/>
+              <xsd:element name="attributes" type="AttributeDescriptions" minOccurs="0"/>
+            </xsd:sequence>
+            <xsd:attribute name="dn" type="DsmlDN" use="required"/>
+            <xsd:attribute name="scope" use="required">
+              <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="baseObject"/>
+                  <xsd:enumeration value="singleLevel"/>
+                  <xsd:enumeration value="wholeSubtree"/>
+                </xsd:restriction>
+              </xsd:simpleType>
+            </xsd:attribute>
+            <xsd:attribute name="derefAliases" use="required">
+              <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="neverDerefAliases"/>
+                  <xsd:enumeration value="derefInSearching"/>
+                  <xsd:enumeration value="derefFindingBaseObj"/>
+                  <xsd:enumeration value="derefAlways"/>
+                </xsd:restriction>
+              </xsd:simpleType>
+            </xsd:attribute>
+            <xsd:attribute name="sizeLimit" type="MAXINT" use="optional" default="0"/>
+            <xsd:attribute name="timeLimit" type="MAXINT" use="optional" default="0"/>
+            <xsd:attribute name="typesOnly" type="xsd:boolean" use="optional" default="false"/>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <!--***** Search Result Entry *****-->
+      <xsd:complexType name="SearchResultEntry">
+        <xsd:complexContent>
+          <xsd:extension base="DsmlMessage">
+            <xsd:sequence>
+              <xsd:element name="attr" type="DsmlAttr" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="dn" type="DsmlDN" use="required"/>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DsmlAttr">
+        <xsd:sequence>
+          <xsd:element name="value" type="DsmlValue" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="AttributeDescriptionValue" use="required"/>
+      </xsd:complexType>
+      <xsd:complexType name="DsmlModification">
+        <xsd:sequence>
+          <xsd:element name="value" type="DsmlValue" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="AttributeDescriptionValue" use="required"/>
+        <xsd:attribute name="operation" use="required">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="add"/>
+              <xsd:enumeration value="delete"/>
+              <xsd:enumeration value="replace"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:complexType>
+      <!--***** Search Result Reference *****-->
+      <xsd:complexType name="SearchResultReference">
+        <xsd:complexContent>
+          <xsd:extension base="DsmlMessage">
+            <xsd:sequence>
+              <xsd:element name="ref" type="xsd:anyURI" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <!--************* MODIFY ********************-->
+      <xsd:complexType name="ModifyRequest">
+        <xsd:complexContent>
+          <xsd:extension base="DsmlMessage">
+            <xsd:sequence>
+              <xsd:element name="modification" type="DsmlModification" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="dn" type="DsmlDN" use="required"/>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <!--*************** ADD *********************-->
+      <xsd:complexType name="AddRequest">
+        <xsd:complexContent>
+          <xsd:extension base="DsmlMessage">
+            <xsd:sequence>
+              <xsd:element name="attr" type="DsmlAttr" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="dn" type="DsmlDN" use="required"/>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <!--*************** DELETE *********************-->
+      <xsd:complexType name="DelRequest">
+        <xsd:complexContent>
+          <xsd:extension base="DsmlMessage">
+            <xsd:attribute name="dn" type="DsmlDN" use="required"/>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <!--*************** MODIFY DN *********************-->
+      <xsd:complexType name="ModifyDNRequest">
+        <xsd:complexContent>
+          <xsd:extension base="DsmlMessage">
+            <xsd:attribute name="dn" type="DsmlDN" use="required"/>
+            <xsd:attribute name="newrdn" type="DsmlRDN" use="required"/>
+            <xsd:attribute name="deleteoldrdn" type="xsd:boolean" use="optional" default="true"/>
+            <xsd:attribute name="newSuperior" type="DsmlDN" use="optional"/>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <!--************* COMPARE ********************-->
+      <xsd:complexType name="CompareRequest">
+        <xsd:complexContent>
+          <xsd:extension base="DsmlMessage">
+            <xsd:sequence>
+              <xsd:element name="assertion" type="AttributeValueAssertion"/>
+            </xsd:sequence>
+            <xsd:attribute name="dn" type="DsmlDN" use="required"/>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <!--***** ABANDON *****-->
+      <xsd:complexType name="AbandonRequest">
+        <xsd:complexContent>
+          <xsd:extension base="DsmlMessage">
+            <xsd:attribute name="abandonID" type="RequestID" use="required"/>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <!--************* EXTENDED OPERATION ********************-->
+      <xsd:complexType name="ExtendedRequest">
+        <xsd:complexContent>
+          <xsd:extension base="DsmlMessage">
+            <xsd:sequence>
+              <xsd:element name="requestName" type="NumericOID"/>
+              <xsd:element name="requestValue" type="xsd:anyType" minOccurs="0"/>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ExtendedResponse">
+        <xsd:complexContent>
+          <xsd:extension base="LDAPResult">
+            <xsd:sequence>
+              <xsd:element name="responseName" type="NumericOID" minOccurs="0"/>
+              <xsd:element name="response" type="xsd:anyType" minOccurs="0"/>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <!--********************END base SCHEMA *********************-->
+    </xsd:schema>
+    <xsd:schema targetNamespace="urn:ehealth-suisse:names:tc:CS:1" elementFormDefault="qualified" xmlns="urn:ehealth-suisse:names:tc:CS:1">
+      <xsd:element name="downloadRequest" type="DownloadRequest"/>
+      <xsd:element name="downloadResponse" type="DownloadResponse"/>
+      <!--**** Download Request ****-->
+      <xsd:complexType name="DownloadRequest">
+        <xsd:sequence>
+          <xsd:element name="authRequest" type="dsml:AuthRequest" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="requestID" type="xsd:string" use="optional"/>
+        <xsd:attribute name="fromDate" use="required">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:date"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="toDate" use="optional">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:date"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:complexType>
+      <!--**** Download Response ****-->
+      <xsd:complexType name="DownloadResponse">
+        <xsd:sequence>
+          <xsd:element ref="dsml:batchRequest" maxOccurs="unbounded" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="requestID" type="xsd:string" use="optional"/>
+      </xsd:complexType>
+    </xsd:schema>
+  </types>
+  <message name="ProviderInformationRequestMessage">
+    <documentation>Provider Information Query/Feed Request Message</documentation>
+    <part name="body" element="dsml:batchRequest"/>
+  </message>
+  <message name="ProviderInformationResponseMessage">
+    <documentation>Provider Information Query/Feed Response Message</documentation>
+    <part name="body" element="dsml:batchResponse"/>
+  </message>
+  <message name="ProviderInformationDownloadRequestMessage">
+    <documentation>Provider Information Download Request Message</documentation>
+    <part name="body" element="cs:downloadRequest"/>
+  </message>
+  <message name="ProviderInformationDownloadResponseMessage">
+    <documentation>Provider Information Download Response Message</documentation>
+    <part name="body" element="cs:downloadResponse"/>
+  </message>
+  <portType name="ProviderInformationDirectory_PortType">
+    <operation name="ProviderInformationQueryRequest">
+      <input message="tns:ProviderInformationRequestMessage" wsaw:Action="urn:ihe:iti:2010:ProviderInformationQuery"/>
+      <output message="tns:ProviderInformationResponseMessage" wsaw:Action="urn:ihe:iti:2010:ProviderInformationQueryResponse"/>
+    </operation>
+    <operation name="ProviderInformationFeedRequest">
+      <input message="tns:ProviderInformationRequestMessage" wsaw:Action="urn:ihe:iti:2010:ProviderInformationFeed"/>
+      <output message="tns:ProviderInformationResponseMessage" wsaw:Action="urn:ihe:iti:2010:ProviderInformationFeedResponse"/>
+    </operation>
+    <operation name="ProviderInformationDownloadRequest">
+      <input message="tns:ProviderInformationDownloadRequestMessage" wsaw:Action="urn:ihe:iti:2010:ProviderInformationDownload"/>
+      <output message="tns:ProviderInformationDownloadResponseMessage" wsaw:Action="urn:ihe:iti:2010:ProviderInformationDownloadResponse"/>
+    </operation>
+  </portType>
+  <binding name="ProviderInformationDirectory_Binding" type="tns:ProviderInformationDirectory_PortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="ProviderInformationQueryRequest">
+      <soap:operation soapAction="urn:ihe:iti:hpd:2010:ProviderInformationQueryRequest"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="ProviderInformationFeedRequest">
+      <soap:operation soapAction="urn:ihe:iti:hpd:2010:ProviderInformationFeedRequest"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="ProviderInformationDownloadRequest">
+      <soap:operation soapAction="urn:ihe:iti:hpd:2010:ProviderInformationDownloadRequest"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="ProviderInformationDirectory_Service">
+    <port name="ProviderInformationDirectory_Port_Soap" binding="tns:ProviderInformationDirectory_Binding">
+      <soap:address location="http://localhost:8080/hpd-ws/ProviderInformationDirectoryService"/>
+    </port>
+  </service>
+</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://147.87.117.77:8080/hpd-ws/ProviderInformationDirectoryService</con:endpoint><con:endpoint>http://192.168.32.142:8080/hpd-ws/ProviderInformationDirectoryService</con:endpoint><con:endpoint>http://localhost:8080/hpd-ws/ProviderInformationDirectoryService</con:endpoint></con:endpoints><con:operation isOneWay="false" action="urn:ihe:iti:hpd:2010:ProviderInformationFeedRequest" name="ProviderInformationFeedRequest" bindingOperationName="ProviderInformationFeedRequest" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="test-feed-00" useWsAddressing="true" outgoingWss="admin_test"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://147.87.117.77:8080/hpd-ws/ProviderInformationDirectoryService</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core">
+   <soap:Header/>
+   <soap:Body>
+      <dsml:batchRequest>
+         <dsml:addRequest dn="uid=test-hospital-01,ou=HCRegulatedOrganization,dc=HPD,o=ehealth-suisse,c=ch">
+            <dsml:attr name="hcIdentifier">
+               <dsml:value>2.16.10.89.200:FederalTax:800-801-8004:Active</dsml:value>
+               <dsml:value>2.16.840.1.113883.4.6:NPI:666789-804:Active</dsml:value>
+            </dsml:attr>
+             <dsml:attr name="uid">
+               <dsml:value>test-hospital-01</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hcRegisteredName">
+               <dsml:value>Nowhere General Hospital</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="o">
+               <dsml:value>Nowhere Hospital</dsml:value>
+               <dsml:value>Nowhere General Hospital</dsml:value>
+               <dsml:value>NGH</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="businessCategory">
+               <dsml:value>Hospital</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="HcSpecialisation">
+               <dsml:value>Emergency</dsml:value>
+               <dsml:value>General Hospital</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hpdProviderPracticeAddress">
+               <dsml:value>status=Primary $ addr=100 North Ave Nowheresville Some 98765-1234</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hpdProviderMailingAddress">
+               <dsml:value>status=Primary $ addr=1 South Ave, Suite 100, Nowheresville Some 98765-1234</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hpdMedicalRecordsDeliveryEmailAddress">
+               <dsml:value>medrecords@nowhere.org</dsml:value>
+            </dsml:attr>
+            <!--DN of  Some Hospital Network Group-->
+            <dsml:attr name="memberof">
+               <dsml:value>cn=NowhereGeneralHospitalMembers,ou=Relationship,dc=HPD,o=ehealth-suisse,c=ch</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="objectClass">
+               <dsml:value>HCRegulatedOrganization</dsml:value>
+               <dsml:value>organization</dsml:value>
+               <dsml:value>uidObject</dsml:value>
+               <dsml:value>hpdProvider</dsml:value>
+               <dsml:value>top</dsml:value>
+            </dsml:attr>
+         </dsml:addRequest>
+         <dsml:addRequest dn="uid=test-sub-hospital-01,ou=HCRegulatedOrganization,dc=HPD,o=ehealth-suisse,c=ch">
+            <dsml:attr name="hcIdentifier">
+               <dsml:value>2.16.10.89.200:FederalTax:800-801-8004:Active</dsml:value>
+               <dsml:value>2.16.840.1.113883.4.6:NPI:666789-804:Active</dsml:value>
+            </dsml:attr>
+             <dsml:attr name="uid">
+               <dsml:value>test-sub-hospital-01</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hcRegisteredName">
+               <dsml:value>Nowhere Sub Hospital</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="o">
+               <dsml:value>Nowhere Hospital</dsml:value>
+               <dsml:value>Nowhere Sub Hospital</dsml:value>
+               <dsml:value>NSH</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="businessCategory">
+               <dsml:value>Hospital</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="HcSpecialisation">
+               <dsml:value>Emergency</dsml:value>
+               <dsml:value>Sub Hospital</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hpdProviderPracticeAddress">
+               <dsml:value>status=Primary $ addr=100 North Ave Nowheresville Some 98765-1234</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hpdProviderMailingAddress">
+               <dsml:value>status=Primary $ addr=1 South Ave, Suite 100, Nowheresville Some 98765-1234</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hpdMedicalRecordsDeliveryEmailAddress">
+               <dsml:value>medrecords@nowhere.org</dsml:value>
+            </dsml:attr>
+            <!--DN of  Some Hospital Network Group-->
+            <dsml:attr name="memberof">
+               <dsml:value>cn=NowhereGeneralHospitalMembers,ou=Relationship,dc=HPD,o=ehealth-suisse,c=ch</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="objectClass">
+               <dsml:value>HCRegulatedOrganization</dsml:value>
+               <dsml:value>organization</dsml:value>
+               <dsml:value>uidObject</dsml:value>
+               <dsml:value>hpdProvider</dsml:value>
+               <dsml:value>top</dsml:value>
+            </dsml:attr>
+         </dsml:addRequest>
+         <!--Add a Relationship Group for "Nowhere General Hospital"-->
+         <dsml:addRequest dn="cn=NowhereGeneralHospitalMembers,ou=Relationship,dc=HPD,o=ehealth-suisse,c=ch">
+            <dsml:attr name="cn">
+               <dsml:value>NowhereCommunity</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="owner">
+               <!--DN of Nowhere General Hospital-->
+               <dsml:value>uid=test-hospital-01,ou=HCRegulatedOrganization,dc=HPD,o=ehealth-suisse,c=ch</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="member">
+               <!--DN of Nowhere General Hospital-->
+               <dsml:value>uid=test-hospital-01,ou=HCRegulatedOrganization,dc=HPD,o=ehealth-suisse,c=ch</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="objectClass">
+               <dsml:value>groupOfNames</dsml:value>
+               <dsml:value>top</dsml:value>
+            </dsml:attr>
+         </dsml:addRequest>
+         <!--Add a Provider "Michael Smith who practices as Endocronologist at Nowhere General Hospital"-->
+         <dsml:addRequest dn="uid=test-practitioner-01,ou=HCProfessional,dc=HPD,o=ehealth-suisse,c=ch">
+            <dsml:attr name="cn">
+               <dsml:value>Michael Smith</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="displayName">
+               <dsml:value>Michael Smith</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="givenName">
+               <dsml:value>Mike</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="sn">
+               <dsml:value>Smith</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="uid">
+               <dsml:value>test-practitioner-01</dsml:value>
+            </dsml:attr>
+            <!--Multiple Indetifiers associated with Provider: Local Hospital Id and NPI Id-->
+            <dsml:attr name="HcIdentifier">
+               <dsml:value>1.89.11.00.124:HospId:786868:Active</dsml:value>
+               <dsml:value>2.16.840.1.113883.4.6:NPI:90909090:Active</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hpdProviderStatus">
+               <dsml:value>Active</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="HcProfession">
+               <dsml:value>Endocronologist</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="HcRegistrationStatus">
+               <dsml:value>valid</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="description">
+               <dsml:value>Thyroid specialist</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="HcSpecialisation">
+               <dsml:value>Internal medicine</dsml:value>
+               <dsml:value>Endocrinology</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hpdProviderLanguageSupported">
+               <dsml:value>en</dsml:value>
+               <dsml:value>es</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="gender">
+               <dsml:value>M</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hpdProviderBillingAddress">
+               <dsml:value>status=Primary $ addr=1221 Circle Lane Nowheresville Some 98765 US</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hpdProviderPracticeAddress">
+               <dsml:value>status=Primary $postalCode=98765 $ addr=100 North Ave Nowheresville Some 98765-1234</dsml:value>
+               <dsml:value>status=other $postalCode=90909 $ addr=8909 First St Nowheresville Some 90909</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="telephoneNumber">
+               <dsml:value>(042) 123 4567</dsml:value>
+            </dsml:attr>
+            <!--DN of Nowhere General Hospital group-->
+            <dsml:attr name="memberof">
+               <dsml:value>cn=NowhereGeneralHospitalMembers,ou=Relationship,dc=HPD,o=ehealth-suisse,c=ch</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="objectClass">
+               <dsml:value>HCProfessional</dsml:value>
+               <dsml:value>inetOrgPerson</dsml:value>
+               <dsml:value>organizationalPerson</dsml:value>
+               <dsml:value>HPDProvider</dsml:value>
+               <dsml:value>naturalPerson</dsml:value>
+               <dsml:value>person</dsml:value>
+               <dsml:value>top</dsml:value>
+            </dsml:attr>
+         </dsml:addRequest>
+         <!--Add a Provider "Jackie Doe who practices as Cardiologist at Nowhere General Hospital"-->
+         <dsml:addRequest dn="uid=test-practitioner-02,ou=HCProfessional,dc=HPD,o=ehealth-suisse,c=ch">
+            <dsml:attr name="cn">
+               <dsml:value>Jackie Doe</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="displayName">
+               <dsml:value>Jacklene Doe</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="givenName">
+               <dsml:value>Jacklene</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="sn">
+               <dsml:value>Doe</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="uid">
+               <dsml:value>test-practitioner-02</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="HcIdentifier">
+               <dsml:value>1.89.11.00.124:HospId:786890:Active</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hpdProviderStatus">
+               <dsml:value>Active</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="HcProfession">
+               <dsml:value>Cardiologist</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="HcRegistrationStatus">
+               <dsml:value>valid</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="description">
+               <dsml:value>Heart specialist</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="HcSpecialisation">
+               <dsml:value>Internal medicine</dsml:value>
+               <dsml:value>Cardiology</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hpdProviderLanguageSupported">
+               <dsml:value>en</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="gender">
+               <dsml:value>F</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hpdProviderBillingAddress">
+               <dsml:value>status=Primary $ addr=1230 Circle Lane Nowheresville Some 98765 US</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="hpdProviderPracticeAddress">
+               <dsml:value>status=Primary $postalCode=98765 $ addr=100 North Ave Nowheresville Some 98765-1234</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="mobile">
+               <dsml:value>(042) 234 4567</dsml:value>
+            </dsml:attr>
+            <!--DN of Nowhere General Hospital Group-->
+            <dsml:attr name="memberof">
+               <dsml:value>cn=NowhereGeneralHospitalMembers,ou=Relationship,dc=HPD,o=ehealth-suisse,c=ch</dsml:value>
+            </dsml:attr>
+            <dsml:attr name="objectClass">
+               <dsml:value>HCProfessional</dsml:value>
+               <dsml:value>inetOrgPerson</dsml:value>
+               <dsml:value>organizationalPerson</dsml:value>
+               <dsml:value>HPDProvider</dsml:value>
+               <dsml:value>naturalPerson</dsml:value>
+               <dsml:value>person</dsml:value>
+               <dsml:value>top</dsml:value>
+            </dsml:attr>
+         </dsml:addRequest>
+         <!--Add the Relationship for both providers with "Nowhere General Hospital"-->
+         <dsml:modifyRequest dn="cn=NowhereGeneralHospitalMembers,ou=Relationship,dc=HPD,o=ehealth-suisse,c=ch">
+            <dsml:modification operation="add" name="member">
+               <!--DN of Michael Smith-->
+               <dsml:value>uid=test-practitioner-01,ou=HCProfessional,dc=HPD,o=ehealth-suisse,c=ch</dsml:value>
+            </dsml:modification>
+            <dsml:modification operation="add" name="member">
+               <!--DN of jackie Doe-->
+               <dsml:value>uid=test-practitioner-02,ou=HCProfessional,dc=HPD,o=ehealth-suisse,c=ch</dsml:value>
+            </dsml:modification>
+         </dsml:modifyRequest>
+      </dsml:batchRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="urn:ihe:iti:2010:ProviderInformationFeed" addDefaultTo="true" replyTo="http://www.w3.org/2005/08/addressing/anonymous" generateMessageId="true"/><con:wsrmConfig version="1.2"/></con:call><con:call name="test-feed-01-modDN" useWsAddressing="true" outgoingWss="admin_test"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/hpd-ws/ProviderInformationDirectoryService</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:dsml="urn:oasis:names:tc:DSML:2:0:core">
+   <soap:Header/>
+   <soap:Body>
+      <dsml:batchRequest onError="resume">
+         <dsml:modDNRequest 
+         			dn="cn=NowhereGeneralHospitalMembers,ou=Relationship,dc=HPD,o=ehealth-suisse,c=ch" 
+                    newrdn="cn=NowhereGeneralHospitalMembers2" />         
+      </dsml:batchRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="urn:ihe:iti:2010:ProviderInformationFeed" addDefaultTo="true" replyTo="http://www.w3.org/2005/08/addressing/anonymous" generateMessageId="true"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="urn:ihe:iti:hpd:2010:ProviderInformationQueryRequest" name="ProviderInformationQueryRequest" bindingOperationName="ProviderInformationQueryRequest" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="test-query-00" useWsAddressing="true" outgoingWss="admin_test" incomingWss="" wssPasswordType="PasswordText" sslKeystore=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@wss-time-to-live"/></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://192.168.32.142:8080/hpd-ws/ProviderInformationDirectoryService</con:endpoint><con:request><![CDATA[<?xml version="1.0"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+	xmlns:urn="urn:oasis:names:tc:DSML:2:0:core">
+   <soap:Body>
+      <urn:batchRequest requestID="0001"
+      processing="sequential" responseOrder="sequential" onError="exit">
+         <urn:searchRequest 
+         		requestID="01" dn="" scope="baseObject" 
+         		derefAliases="neverDerefAliases" sizeLimit="0" timeLimit="0" typesOnly="false">
+            <urn:filter>
+               <urn:present name="objectClass"/>
+            </urn:filter>
+            <attributes>
+               <attribute name="namingContexts"/>
+               <attribute name="supportedLDAPversion"/>
+               <attribute name="vendorName"/>
+               <attribute name="vendorVersion"/>
+               <attribute name="supportedSASLMechanisms"/>
+            </attributes>
+         </urn:searchRequest>
+      </urn:batchRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:username/><con:password/><con:domain/><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:preemptive>false</con:preemptive><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="urn:ihe:iti:2010:ProviderInformationQuery" addDefaultAction="false" addDefaultTo="true" generateMessageId="true" replyTo="http://www.w3.org/2005/08/addressing/anonymous"/><con:wsrmConfig version="1.2"/></con:call><con:call name="test-query-01" useWsAddressing="true"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://192.168.32.142:8080/hpd-ws/ProviderInformationDirectoryService</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+	xmlns:urn="urn:oasis:names:tc:DSML:2:0:core">
+   <soap:Body>
+      <urn:batchRequest requestID="0001" processing="sequential" 
+      responseOrder="sequential" onError="exit">
+         <urn:searchRequest requestID="01" 
+         		dn="ou=HCProfessional,dc=HPD,o=ehealth-suisse,c=ch" 
+         		scope="wholeSubtree" derefAliases="neverDerefAliases" sizeLimit="0" timeLimit="0" typesOnly="false">
+            <urn:filter>
+               <urn:present name="objectClass"/>
+            </urn:filter>
+         </urn:searchRequest>
+      </urn:batchRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:username>admin</con:username><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="urn:ihe:iti:2010:ProviderInformationQuery" addDefaultTo="true" replyTo="http://www.w3.org/2005/08/addressing/anonymous" generateMessageId="true"/><con:wsrmConfig version="1.2"/></con:call><con:call name="test-query-02" useWsAddressing="true" outgoingWss="admin_test"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://147.87.117.77:8080/hpd-ws/ProviderInformationDirectoryService</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:oasis:names:tc:DSML:2:0:core">
+   <soap:Body>
+      <urn:batchRequest>
+         <urn:searchRequest 
+         		dn="dc=HPD,o=ehealth-suisse,c=ch" 
+         		scope="wholeSubtree" 
+         		derefAliases="neverDerefAliases" 
+         		sizeLimit="100">
+            <urn:filter>
+               <urn:approxMatch name="displayName">
+                  <urn:value>Michael Smith</urn:value>
+               </urn:approxMatch>
+            </urn:filter>
+            <urn:attributes>
+               <urn:attribute name="HcPracticeLocation"/>
+               <urn:attribute name="HcPrincipalPracticeLocation"/>
+               <urn:attribute name="HcRegisteredAddr"/>
+               <urn:attribute name="HcServiceLocations"/>
+               <urn:attribute name="hpdProviderPracticeAddress"/>
+               <urn:attribute name="HcIdentifier"/>
+               <urn:attribute name="HcRegisteredName"/>
+               <urn:attribute name="HcRole"/>
+               <urn:attribute name="HcSpecialisation"/>
+               <urn:attribute name="HcOperatingHours"/>
+               <urn:attribute name="givenName"/>
+               <urn:attribute name="cn"/>
+               <urn:attribute name="memberOf"/>
+            </urn:attributes>
+         </urn:searchRequest>
+      </urn:batchRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="urn:ihe:iti:2010:ProviderInformationQuery" addDefaultAction="false" addDefaultTo="true" replyTo="http://www.w3.org/2005/08/addressing/anonymous" generateMessageId="true"/><con:wsrmConfig version="1.2"/></con:call><con:call name="test-query-03" wssPasswordType="PasswordText"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://147.87.117.77:8080/hpd-ws/ProviderInformationDirectoryService</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+	xmlns:urn="urn:oasis:names:tc:DSML:2:0:core">
+   <soap:Body>
+      <urn:batchRequest requestID="0001"
+      processing="sequential" responseOrder="sequential" onError="exit">
+         <urn:searchRequest 
+         		requestID="01" dn="" scope="baseObject" 
+         		derefAliases="neverDerefAliases" sizeLimit="0" timeLimit="0" typesOnly="false">
+            <urn:filter>
+               <urn:present name="objectClass"/>
+            </urn:filter>
+            <attributes>
+               <attribute name="namingContexts"/>
+               <attribute name="supportedLDAPversion"/>
+               <attribute name="vendorName"/>
+               <attribute name="vendorVersion"/>
+               <attribute name="supportedSASLMechanisms"/>
+            </attributes>
+         </urn:searchRequest>
+      </urn:batchRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:username/><con:password/><con:domain/><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:preemptive>false</con:preemptive><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="urn:ihe:iti:2010:ProviderInformationQuery"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="urn:ihe:iti:hpd:2010:ProviderInformationDownloadRequest" name="ProviderInformationDownloadRequest" bindingOperationName="ProviderInformationDownloadRequest" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="test-download-01" useWsAddressing="true" outgoingWss="admin_test"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>iso-8859-1</con:encoding><con:endpoint>http://147.87.117.77:8080/hpd-ws/ProviderInformationDirectoryService</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:cs="urn:ehealth-suisse:names:tc:CS:1" xmlns:urn1="urn:oasis:names:tc:DSML:2:0:core">
+   <soap:Header/>
+   <soap:Body>
+      <cs:downloadRequest requestID="0001" fromDate="2015-03-02T15:43:00" filterMyTransactions="true"></cs:downloadRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="urn:ihe:iti:2010:ProviderInformationDownload" addDefaultTo="true" replyTo="http://www.w3.org/2005/08/addressing/anonymous" generateMessageId="true"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer><con:outgoing mustUnderstand="false" actor=""><con:name>admin_test</con:name><con:username>admin</con:username><con:password>test</con:password><con:entry type="Username"><con:configuration><addCreated>true</addCreated><addNonce>true</addNonce><passwordType>PasswordText</passwordType></con:configuration></con:entry></con:outgoing></con:wssContainer><con:oAuth2ProfileContainer/><con:sensitiveInformation/></con:soapui-project>

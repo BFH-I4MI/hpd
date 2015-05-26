@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.2.0" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0"
+		name="hpd-providerdir">
+	<repository>mvn:org.apache.camel.karaf/apache-camel/${camel.version}/xml/features</repository>
+	<repository>mvn:org.apache.activemq/activemq-karaf/${activemq.version}/xml/features</repository>
+	<feature name="${project.artifactId}" version="${project.version}" description="HealthCare Provider Information Directory WS">
+		<feature version="${camel.version}">camel-core</feature>
+		<feature version="${camel.version}">camel-jms</feature>
+		<feature version="${camel.version}">camel-jaxb</feature>
+		<feature version="${camel.version}">camel-sql</feature>
+		<feature version="${camel.version}">camel-spring</feature>
+		<feature version="${camel.version}">camel-spring-ws</feature>
+		<feature version="${camel.version}">camel-spring-security</feature>
+		<feature version="${activemq.version}">activemq-camel</feature>
+		<bundle>mvn:${project.groupId}/${project.artifactId}/${project.version}</bundle>
+	</feature>
+</features>
+
