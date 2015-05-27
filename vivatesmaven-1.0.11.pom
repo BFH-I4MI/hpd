@@ -1,0 +1,460 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ch.vivates</groupId>
+	<artifactId>vivatesmaven</artifactId>
+	<version>1.0.11</version>
+	<packaging>pom</packaging>
+	<name>Vivates Maven Project</name>
+	<url>https://${confluence.host}/${confluence.space}/${project.artifactId}/</url>
+	<description>This Maven project acts as the main parent for all Vivates Maven projects. It defindes all common attributes.</description>
+	<organization>
+		<url>http://www.vivates.ch</url>
+		<name>Vivates</name>
+	</organization>
+
+	<!-- ***** DEVELOPERS ***** -->
+
+	<developers>
+		<developer>
+			<id>marmorife</id>
+			<name>Federico Marmori</name>
+			<organization>Vivates</organization>
+			<email>federico.marmori@vivates.ch</email>
+			<organizationUrl>http://www.vivates.ch</organizationUrl>
+			<timezone>+1</timezone>
+			<roles>
+				<role>Principal Architect</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>steppacherra</id>
+			<name>Ralf Steppacher</name>
+			<organization>Vivates</organization>
+			<email>ralf.steppacher@vivates.ch</email>
+			<organizationUrl>http://www.vivates.ch</organizationUrl>
+			<timezone>+1</timezone>
+			<roles>
+				<role>Senior Software Engineer</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<!-- NOTE: The following Maven elements are eligible for inheritance:
+	       * dependencies
+           * developers and contributors
+           * plugin lists
+           * reports lists
+           * plugin executions with matching ids
+           * plugin configuration -->
+
+	<!-- ***** PROPERTIES ***** -->
+
+	<properties>
+		<stash.scheme>https</stash.scheme>
+		<stash.host>share.vivates.ch</stash.host>
+		<stash.path>stash/scm</stash.path>
+		<nexus.scheme>https</nexus.scheme>
+		<nexus.host>share.vivates.ch</nexus.host>
+		<confluence.host>share.vivates.ch</confluence.host>
+		<confluence.space>unknown at this time</confluence.space>
+		<!-- ** Miscellaneous ** -->
+		<maven.build.timestamp.format>yyyy.MM.dd hh:mm:ss</maven.build.timestamp.format>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- ** Java Version Compiler ** -->
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<!-- ** Plugin Versions ** -->
+		<!-- * Core * -->
+		<maven.war.version>2.4</maven.war.version>
+		<maven.ear.version>2.9.1</maven.ear.version>
+		<maven.jar.version>2.5</maven.jar.version>
+		<maven.clean.version>2.5</maven.clean.version>
+		<maven.compiler.version>3.1</maven.compiler.version>
+		<maven.deploy.version>2.8.1</maven.deploy.version>
+		<maven.failsave.version>2.17</maven.failsave.version>
+		<maven.install.version>2.5.1</maven.install.version>
+		<maven.resources.version>2.6</maven.resources.version>
+		<maven.site.version>3.3</maven.site.version>
+		<maven.surefire.version>2.17</maven.surefire.version>
+		<!-- * Tools * -->
+		<maven.source.version>2.2.1</maven.source.version>
+		<migration.plugin.version>1.0.0</migration.plugin.version>
+		<maven.cargo.version>1.4.8</maven.cargo.version>
+		<maven.enforcer.version>1.3.1</maven.enforcer.version>
+		<maven.help.version>2.2</maven.help.version>
+		<maven.assembly.version>2.4</maven.assembly.version>
+		<maven.dependency.version>2.8</maven.dependency.version>
+		<maven.versions.version>2.1</maven.versions.version>
+		<maven.release.version>2.5</maven.release.version>
+		<!--maven.release.version>2.4.2</maven.release.version>
+		<maven.scm.version>1.8.1</maven.scm.version-->
+		<maven.buildnumber.version>1.3</maven.buildnumber.version>
+		<!-- * Reporting * -->
+		<maven.changelog.version>2.2</maven.changelog.version>
+		<maven.changes.version>2.10</maven.changes.version>
+		<maven.javadoc.version>2.9.1</maven.javadoc.version>
+		<maven.surefire-report.version>2.17</maven.surefire-report.version>
+		<maven.build-helper.version>1.9</maven.build-helper.version>
+		<maven.karaf.version>3.0.1</maven.karaf.version>
+		<maven.bundle.version>2.5.3</maven.bundle.version>
+	</properties>
+
+	<scm>
+		<url>${stash.scheme}://${stash.host}/${stash.path}/auth/vivatesmaven</url>
+		<connection>scm:git:${stash.scheme}://${stash.host}/${stash.path}/auth/vivatesmaven.git</connection>
+		<developerConnection>scm:git:${stash.scheme}://${stash.host}/${stash.path}/auth/vivatesmaven.git</developerConnection>
+		<tag>vivatesmaven-1.0.11</tag>
+	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>vivates-snapshots</id>
+			<name>vivates-snapshots</name>
+			<url>${nexus.scheme}://${nexus.host}/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>vivates-releases</id>
+			<name>vivates-releases</name>
+			<url>${nexus.scheme}://${nexus.host}/nexus/content/repositories/releases</url>
+		</repository>
+	</distributionManagement>
+
+
+	<!-- ***** BUILD ***** -->
+
+	<build>
+		<defaultGoal>install</defaultGoal>
+		<!-- *** PLUGIN MANAGEMENT *** -->
+		<pluginManagement>
+			<plugins>
+				<!-- ** Maven Clean Plugin ** -->
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>${maven.clean.version}</version>
+				</plugin>
+				<!-- ** Maven Compiler Plugin ** -->
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven.compiler.version}</version>
+					<configuration>
+						<source>${maven.compiler.source}</source>
+						<target>${maven.compiler.target}</target>
+						<showWarnings>true</showWarnings>
+						<fork>false</fork>
+						<maxmem>512m</maxmem>
+						<meminitial>64m</meminitial>
+					</configuration>
+				</plugin>
+				<!-- ** Maven Deploy Plugin ** -->
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>${maven.deploy.version}</version>
+				</plugin>
+				<!-- ** Maven Install Plugin ** -->
+				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>${maven.install.version}</version>
+					<configuration>
+						<createChecksum>true</createChecksum>
+					</configuration>
+				</plugin>
+				<!-- ** Maven Resources Plugin ** -->
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>${maven.resources.version}</version>
+				</plugin>
+				<!-- ** Maven Surefire Plugin ** -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven.surefire.version}</version>
+					<configuration>
+						<argLine>-Xmx1024m</argLine>
+					</configuration>
+				</plugin>
+				<!-- ** Maven Site Plugin ** -->
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>${maven.site.version}</version>
+					<configuration>
+						<locales>en,de</locales>
+						<stagingDirectory>${basedir}\site</stagingDirectory>
+					</configuration>
+				</plugin>
+				<!-- ** Maven Source Plugin ** -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>${maven.source.version}</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- ** Maven-dependency-plugin ** -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>${maven.dependency.version}</version>
+					<executions>
+						<execution>
+							<id>install</id>
+							<phase>install</phase>
+							<goals>
+								<goal>sources</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- ** Maven Help Plugin ** -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-help-plugin</artifactId>
+					<version>${maven.help.version}</version>
+					<executions>
+						<execution>
+							<id>project-info</id>
+							<inherited>true</inherited>
+							<phase>validate</phase>
+							<goals>
+								<goal>all-profiles</goal>
+								<goal>active-profiles</goal>
+								<goal>expressions</goal>
+								<goal>system</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- ** Maven War Plugin** -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>${maven.war.version}</version>
+				</plugin>
+				<!-- ** Maven EAR Plugin** -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-ear-plugin</artifactId>
+					<version>${maven.ear.version}</version>
+				</plugin>
+				<!-- ** Maven Jar Plugin** -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${maven.jar.version}</version>
+				</plugin>
+				<!-- ** Maven Java-Doc Plugin ** -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${maven.javadoc.version}</version>
+					<configuration>
+						<show>public</show>
+					</configuration>
+				</plugin>
+				<!-- ** Maven Release Plugin ** -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>${maven.release.version}</version>
+					<!--dependencies>
+						<dependency>
+							<groupId>org.apache.maven.scm</groupId>
+							<artifactId>maven-scm-api</artifactId>
+							<version>${maven.scm.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.apache.maven.scm</groupId>
+							<artifactId>maven-scm-provider-gitexe</artifactId>
+							<version>${maven.scm.version}</version>
+						</dependency>
+					</dependencies-->
+				</plugin>
+				<!-- ** Maven-enforcer-plugin ** -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>${maven.enforcer.version}</version>
+					<executions>
+						<execution>
+							<phase>validate</phase>
+							<id>enforce-versions</id>
+							<goals>
+								<goal>display-info</goal>
+								<goal>enforce</goal>
+							</goals>
+							<configuration>
+								<rules>
+									<requireMavenVersion>
+										<message>Maven 3.2.1 or later must be used!</message>
+										<!-- http://maven.apache.org/enforcer/enforcer-rules/versionRanges.html -->
+										<version>[3.2.1,)</version>
+									</requireMavenVersion>
+									<requireJavaVersion>
+										<version>1.7</version>
+									</requireJavaVersion>
+									<requirePluginVersions>
+										<message>Best Practice is to always define plugin versions!</message>
+										<banLatest>true</banLatest>
+										<banRelease>true</banRelease>
+										<banSnapshots>true</banSnapshots>
+										<phases>clean,install,deploy,site</phases>
+										<unCheckedPluginList>org.apache.maven.plugins:maven-enforcer-plugin</unCheckedPluginList>
+									</requirePluginVersions>
+								</rules>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- **Maven-versions-plugin** -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>${maven.versions.version}</version>
+				</plugin>
+				<!-- **Maven-buildnumber-plugin** -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>buildnumber-maven-plugin</artifactId>
+					<version>${maven.buildnumber.version}</version>
+				</plugin>
+				<!-- **Maven-cargo-plugin** -->
+				<plugin>
+					<groupId>org.codehaus.cargo</groupId>
+					<artifactId>cargo-maven2-plugin</artifactId>
+					<version>${maven.cargo.version}</version>
+				</plugin>
+				<!-- **MyBatis-Migration-Plugin** -->
+				<plugin>
+					<groupId>org.mybatis.maven</groupId>
+					<artifactId>maven-migration-plugin</artifactId>
+					<version>${migration.plugin.version}</version>
+				</plugin>
+				<!-- **Maven-assembly-plugin** -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${maven.assembly.version}</version>
+				</plugin>
+				<!-- **Maven-build-helper-plugin** -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>${maven.build-helper.version}</version>
+				</plugin>
+				<!-- **Maven-karaf-plugin** -->
+				<plugin>
+					<groupId>org.apache.karaf.tooling</groupId>
+					<artifactId>karaf-maven-plugin</artifactId>
+					<version>${maven.karaf.version}</version>
+					<extensions>true</extensions>
+				</plugin>
+				<!-- **Maven-bundle-plugin** -->
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>${maven.bundle.version}</version>
+					<extensions>true</extensions>
+				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-enforcer-plugin</artifactId>
+										<versionRange>[1.3.1,)</versionRange>
+										<goals>
+											<goal>display-info</goal>
+											<goal>enforce</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-help-plugin</artifactId>
+										<versionRange>[2.2,)</versionRange>
+										<goals>
+											<goal>active-profiles</goal>
+											<goal>all-profiles</goal>
+											<goal>expressions</goal>
+											<goal>system</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.karaf.tooling</groupId>
+										<artifactId>karaf-maven-plugin</artifactId>
+										<versionRange>[3.0.1,)</versionRange>
+										<goals>
+											<goal>features-generate-descriptor</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<!-- ***** Plugins ALWAYS ACTIVE in Children ***** -->
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-help-plugin</artifactId>
+			</plugin>
+		</plugins>
+
+	</build>
+
+	<!-- ***** DEPENDENCY MANAGEMENT ***** -->
+
+	<dependencyManagement>
+		<!-- common dependencies -->
+	</dependencyManagement>
+
+	<prerequisites>
+		<maven>3.2.1</maven>
+	</prerequisites>
+
+	<profiles>
+		<profile>
+			<id>jenkins</id>
+			<properties>
+				<stash.scheme>http</stash.scheme>
+				<stash.host>build-master:7990</stash.host>
+				<stash.path>stash/scm</stash.path>
+				<nexus.scheme>http</nexus.scheme>
+				<nexus.host>build-master:8081</nexus.host>
+			</properties>
+		</profile>
+	</profiles>
+
+</project>
