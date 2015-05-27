@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.soap.SOAPException;
+
 import org.apache.camel.Exchange;
 import org.apache.commons.lang.StringUtils;
 import org.apache.directory.api.ldap.model.cursor.CursorException;
@@ -29,6 +31,7 @@ import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 
+import ch.bfh.i4mi.validators.AttributeValidator;
 import ch.vivates.ihe.hpd.pid.exceptions.AuthorizationException;
 import ch.vivates.ihe.hpd.pid.model.cs.AddRequest;
 import ch.vivates.ihe.hpd.pid.model.cs.BatchRequest;
@@ -56,6 +59,8 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 	private String hpRdn = "ou=HCProfessional";
 
 	private LdapConnectionPool ldapConnectionPool;
+	
+	private AttributeValidator attributeValidator;
 
 	@Override
 	public void decide(Authentication authentication, Object exchange, Collection<ConfigAttribute> enforcingPolicies)
@@ -90,7 +95,9 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 		return true;
 	}
 
-
+	// Möglicherweise boolean für admin rechte als parameter mitgeben und neue security
+	// policy erstellen. Wäre die bessere Lösung
+	
 	private void checkScope(Authentication authentication, BatchRequest request) {
 		if (authentication.getDetails() == null) {
 			throw new AuthorizationException("Authentication is missing community ID.");
@@ -170,6 +177,18 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 							verifyCommunityLink(ownerDn, communityUID, connection);
 						} // TODO: We could detect an issue here: missing owner is a granted failure
 					}
+					
+					// ***************** tuk1 *****************
+					for (DsmlAttr attr : addRequest.getAttr()) {
+						for (String value : attr.getValue()) {
+								if (!attributeValidator.checkTerminology(attr.getName(), value)) {
+									throw new AuthorizationException(
+											"[INVALID FEED REQ] Your attributes must match to the terminology from the index server.");
+								}
+						}
+					}
+
+					// ***************** /tuk1 *****************
 					break;
 
 				case "ModifyRequest":
@@ -251,6 +270,10 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 		} catch (LdapException e) {
 			LOG.error("Unable authorize query for policy: SCOPE", e);
 			throw new AccessDeniedException("Unable authorize query for policy: SCOPE", e);
+		} catch (SOAPException e) {
+			LOG.error("Invalid terminology", e);
+			throw new AccessDeniedException(
+					"Unable authorize query for policy: TERMINOLOGY", e);
 		} finally {
 			if(connection != null) {
 				try {
