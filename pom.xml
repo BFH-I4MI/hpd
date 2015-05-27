@@ -12,6 +12,7 @@
 		<groupId>ch.vivates.hpd</groupId>
 		<artifactId>reactor</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>reactor-1.0.0-SNAPSHOT.pom</relativePath>
 	</parent>
 	
 	<properties>
