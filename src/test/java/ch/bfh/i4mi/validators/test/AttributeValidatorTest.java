@@ -30,7 +30,7 @@ public class AttributeValidatorTest {
 	@Test
 	public void testGetCurrentCodeSystemVersion() throws SOAPException {
 		// Positive test
-		assertEquals(av.getCurrentCodeSystemVersion("authorSpecialty"), 9l);
+		assertEquals(av.getCurrentCodeSystemVersion("authorSpecialty"), 6l);
 		
 		// Negative test
 		assertEquals(av.getCurrentCodeSystemVersion("author_Specialty"), -1l);
