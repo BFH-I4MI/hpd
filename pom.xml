@@ -6,7 +6,8 @@
 	<packaging>bundle</packaging>
 	<version>1.0.3-SNAPSHOT</version>
 	<name>HPD - Provider Information Directory</name>
-	<description>IHE Provider Information Directory Actor implementation.</description>
+	<description>IHE Provider Information Directory Actor implementation.
+	</description>
 
 	<parent>
 		<groupId>ch.vivates.hpd</groupId>
@@ -14,10 +15,11 @@
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>reactor-1.0.0-SNAPSHOT.pom</relativePath>
 	</parent>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.build.timestamp.format>yyyy.MM.dd hh:mm:ss</maven.build.timestamp.format>
+		<maven.build.timestamp.format>yyyy.MM.dd hh:mm:ss
+		</maven.build.timestamp.format>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<camel.version>2.14.0</camel.version>
@@ -28,13 +30,17 @@
 		<mysql.version>5.1.33</mysql.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.1.2</logback.version>
+		<cxf.version>3.1.0</cxf.version>
 	</properties>
 	<build>
 		<resources>
-			<!-- Another WTF: If you enable resource filtering then the maven-bundle-plugin has its own go at property replacement, not just the resource 
-				plugin. If the bundle plugin finds properties it cannot replace it spits out loads of errors and might even run out of heap space. Because the 
-				Spring config file and potentially others contain properties that maven is not concerned about, we need to limit maven property replacement to 
-				the file(s) that maven should care about. -->
+			<!-- Another WTF: If you enable resource filtering then the maven-bundle-plugin 
+				has its own go at property replacement, not just the resource plugin. If 
+				the bundle plugin finds properties it cannot replace it spits out loads of 
+				errors and might even run out of heap space. Because the Spring config file 
+				and potentially others contain properties that maven is not concerned about, 
+				we need to limit maven property replacement to the file(s) that maven should 
+				care about. -->
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
@@ -77,8 +83,10 @@
 					</execution>
 				</executions>
 				<configuration>
-					<schemaDirectory>${project.basedir}/src/main/resources/META-INF/xsd</schemaDirectory>
-					<bindingDirectory>${project.basedir}/src/main/resources/META-INF/xjb</bindingDirectory>
+					<schemaDirectory>${project.basedir}/src/main/resources/META-INF/xsd
+					</schemaDirectory>
+					<bindingDirectory>${project.basedir}/src/main/resources/META-INF/xjb
+					</bindingDirectory>
 				</configuration>
 			</plugin>
 			<!-- Documentation at http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html -->
@@ -162,7 +170,8 @@
 							resolution:=optional,
 							*
 						</Import-Package>
-						<Include-Resource>META-INF=src/main/resources/META-INF</Include-Resource>
+						<Include-Resource>META-INF=src/main/resources/META-INF
+						</Include-Resource>
 					</instructions>
 				</configuration>
 			</plugin>
@@ -376,7 +385,8 @@
 		<!-- Apache commons -->
 		<dependency>
 			<groupId>org.apache.servicemix.bundles</groupId>
-			<artifactId>org.apache.servicemix.bundles.commons-httpclient</artifactId>
+			<artifactId>org.apache.servicemix.bundles.commons-httpclient
+			</artifactId>
 			<version>3.1_7</version>
 			<exclusions>
 				<exclusion>
@@ -408,7 +418,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.servicemix.bundles</groupId>
-			<artifactId>org.apache.servicemix.bundles.commons-collections</artifactId>
+			<artifactId>org.apache.servicemix.bundles.commons-collections
+			</artifactId>
 			<version>3.2.1_3</version>
 		</dependency>
 
@@ -470,15 +481,15 @@
 			<version>${camel.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Command-line tools -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>ch.vivates.hpd</groupId> -->
-<!-- 			<artifactId>hpd-shell-commands</artifactId> -->
-<!-- 			<version>${project.version}</version> -->
-<!-- 			<scope>runtime</scope> -->
-<!-- 		</dependency> -->
-		
+		<!-- <dependency> -->
+		<!-- <groupId>ch.vivates.hpd</groupId> -->
+		<!-- <artifactId>hpd-shell-commands</artifactId> -->
+		<!-- <version>${project.version}</version> -->
+		<!-- <scope>runtime</scope> -->
+		<!-- </dependency> -->
+
 	</dependencies>
 
 	<profiles>
@@ -507,6 +518,46 @@
 				</plugins>
 			</build>
 		</profile>
+
+		<profile>
+			<id>CXF</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.cxf</groupId>
+						<artifactId>cxf-codegen-plugin</artifactId>
+						<version>${cxf.version}</version>
+						<executions>
+							<execution>
+								<configuration>
+									<sourceRoot>
+										${basedir}/target/generated-sources/termserver
+									</sourceRoot>
+									<wsdlOptions>
+										<wsdlOption>
+											<wsdl>
+												http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl
+											</wsdl>
+											<wsdlLocation>http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl
+											</wsdlLocation>
+										</wsdlOption>
+									</wsdlOptions>
+								</configuration>
+								<goals>
+									<goal>wsdl2java</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+
+
 	</profiles>
 
 </project>

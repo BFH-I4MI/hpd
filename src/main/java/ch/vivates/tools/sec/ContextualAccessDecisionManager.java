@@ -385,6 +385,10 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 		this.ldapConnectionPool = ldapConnectionPool;
 	}
 	
+	public void setAttributeValidator(AttributeValidator attributeValidator) {
+		this.attributeValidator = attributeValidator;
+	}
+	
 	private class CaseInsensitiveArrayList extends ArrayList<String> {
 		
 		private static final long serialVersionUID = 4937525101490935626L;

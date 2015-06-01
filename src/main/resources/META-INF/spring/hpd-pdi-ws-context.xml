@@ -120,7 +120,7 @@
 	</bean>
 
 	<bean id="attrValidatorFileInputStream" class="java.io.FileInputStream">
-		<constructor-arg value="AttributeValidator/AttributeValidator.properties" />
+		<constructor-arg value="${hpd.pid.attr_validator.properties}" />
 	</bean>
 
 	<bean id="attrValidatorBufferedInputStream" class="java.io.BufferedInputStream">
