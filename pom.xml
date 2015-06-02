@@ -30,7 +30,9 @@
 		<mysql.version>5.1.33</mysql.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.1.2</logback.version>
+		<!-- tuk1 -->
 		<cxf.version>3.1.0</cxf.version>
+		<!-- /tuk1 -->
 	</properties>
 	<build>
 		<resources>
@@ -192,6 +194,32 @@
 					</execution>
 				</executions>
 			</plugin>
+					
+			<!--  <plugin>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-codegen-plugin</artifactId>
+				<version>${cxf.version}</version>
+
+				<executions>
+					<execution>
+						<id>generate-sources</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<sourceRoot>${project.build.directory}/generated-sources/termserver
+							</sourceRoot>
+							<wsdlOptions>
+								<wsdlOption>
+									<wsdl>http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl
+									</wsdl>
+								</wsdlOption>
+							</wsdlOptions>
+						</configuration>
+						<goals>
+							<goal>wsdl2java</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>-->
 		</plugins>
 	</build>
 	<dependencies>
@@ -519,6 +547,7 @@
 			</build>
 		</profile>
 
+		<!--  Added by tuk1 -->
 		<profile>
 			<id>CXF</id>
 			<activation>
@@ -533,13 +562,11 @@
 						<executions>
 							<execution>
 								<configuration>
-									<sourceRoot>
-										${basedir}/target/generated-sources/termserver
+									<sourceRoot> ${basedir}/target/generated-sources/termserver
 									</sourceRoot>
 									<wsdlOptions>
 										<wsdlOption>
-											<wsdl>
-												http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl
+											<wsdl> http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl
 											</wsdl>
 											<wsdlLocation>http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl
 											</wsdlLocation>
@@ -555,8 +582,44 @@
 				</plugins>
 			</build>
 		</profile>
+		<!-- / Added by tuk1 -->
 
-
+      <profile>
+         <id>Metro</id>
+         <dependencies>
+            <dependency>
+               <groupId>org.glassfish.metro</groupId>
+               <artifactId>webservices-rt</artifactId>
+               <version>2.3</version>
+            </dependency>
+         </dependencies>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.jvnet.jax-ws-commons</groupId>
+                  <artifactId>jaxws-maven-plugin</artifactId>
+                  <version>2.3</version>
+                  <executions>
+                     <execution>
+                        <goals>
+                           <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                           <wsdlUrls>
+                           <wsdlUrl>http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl</wsdlUrl>
+                           </wsdlUrls>
+                           <sourceDestDir>${basedir}/target/generated-sources/termserver</sourceDestDir>
+                           <!-- Needed with JAXP 1.5, see https://netbeans.org/bugzilla/show_bug.cgi?id=241570#c2 -->
+                           <vmArgs>
+                               <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+                           </vmArgs>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
 
 	</profiles>
 
