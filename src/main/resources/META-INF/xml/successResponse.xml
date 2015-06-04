@@ -1,8 +1,6 @@
-<batchResponse xmlns="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3c.org/2001/XMLSchema"
-	xmlns:xsi="http://www.w3c.org/2001/XMLSchema-instance">
-	<batchResponse>
-		<addResponse>
-			<resultCode code="0" descr="success" />
-		</addResponse>
-	</batchResponse >
+<batchResponse xmlns="urn:oasis:names:tc:DSML:2:0:core"
+	xmlns:xsd="http://www.w3c.org/2001/XMLSchema" xmlns:xsi="http://www.w3c.org/2001/XMLSchema-instance">
+	<addResponse>
+		<resultCode code="0" descr="success" />
+	</addResponse>
 </batchResponse>
