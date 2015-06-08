@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+
 public class CertificateStore {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CertificateStore.class);

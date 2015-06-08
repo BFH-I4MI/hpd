@@ -114,8 +114,18 @@ public class AttributeValidator {
 	}
 	
 	public boolean checkTerminology(String anAttrName, String anAttrValue) throws SOAPException {
-		if (this.currentConceptCodeFilter(
-				attributeValidatorSettings.getTranslation(anAttrName), anAttrValue) == null) {
+		if(anAttrName.equalsIgnoreCase("businessCategory") && anAttrValue.equalsIgnoreCase("community")) {
+			return true;
+		}
+		
+		String indexServerAttrName = attributeValidatorSettings.getTranslation(anAttrName);
+		if(indexServerAttrName == null) {
+			return false;
+		} else if(indexServerAttrName.equalsIgnoreCase("NoCodeSystem")) {
+			// There is no code system for the attribute
+			return true;
+		} else if (this.currentConceptCodeFilter(
+				indexServerAttrName, anAttrValue) == null) {
 			// In the code system for anAttrName was no value equals anAttrValue
 			return false;
 		}

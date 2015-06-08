@@ -181,6 +181,7 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 					// ***************** tuk1 *****************
 					for (DsmlAttr attr : addRequest.getAttr()) {
 						for (String value : attr.getValue()) {
+							LOG.info("Attrname: " + attr.getName() + " value: " +value);
 								if (!attributeValidator.checkTerminology(attr.getName(), value)) {
 									throw new AuthorizationException(
 											"[INVALID FEED REQ] Your attributes must match to the terminology from the index server.");
