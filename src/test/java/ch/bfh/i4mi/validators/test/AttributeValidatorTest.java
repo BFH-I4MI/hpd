@@ -53,7 +53,7 @@ public class AttributeValidatorTest {
 		assertTrue(av.checkTerminology("HcSpecialisation", "260049"));
 		assertTrue(av.checkTerminology("businessCategory", "190005"));
 		assertFalse(av.checkTerminology("HcSpecialisation", "190005"));
-		assertFalse(av.checkTerminology("asdf", "asdf"));
+		assertTrue(av.checkTerminology("asdf", "asdf"));
 		assertTrue(av.checkTerminology("hcIdentifier", "asdf"));
 	}
 }

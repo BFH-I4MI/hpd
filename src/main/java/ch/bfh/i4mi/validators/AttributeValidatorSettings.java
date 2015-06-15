@@ -2,6 +2,7 @@ package ch.bfh.i4mi.validators;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -16,7 +17,7 @@ public class AttributeValidatorSettings {
 		try {
 			loadSettings();
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage() + ":" + e.getStackTrace());
+			throw new RuntimeException(e.getMessage() + ":" + Arrays.toString(e.getStackTrace()));
 		}
 	}
 	

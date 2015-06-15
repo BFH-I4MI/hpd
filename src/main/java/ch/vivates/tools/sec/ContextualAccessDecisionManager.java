@@ -150,8 +150,7 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 					}
 					
 					// ***************** tuk1 *****************
-					if (attributesMap.get("objectClass").contains(
-							"businessCategory")) {
+					if (attributesMap.get("businessCategory") != null) {
 						for (DsmlAttr attr : addRequest.getAttr()) {
 							// Checks if:
 							//  - the attribute is 'businessCategory'
@@ -171,7 +170,8 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 					// ***************** /tuk1 *****************
 
 					// ADD-REL: New owner ORG in community
-					if (targetAddDn.contains(relRdn)) {
+					// If user is 'root' community link verification is deactivated
+					if (targetAddDn.contains(relRdn) && !authentication.getName().equalsIgnoreCase("root")) {
 						String ownerDn = attributesMap.get("owner").get(0);
 						if (!StringUtils.isBlank(ownerDn) && connection.exists(ownerDn)) {
 							verifyCommunityLink(ownerDn, communityUID, connection);
@@ -181,10 +181,10 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 					// ***************** tuk1 *****************
 					for (DsmlAttr attr : addRequest.getAttr()) {
 						for (String value : attr.getValue()) {
-							LOG.info("Attrname: " + attr.getName() + " value: " +value);
+							LOG.info("Attrname: " + attr.getName() + " value: " + value);
 								if (!attributeValidator.checkTerminology(attr.getName(), value)) {
 									throw new AuthorizationException(
-											"[INVALID FEED REQ] Your attributes must match to the terminology from the index server.");
+											"[INVALID FEED REQ] Attribute: '" + attr.getName() + "' value: '" + value + "' does not match with the terminology.");
 								}
 						}
 					}
@@ -194,6 +194,12 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 
 				case "ModifyRequest":
 					ModifyRequest modRequest = (ModifyRequest) op;
+					
+					for(DsmlModification dsmlMod : modRequest.getModification()) {
+						if(dsmlMod.getValue() == null || dsmlMod.getValue().isEmpty()) {
+							throw new AuthorizationException("[INVALID FEED REQ] Use REMOVE operation to remove attributes.");
+						}
+					}
 					Map<String, DsmlModification> modificationsMap = getModificationsMap(modRequest);
 
 					String targetModDn = modRequest.getDn();
@@ -212,11 +218,39 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 						}
 						
 						// MOD-REL: New owner ORG in community
-						DsmlModification ownerModificaiton = modificationsMap.get("owner");
-						if(ownerModificaiton != null && "replace".equals(ownerModificaiton.getOperation())) {
-							if(!ownerModificaiton.getValue().isEmpty()) {
-								verifyCommunityLink(ownerModificaiton.getValue().get(0), communityUID, connection);
+						DsmlModification ownerModification = modificationsMap.get("owner");
+						if(ownerModification != null && "replace".equals(ownerModification.getOperation())) {
+							if(!ownerModification.getValue().isEmpty()) {
+								verifyCommunityLink(ownerModification.getValue().get(0), communityUID, connection);
 							} // TODO: We could detect an issue here: empty owner is a granted failure
+							
+//							if(ownerModification.getValue().get(0).equals(targetModDn)) {
+//								// User trys to set owner equal to the modification target
+//								if(!authentication.getName().equalsIgnoreCase("root")) {									
+//								throw new AuthorizationException(
+//										"[INVALID FEED REQ] Set Attribute 'owner' equal to modification target is only allowed for user 'root'.");	
+//								}
+//								
+//								DsmlModification businessCategoryModification = modificationsMap.get("businessCategory");
+//								if(businessCategoryModification != null && "replace".equals(businessCategoryModification.getOperation())) {
+//									if(businessCategoryModification.getValue().isEmpty() || !ownerModification.getValue().get(0).equalsIgnoreCase("Community")) {
+//										throw new AuthorizationException(
+//												"[INVALID FEED REQ] Value for modification of 'businessCategory' is either empty or not equal 'Community'");	
+//									}
+//								} else {
+//									throw new AuthorizationException(
+//											"[INVALID FEED REQ] Set Attribute 'owner' equal to modification target must be combined with the modification businessCategory to 'Community'");	
+//								}
+//							}
+							
+							DsmlModification businessCategoryModification = modificationsMap.get("businessCategory");
+							if(businessCategoryModification != null && "replace".equals(businessCategoryModification.getOperation())) {
+								if(!businessCategoryModification.getValue().isEmpty()) {
+									if(businessCategoryModification.getValue().get(0).equalsIgnoreCase("Community")  && !authentication.getName().equalsIgnoreCase("root"))
+									throw new AuthorizationException(
+											"[INVALID FEED REQ] Modification of 'businessCategory' to 'Community' is only allowed for 'root'.");	
+								}
+							}
 						}
 					}
 

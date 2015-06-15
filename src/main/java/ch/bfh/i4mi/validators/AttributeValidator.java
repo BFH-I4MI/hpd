@@ -114,15 +114,18 @@ public class AttributeValidator {
 	}
 	
 	public boolean checkTerminology(String anAttrName, String anAttrValue) throws SOAPException {
+		// The value 'community' can only be set by the user 'root'. The value is not in the terminology.
 		if(anAttrName.equalsIgnoreCase("businessCategory") && anAttrValue.equalsIgnoreCase("community")) {
 			return true;
 		}
 		
 		String indexServerAttrName = attributeValidatorSettings.getTranslation(anAttrName);
 		if(indexServerAttrName == null) {
-			return false;
+			// If there is no translation, there is no code system for the attribute.
+			// If true, no exception occurs if it's a invalid attribute name.
+			return true;
 		} else if(indexServerAttrName.equalsIgnoreCase("NoCodeSystem")) {
-			// There is no code system for the attribute
+			// There is no code system for the attribute but its a valid attribute name.
 			return true;
 		} else if (this.currentConceptCodeFilter(
 				indexServerAttrName, anAttrValue) == null) {
