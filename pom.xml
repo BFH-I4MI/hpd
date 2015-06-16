@@ -69,6 +69,11 @@
 			<!-- Plugins with managed versions in parent project -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/ch/bfh/i4mi/interceptor/*</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.jvnet.jax-ws-commons</groupId>
@@ -455,14 +460,7 @@
 			</artifactId>
 			<version>3.2.1_3</version>
 		</dependency>
-		
-		<!-- Apache DS -->
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-core-api</artifactId>
-			<version>2.0.0-M19</version>
-		</dependency>
-		
+
 		<!-- XML processing -->
 		<dependency>
 			<groupId>org.apache.servicemix.bundles</groupId>
@@ -605,8 +603,24 @@
 
 		<profile>
 			<id>interceptors</id>
+			<dependencies>
+				<!-- Apache DS -->
+				<dependency>
+					<groupId>org.apache.directory.server</groupId>
+					<artifactId>apacheds-core-api</artifactId>
+					<version>2.0.0-M19</version>
+				</dependency>
+			</dependencies>
 			<build>
 				<plugins>
+				            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/ch/bfh/i4mi/interceptor/*</include>
+                    </includes>
+                </configuration>
+            </plugin>
 					<plugin>
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
