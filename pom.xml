@@ -455,7 +455,14 @@
 			</artifactId>
 			<version>3.2.1_3</version>
 		</dependency>
-
+		
+		<!-- Apache DS -->
+		<dependency>
+			<groupId>org.apache.directory.server</groupId>
+			<artifactId>apacheds-core-api</artifactId>
+			<version>2.0.0-M19</version>
+		</dependency>
+		
 		<!-- XML processing -->
 		<dependency>
 			<groupId>org.apache.servicemix.bundles</groupId>
@@ -598,14 +605,6 @@
 
 		<profile>
 			<id>interceptors</id>
-			<dependencies>
-				<!-- Apache DS -->
-				<dependency>
-					<groupId>org.apache.directory.server</groupId>
-					<artifactId>apacheds-core-api</artifactId>
-					<version>2.0.0-M19</version>
-				</dependency>
-			</dependencies>
 			<build>
 				<plugins>
 					<plugin>
