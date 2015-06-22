@@ -41,15 +41,15 @@ public class RelationshipChecker {
 			String ouHeathProRdn, OperationContext anOperationContext,
 			Entry anOpContextEntry, Attribute anAttribute) throws LdapException {
 
-			this.ownerAttributeName = anOwnerAttributeName;
-			this.memberOfAttributeName = aMemberOfAttributeName;
-			this.catAttrName = aCatAttrName;
-			this.catValueForCommunity = aCatValueForCommunity;
-			this.ouHealthOrgRdn = anOuHealthOrgRdn;
-			this.ouHealthProRdn = ouHeathProRdn;
-			this.opContext = anOperationContext;
-			this.opContextEntry = anOpContextEntry;
-			this.attribute = anAttribute;
+		this.ownerAttributeName = anOwnerAttributeName;
+		this.memberOfAttributeName = aMemberOfAttributeName;
+		this.catAttrName = aCatAttrName;
+		this.catValueForCommunity = aCatValueForCommunity;
+		this.ouHealthOrgRdn = anOuHealthOrgRdn;
+		this.ouHealthProRdn = ouHeathProRdn;
+		this.opContext = anOperationContext;
+		this.opContextEntry = anOpContextEntry;
+		this.attribute = anAttribute;
 	}
 
 	protected void checkAddRequest() throws LdapException {
@@ -69,22 +69,36 @@ public class RelationshipChecker {
 				}
 
 			} else if (isEntryOfOU(this.opContextEntry, this.ouHealthProRdn)) {
+
+				int comCounter = 0;
 				// HP
 				for (Value<?> value : this.attribute) {
 					Entry ownerOfRelationship = getOwnerOfRelationship(value);
 
 					if (!isEntryOfOU(ownerOfRelationship, this.ouHealthOrgRdn)) {
+						// Throw exception if the owner of the relationship
+						// object is not
+						// from the OU HcRegulatedOrganization
 						throw new LdapException(
 								"HPs can only be connected to organizations or a community.");
 					} else if (isEntryOfOU(ownerOfRelationship,
 							this.ouHealthOrgRdn)
 							&& isCommunity(ownerOfRelationship)) {
 						// Owner is a community not a HO and not the only value.
-						throw new LdapException(
-								"Community relationship for HPs is only allowed when there are no "
-										+ "other relationships.");
+						// Count the communities to check if they are mixed up
+						// with organizations.
+
+						comCounter++;
 					}
 				}
+
+				if (comCounter != 0
+						|| comCounter != this.opContextEntry.get(
+								this.memberOfAttributeName).size()) {
+					throw new LdapException(
+							"Community and organization relationships can not be mixed for HPs.");
+				}
+
 			} else {
 				throw new LdapException(
 						"Unexpected entry with multiple memberOf values.");
@@ -118,7 +132,7 @@ public class RelationshipChecker {
 		if (this.opContextEntry.get(this.memberOfAttributeName) == null
 				|| this.opContextEntry.get(this.memberOfAttributeName).size() < 1) {
 			LOG.debug("size() < 1");
-			// Single memberOf value
+			// No memberOf attributes
 			Entry ownerOfRelationship = getOwnerOfRelationship(this.attribute
 					.get());
 			if (isEntryOfOU(this.opContextEntry, this.ouHealthOrgRdn)) {
@@ -159,9 +173,11 @@ public class RelationshipChecker {
 								"Root-HO must not contain any non community relationships.");
 					}
 				} else if (isEntryOfOU(this.opContextEntry, this.ouHealthProRdn)) {
-					throw new LdapException(
-							"Community relationship for HPs is only allowed when there are no "
-									+ "other relationships.");
+					if (!isCommunity(ownerOfNewRelationship)) {
+						throw new LdapException(
+								"Community relationships for HPs are only allowed when there are no "
+										+ "relationships to HOs.");
+					}
 				}
 			} else if (isEntryOfOU(this.opContextEntry, this.ouHealthOrgRdn)) {
 				LOG.debug("isEntryofOU");
@@ -173,8 +189,8 @@ public class RelationshipChecker {
 					// The old relationship is to an HO, the new is to a
 					// community
 					throw new LdapException(
-							"Community relationship for HPs is only allowed when there are no "
-									+ "other relationships.");
+							"Community relationships for HPs are only allowed when there are no "
+									+ "relationships to HOs.");
 				}
 			}
 		} else {
@@ -182,24 +198,37 @@ public class RelationshipChecker {
 			// 1)
 			// Is already a multiple
 			LOG.debug("size() > 1");
-			Entry ownerOfRelationship = getOwnerOfRelationship(this.attribute
-					.get());
+			Entry ownerOfExistingRelationship = getOwnerOfRelationship(this.opContextEntry
+					.get(this.memberOfAttributeName).get());
+			
+			for (Value<?> value : this.attribute) {
+				LOG.debug("Value of owner: " + value.getString());
+				Entry ownerOfRelationship = getOwnerOfRelationship(value);
 
-			if (isEntryOfOU(this.opContextEntry, this.ouHealthOrgRdn)) {
-				// Is a Root-HO
-				LOG.debug("Is a Root-HO");
-				if (!isCommunity(ownerOfRelationship)) {
-					throw new LdapException(
-							"Root-HO must not contain any non community relationships.");
-				}
+				if (isEntryOfOU(this.opContextEntry, this.ouHealthOrgRdn)) {
+					// Is a Root-HO
+					LOG.debug("Is a Root-HO");
+					if (!isCommunity(ownerOfRelationship)) {
+						throw new LdapException(
+								"Root-HO must not contain any non community relationships.");
+					}
 
-			} else if (isEntryOfOU(this.opContextEntry, this.ouHealthProRdn)) {
-				// Is a HPProfessional
-				LOG.debug("Is a HPProfessional");
-				if (isCommunity(ownerOfRelationship)) {
-					throw new LdapException(
-							"Community relationship for HPs is only allowed when there are no "
-									+ "other relationships.");
+				} else if (isEntryOfOU(this.opContextEntry, this.ouHealthProRdn)) {
+					// Is a HPProfessional
+					LOG.debug("Is a HPProfessional");
+					if(isCommunity(ownerOfExistingRelationship)) {
+						if (!isCommunity(ownerOfRelationship)) {					
+							throw new LdapException(
+									"Community relationships for HPs is only allowed when there are no "
+											+ "relationships to organizations.");
+						}
+					} else if(isEntryOfOU(ownerOfExistingRelationship, this.ouHealthOrgRdn)) {
+						if (isCommunity(ownerOfRelationship)) {
+							throw new LdapException(
+									"Organization relationships for HPs is only allowed when there are no "
+											+ "relationships to communities.");
+						}
+					}
 				}
 			}
 		}
