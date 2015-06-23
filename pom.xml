@@ -69,11 +69,8 @@
 			<!-- Plugins with managed versions in parent project -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>**/ch/bfh/i4mi/interceptor/*</exclude>
-					</excludes>
-				</configuration>
+				<!-- <configuration> <excludes> <exclude>**/ch/bfh/i4mi/interceptor/*</exclude> 
+					</excludes> </configuration> -->
 			</plugin>
 			<plugin>
 				<groupId>org.jvnet.jax-ws-commons</groupId>
@@ -280,6 +277,13 @@
 			<artifactId>activemq-camel</artifactId>
 			<version>${activemq.version}</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<!-- Apache DS -->
+		<dependency>
+			<groupId>org.apache.directory.server</groupId>
+			<artifactId>apacheds-core-api</artifactId>
+			<version>2.0.0-M19</version>
 		</dependency>
 
 		<!-- ActiveMQ -->
@@ -613,14 +617,14 @@
 			</dependencies>
 			<build>
 				<plugins>
-				            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <include>**/ch/bfh/i4mi/interceptor/*</include>
-                    </includes>
-                </configuration>
-            </plugin>
+					<plugin>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<includes>
+								<include>**/ch/bfh/i4mi/interceptor/*</include>
+							</includes>
+						</configuration>
+					</plugin>
 					<plugin>
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>

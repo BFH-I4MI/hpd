@@ -12,6 +12,8 @@ import org.apache.directory.server.core.api.interceptor.context.OperationContext
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.bfh.i4mi.interceptor.RelationshipInterceptor;
+
 public class RelationshipChecker {
 	/**
 	 * Name of the attribute to check.
@@ -74,6 +76,10 @@ public class RelationshipChecker {
 				// HP
 				for (Value<?> value : this.attribute) {
 					Entry ownerOfRelationship = getOwnerOfRelationship(value);
+					LOG.debug("Value: " + value.getString());
+					LOG.debug("ownerOfRelationship: " + ownerOfRelationship.toString());
+					LOG.debug("isEntryOfOU: " + isEntryOfOU(ownerOfRelationship, this.ouHealthOrgRdn));
+					LOG.debug("isCommunity: " + isCommunity(ownerOfRelationship));
 
 					if (!isEntryOfOU(ownerOfRelationship, this.ouHealthOrgRdn)) {
 						// Throw exception if the owner of the relationship
@@ -92,8 +98,11 @@ public class RelationshipChecker {
 					}
 				}
 
+				LOG.debug("comCounter: " + comCounter);
+				LOG.debug("opContextEntry.size: " + this.opContextEntry.get(
+								this.memberOfAttributeName).size());
 				if (comCounter != 0
-						|| comCounter != this.opContextEntry.get(
+						&& comCounter != this.opContextEntry.get(
 								this.memberOfAttributeName).size()) {
 					throw new LdapException(
 							"Community and organization relationships can not be mixed for HPs.");
