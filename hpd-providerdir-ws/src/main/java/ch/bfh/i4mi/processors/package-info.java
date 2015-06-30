@@ -1,7 +1,6 @@
 /**
- * Example client for the HPD web service. 
+ * Contains the processors of the HPD project. 
  *
- * @version  %I%, %G%
  * @author  Kevin Tippenhauer
  */
 
