@@ -49,7 +49,7 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 		// RELATIONSHIP ATTRIBUTES ARE CHECKED FROM THE RELATIONSHIP INTERCEPTOR
 
 		try {
-			
+			// HcIdentifier geht nicht null ist möglich
 			orgAttrToCheck.add(new HPDAttributeSettings("HcIdentifier", SINGLE,
 					REQUIRED, 1, 1));
 
@@ -59,13 +59,11 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 					REQUIRED, 1, Integer.MAX_VALUE));
 			orgAttrToCheck.add(new HPDAttributeSettings("hpdProviderPracticeAddress",
 					MULTIPLE, OPTIONAL, 0, 2));
-			orgAttrToCheck.add(new HPDAttributeSettings("HcRegisteredName",
-					MULTIPLE, REQUIRED, 1, Integer.MAX_VALUE));
 
-			proAttrToCheck.add(new HPDAttributeSettings("uid", SINGLE, REQUIRED, 1, 1));
+			
+			// Professionals are tested and working.
 			proAttrToCheck.add(new HPDAttributeSettings("HcIdentifier", SINGLE,
 					REQUIRED, 1, 1));
-			proAttrToCheck.add(new HPDAttributeSettings("displayName", SINGLE, REQUIRED, 1, 1));
 			proAttrToCheck.add(new HPDAttributeSettings("hpdProviderPracticeAddress",
 					SINGLE, OPTIONAL, 0, 1));
 			proAttrToCheck.add(new HPDAttributeSettings("givenName", MULTIPLE,
