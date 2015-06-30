@@ -1,9 +1,8 @@
 /**
  * Example client for the HPD web service. 
  *
- * @since   0.0.1
+ * @version  %I%, %G%
  * @author  Kevin Tippenhauer
- * @version 0.0.1
  */
 
-package ch.bfh.i4mi.client;
+package ch.bfh.i4mi.processors;

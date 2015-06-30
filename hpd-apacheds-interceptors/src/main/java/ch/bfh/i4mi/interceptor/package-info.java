@@ -1,8 +1,9 @@
 /**
- * Contains the interceptors for validating dn and adding member attributes to
- * relationship entries.
+ * Contains the interceptors which validate the change requests sent to ApacheDS.
  * 
- * @author Kevin Tippenhauer
+ * @since   0.0.1
+ * @author  Kevin Tippenhauer
+ * @version 0.0.1
  */
 
 package ch.bfh.i4mi.interceptor;
