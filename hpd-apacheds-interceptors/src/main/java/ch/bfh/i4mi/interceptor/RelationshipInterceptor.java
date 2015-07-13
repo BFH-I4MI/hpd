@@ -113,8 +113,13 @@ public class RelationshipInterceptor extends BaseInterceptor {
 					rc.checkModifyAddRequest();
 				}
 			} else if (operation == ModificationOperation.REMOVE_ATTRIBUTE) {
+				int minNumberOfValues = 2;
+				if(modification.getAttribute() != null) {
+					minNumberOfValues = modification.getAttribute().size() + 1;
+				}
+				
 				if (attribute.getUpId().equalsIgnoreCase(MEMBER_OF_ATTR_NAME)) {
-					if (this.opContextEntry.get(MEMBER_OF_ATTR_NAME).size() <= 1
+					if (this.opContextEntry.get(MEMBER_OF_ATTR_NAME).size() < minNumberOfValues
 							&& !isCommunity(this.opContextEntry)) {
 						throw new LdapException(
 								"HOs and HPs must have at least one relationship.");

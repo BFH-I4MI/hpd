@@ -86,7 +86,8 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 			// Organizations
 			orgAttrToCheck.add(new HPDAttributeSettings("HcIdentifier", SINGLE,
 					REQUIRED, 1, 1));
-
+			orgAttrToCheck.add(new HPDAttributeSettings("uid", SINGLE,
+					REQUIRED, 1, 1));
 			orgAttrToCheck.add(new HPDAttributeSettings("o", MULTIPLE,
 					REQUIRED, 1, Integer.MAX_VALUE));
 			orgAttrToCheck.add(new HPDAttributeSettings("businessCategory",
