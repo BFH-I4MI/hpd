@@ -14,6 +14,13 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 @Configuration
 public class ClientConfiguration {
 	
+	/** The Constant USERNAME provides the username used by the HPDClient. */
+	private static final String USERNAME = "test";
+	
+	/** The Constant PASSWORD provides the password used by the HPDClient.*/
+	private static final String PASSWORD = "test";
+	
+	
 	/**
 	 * Instantiates a new client configuration.
 	 */
@@ -45,10 +52,11 @@ public class ClientConfiguration {
 	 * @param marshaller
 	 *            the marshaller used by the client
 	 * @return the HPD client instance
+	 * @throws Exception when HPDClient can not be created.
 	 */
 	@Bean
-	public final HPDClient hpdClient(final Jaxb2Marshaller marshaller) {
-		final HPDClient client = new HPDClient();
+	public final HPDClient hpdClient(final Jaxb2Marshaller marshaller) throws Exception {
+		final HPDClient client = new HPDClient(USERNAME, PASSWORD);
 		client.setDefaultUri("http://147.87.117.79:8080/hpd-ws/"
 				+ "ProviderInformationDirectoryService");
 		client.setMarshaller(marshaller);

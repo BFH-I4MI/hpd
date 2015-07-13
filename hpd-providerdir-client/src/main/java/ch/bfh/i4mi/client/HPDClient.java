@@ -43,10 +43,28 @@ import org.xml.sax.SAXException;
 import ch.vivates.ihe.hpd.pid.model.cs.BatchRequest;
 import ch.vivates.ihe.hpd.pid.model.cs.BatchResponse;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class HPDClient represents a client for the HPD web service.
  */
 public class HPDClient extends WebServiceGatewaySupport {
+	
+	/** The username. */
+	private String username;
+	
+	/** The password. */
+	private String password;
+	
+	
+	/**
+	 * Instantiates a new HPD client.
+	 * 
+	 * @throws Exception when username or password is NULL or empty.
+	 */
+	public HPDClient(String aUsername, String aPassword) throws Exception {
+		this.setUsername(aUsername);
+		this.setPassword(aPassword);
+	}
 
 	/**
 	 * Returns the BatchResponse for the Request if possible otherwise an
@@ -123,7 +141,7 @@ public class HPDClient extends WebServiceGatewaySupport {
 							.addChildElement("Username",
 									WSSecurityConstants.WSSE_PREFIX,
 									WSSecurityConstants.WSSE_NS);
-					userNameSOAPElement.addTextNode("com_be");
+					userNameSOAPElement.addTextNode(username);
 
 					// Add password to usernameToken
 					SOAPElement passwordSOAPElement = usernameTokenSOAPElement
@@ -131,7 +149,7 @@ public class HPDClient extends WebServiceGatewaySupport {
 									WSSecurityConstants.WSSE_PREFIX,
 									WSSecurityConstants.WSSE_NS);
 
-					passwordSOAPElement.addTextNode("com");
+					passwordSOAPElement.addTextNode(password);
 
 					SoapHeaderElement wsaAction = springSoapHeader
 							.addHeaderElement(new QName(
@@ -202,5 +220,51 @@ public class HPDClient extends WebServiceGatewaySupport {
 
 		transformer.transform(new DOMSource(doc), new StreamResult(
 				new OutputStreamWriter(out, "UTF-8")));
+	}
+
+
+	/**
+	 * Gets the username.
+	 *
+	 * @return the username
+	 */
+	public String getUsername() {
+		return username;
+	}
+
+	/**
+	 * Sets the username.
+	 *
+	 * @param username the new username
+	 * @throws Exception when username is null or empty
+	 */
+	public void setUsername(String username) throws Exception {
+		if(username == null || username.isEmpty()) {
+			throw new Exception("Username must not be 'null' or empty");
+		}
+
+		this.username = username;
+	}
+
+	/**
+	 * Gets the password.
+	 *
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * Sets the password.
+	 *
+	 * @param password the password to set
+	 * @throws Exception when password is NULL or empty.
+	 */
+	public void setPassword(String password) throws Exception {
+		if(password == null || password.isEmpty()) {
+			throw new Exception("Password must not be 'null' or empty");
+		}
+		this.password = password;
 	}
 }
