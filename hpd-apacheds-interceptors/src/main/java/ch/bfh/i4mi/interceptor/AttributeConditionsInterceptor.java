@@ -15,16 +15,42 @@ import org.apache.directory.server.core.api.interceptor.context.OperationContext
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class AttributeConditionsInterceptor checks if the special rules for the
+ * HPD are fulfilled on an request.
+ */
 public class AttributeConditionsInterceptor extends BaseInterceptor {
 
-	Logger LOG = LoggerFactory.getLogger(AttributeConditionsInterceptor.class);
+	/** The org.slf4j.Logger for this class. */
+	private Logger LOG = LoggerFactory
+			.getLogger(AttributeConditionsInterceptor.class);
 
-	private final static String OU_HEALTH_ORG = "ou=HCRegulatedOrganization";
-	private final static String OU_HEALTH_PRO = "ou=HCProfessional";
-	private final static Boolean SINGLE = true;
-	private final static Boolean MULTIPLE = false;
-	private final static Boolean OPTIONAL = true;
-	private final static Boolean REQUIRED = false;
+	/** The Constant OU_HEALTH_ORG contains the RDN for an organization. */
+	private static final String OU_HEALTH_ORG = "ou=HCRegulatedOrganization";
+
+	/** The Constant OU_HEALTH_PRO contains the RDN for a professional. */
+	private static final String OU_HEALTH_PRO = "ou=HCProfessional";
+
+	/** The Constant SINGLE contains the boolean value for a single attribute. */
+	private static final Boolean SINGLE = true;
+
+	/**
+	 * The Constant MULTIPLE contains the boolean value for a multiple
+	 * attribute.
+	 */
+	private static final Boolean MULTIPLE = false;
+
+	/**
+	 * The Constant OPTIONAL contains the boolean value for a optional
+	 * attribute.
+	 */
+	private static final Boolean OPTIONAL = true;
+
+	/**
+	 * The Constant REQUIRED contains the boolean value for a required
+	 * attribute.
+	 */
+	private static final Boolean REQUIRED = false;
 
 	/**
 	 * Contains the organizational attributes which are different from the IHE
@@ -41,34 +67,42 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 	/** The OperationContext. */
 	private OperationContext operationContext;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.apache.directory.server.core.api.interceptor.BaseInterceptor#init
+	 * (org.apache.directory.server.core.api.DirectoryService)
+	 */
 	public final void init(final DirectoryService aDirectoryService)
 			throws LdapException {
 		LOG.debug("Initialiazing the AttributeConditionsInterceptor");
 
-		// name, isSingle, isOptional, minOccurence, maxOccurence
-		// RELATIONSHIP ATTRIBUTES ARE CHECKED FROM THE RELATIONSHIP INTERCEPTOR
-
 		try {
-			// HcIdentifier geht nicht null ist möglich
+			// name, isSingle, isOptional, minOccurence, maxOccurence
+			// RELATIONSHIP ATTRIBUTES ARE CHECKED FROM THE RELATIONSHIP
+			// INTERCEPTOR
+
+			// Organizations
 			orgAttrToCheck.add(new HPDAttributeSettings("HcIdentifier", SINGLE,
 					REQUIRED, 1, 1));
 
-			orgAttrToCheck.add(new HPDAttributeSettings("o", MULTIPLE, REQUIRED, 1,
-					Integer.MAX_VALUE));
-			orgAttrToCheck.add(new HPDAttributeSettings("businessCategory", MULTIPLE,
+			orgAttrToCheck.add(new HPDAttributeSettings("o", MULTIPLE,
 					REQUIRED, 1, Integer.MAX_VALUE));
-			orgAttrToCheck.add(new HPDAttributeSettings("hpdProviderPracticeAddress",
-					MULTIPLE, OPTIONAL, 0, 2));
+			orgAttrToCheck.add(new HPDAttributeSettings("businessCategory",
+					MULTIPLE, REQUIRED, 1, Integer.MAX_VALUE));
+			orgAttrToCheck.add(new HPDAttributeSettings(
+					"hpdProviderPracticeAddress", MULTIPLE, OPTIONAL, 0, 2));
 
-			
-			// Professionals are tested and working.
+			// Professionals
 			proAttrToCheck.add(new HPDAttributeSettings("HcIdentifier", SINGLE,
 					REQUIRED, 1, 1));
-			proAttrToCheck.add(new HPDAttributeSettings("hpdProviderPracticeAddress",
-					SINGLE, OPTIONAL, 0, 1));
+			proAttrToCheck.add(new HPDAttributeSettings(
+					"hpdProviderPracticeAddress", SINGLE, OPTIONAL, 0, 1));
 			proAttrToCheck.add(new HPDAttributeSettings("givenName", MULTIPLE,
 					REQUIRED, 1, Integer.MAX_VALUE));
-			proAttrToCheck.add(new HPDAttributeSettings("sn", SINGLE, REQUIRED, 1, 1));
+			proAttrToCheck.add(new HPDAttributeSettings("sn", SINGLE, REQUIRED,
+					1, 1));
 		} catch (Exception e) {
 			LOG.debug(e.getMessage());
 		}
@@ -76,11 +110,19 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 		super.init(aDirectoryService);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.apache.directory.server.core.api.interceptor.BaseInterceptor#add(
+	 * org.apache
+	 * .directory.server.core.api.interceptor.context.AddOperationContext)
+	 */
 	@Override
 	public final void add(final AddOperationContext addOperationContext)
 			throws LdapException {
 		this.operationContext = addOperationContext;
-		Entry entry = operationContext.getEntry();
+		final Entry entry = operationContext.getEntry();
 
 		LOG.debug(">> OptionalRequiredOperation : AddContext for Dn '"
 				+ entry.getDn() + "'");
@@ -88,7 +130,6 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 		if (isEntryOfOU(entry, OU_HEALTH_ORG)) {
 			checkAddOp(orgAttrToCheck);
 		} else if (isEntryOfOU(entry, OU_HEALTH_PRO)) {
-			LOG.debug("Add Professional");
 			checkAddOp(proAttrToCheck);
 		}
 
@@ -96,14 +137,21 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 		next(addOperationContext);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.apache.directory.server.core.api.interceptor.BaseInterceptor#modify
+	 * (org
+	 * .apache.directory.server.core.api.interceptor.context.ModifyOperationContext
+	 * )
+	 */
 	@Override
 	public final void modify(final ModifyOperationContext modifyOperationContext)
 			throws LdapException {
-		List<Modification> items = modifyOperationContext.getModItems();
+		final List<Modification> items = modifyOperationContext.getModItems();
 		this.operationContext = modifyOperationContext;
-		Entry entry = operationContext.getEntry();
-
-		
+		final Entry entry = operationContext.getEntry();
 
 		LOG.debug(">> OptionalRequiredOperation : ModifyContext for Dn '"
 				+ entry.getDn() + "'");
@@ -119,10 +167,18 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 		next(modifyOperationContext);
 	}
 
-	private void checkAddOp(List<HPDAttributeSettings> attributesToCheck)
+	/**
+	 * Checks if an ADD-Operation is valid.
+	 *
+	 * @param attributesToCheck
+	 *            the attributes to check
+	 * @throws LdapException
+	 *             the ldap exception thrown on unexpected errors.
+	 */
+	private void checkAddOp(final List<HPDAttributeSettings> attributesToCheck)
 			throws LdapException {
-		Entry entry = operationContext.getEntry();
-		for (HPDAttributeSettings attributeToCheck : attributesToCheck) {
+		final Entry entry = operationContext.getEntry();
+		for (final HPDAttributeSettings attributeToCheck : attributesToCheck) {
 
 			Attribute attribute = entry
 					.get(attributeToCheck.getAttributeName());
@@ -142,7 +198,7 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 							+ "' occures more than once.");
 				}
 			} else {
-				// Must be a multiple value attribute.
+				// It's a multiple value attribute.
 
 				// Check if it fulfills the minimal number requirement.
 				if (entry.get(attributeToCheck.getAttributeName()).size() < attributeToCheck
@@ -170,8 +226,19 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 		}
 	}
 
-	private void checkModOp(Modification modification,
-			List<HPDAttributeSettings> attributesToCheck) throws LdapException {
+	/**
+	 * Check a Modification is valid.
+	 *
+	 * @param modification
+	 *            a Modification from a ModificationOperationContext
+	 * @param attributesToCheck
+	 *            the attributes to check
+	 * @throws LdapException
+	 *             the ldap exception thrown on unexpected errors.
+	 */
+	private void checkModOp(final Modification modification,
+			final List<HPDAttributeSettings> attributesToCheck)
+			throws LdapException {
 		Attribute attribute = modification.getAttribute();
 		for (HPDAttributeSettings attributeToCheck : attributesToCheck) {
 			if (attribute.getUpId().equalsIgnoreCase(
@@ -186,15 +253,27 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 				case REMOVE_ATTRIBUTE:
 					checkRemoveMod(attribute, attributeToCheck);
 					break;
+				default:
+					break;
 				}
 			}
 		}
 	}
 
-	private void checkRemoveMod(Attribute attribute, HPDAttributeSettings attrProperties)
-			throws LdapException {
+	/**
+	 * Check if a REMOVE-Modification is valid.
+	 *
+	 * @param attribute
+	 *            the attribute to remove
+	 * @param attrProperties
+	 *            the special attribute properties for this attribute
+	 * @throws LdapException
+	 *             the ldap exception thrown on unexpected errors.
+	 */
+	private void checkRemoveMod(final Attribute attribute,
+			final HPDAttributeSettings attrProperties) throws LdapException {
 		if (!attrProperties.isOptional()) {
-			Entry entry = this.operationContext.getEntry();
+			final Entry entry = this.operationContext.getEntry();
 			// Required, if size equals 1 throw exception
 			if (entry.get(attribute.getUpId()).size() == attrProperties
 					.getNumberOfMinOccurence()) {
@@ -205,9 +284,19 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 		}
 	}
 
-	private void checkReplaceMod(Attribute attribute,
-			HPDAttributeSettings attrProperties) throws LdapException {
-		Entry entry = this.operationContext.getEntry();
+	/**
+	 * Check if a REPLACE-Modification is valid.
+	 *
+	 * @param attribute
+	 *            the attribute to replace
+	 * @param attrProperties
+	 *            the special attribute properties for this attribute
+	 * @throws LdapException
+	 *             the ldap exception thrown on unexpected errors.
+	 */
+	private void checkReplaceMod(final Attribute attribute,
+			final HPDAttributeSettings attrProperties) throws LdapException {
+		final Entry entry = this.operationContext.getEntry();
 		if (entry.get(attribute.getUpId()).size() != 1) {
 			throw new LdapException(
 					"ModifyReplace operation on an attribute which doesn't exist "
@@ -215,19 +304,29 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 		}
 	}
 
-	private void checkAddMod(Attribute attribute, HPDAttributeSettings attrProperties)
-			throws LdapException {
+	/**
+	 * Check if an ADD-Modification is valid.
+	 *
+	 * @param attribute
+	 *            the attribute to add
+	 * @param attrProperties
+	 *            the special properties for this attribute
+	 * @throws LdapException
+	 *             the ldap exception thrown on unexpected errors.
+	 */
+	private void checkAddMod(final Attribute attribute,
+			final HPDAttributeSettings attrProperties) throws LdapException {
 		// Optional Single kein Attibute -> OK
 		// Optional Multi kein Attribute -> OK
 		// Optional Single mit Attribute -> FALSE
-		// Optional Multi mit Attribute -> anz. Attribute < max -> OK sonst
+		// Optional Multi mit Attribute -> anz. Attribute < max -> OK ansonsten
 		// FALSE
 		// Required Single kein Attribute -> sollte es nicht geben
 		// Required Multi kein Attribute -> sollte es nicht geben
 		// Required Single mit Attribute -> Fehler REPLACE verwenden
-		// Required Multi mit Attributeen -> anz. Attribute < max -> OK sonst
+		// Required Multi mit Attributen -> anz. Attribute < max -> OK ansonsten
 		// FALSE
-		Entry entry = this.operationContext.getEntry();
+		final Entry entry = this.operationContext.getEntry();
 		if (attrProperties.isSingleValue()) {
 			if (entry.get(attribute.getUpId()) != null) {
 				// There is already one attribute of this type, throw exception
@@ -247,11 +346,21 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 		}
 	}
 
+	/**
+	 * Checks if an entry is part of a OU.
+	 *
+	 * @param entry
+	 *            the entry
+	 * @param rdnName
+	 *            the rdn name of the OU
+	 * @return true, if entry is part of the OU
+	 */
 	private static boolean isEntryOfOU(final Entry entry, final String rdnName) {
+		Boolean isEntryOfOU = false;
 		if (entry.getDn().getRdn(1).getName().equals(rdnName)) {
-			return true;
+			isEntryOfOU = true;
 		}
-		return false;
+		return isEntryOfOU;
 	}
 
 }

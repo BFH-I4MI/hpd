@@ -12,29 +12,58 @@ import org.apache.directory.server.core.api.interceptor.context.OperationContext
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RelationshipChecker checks if a change on the relationships is valid.
+ */
 public class RelationshipChecker {
 	/**
 	 * Name of the attribute to check.
 	 */
 	private String ownerAttributeName;
 
+	/** The member of attribute name. */
 	private String memberOfAttributeName;
 
+	/** The cat attr name. */
 	private String catAttrName;
 
+	/** The cat value for community. */
 	private String catValueForCommunity;
 
+	/** The ou health org rdn. */
 	private String ouHealthOrgRdn;
 
+	/** The ou health pro rdn. */
 	private String ouHealthProRdn;
 
+	/** The op context. */
 	private OperationContext opContext;
+	
+	/** The op context entry. */
 	private Entry opContextEntry;
+	
+	/** The attribute. */
 	private Attribute attribute;
 
+	/** The Constant LOG. */
 	private static final Logger LOG = LoggerFactory
 			.getLogger(RelationshipInterceptor.class);
 
+	/**
+	 * Instantiates a new relationship checker.
+	 *
+	 * @param anOwnerAttributeName the an owner attribute name
+	 * @param aMemberOfAttributeName the a member of attribute name
+	 * @param aCatAttrName the a cat attr name
+	 * @param aCatValueForCommunity the a cat value for community
+	 * @param anOuHealthOrgRdn the an ou health org rdn
+	 * @param ouHeathProRdn the ou heath pro rdn
+	 * @param anOperationContext the an operation context
+	 * @param anOpContextEntry the an op context entry
+	 * @param anAttribute the an attribute
+	 * @throws LdapException the ldap exception
+	 */
 	RelationshipChecker(String anOwnerAttributeName,
 			String aMemberOfAttributeName, String aCatAttrName,
 			String aCatValueForCommunity, String anOuHealthOrgRdn,
@@ -52,6 +81,11 @@ public class RelationshipChecker {
 			this.attribute = anAttribute;
 	}
 
+	/**
+	 * Check add request.
+	 *
+	 * @throws LdapException the ldap exception
+	 */
 	protected void checkAddRequest() throws LdapException {
 		if (this.opContextEntry.get(this.memberOfAttributeName).size() > 1) {
 			// Multiple memberOf values
@@ -113,6 +147,11 @@ public class RelationshipChecker {
 		}
 	}
 
+	/**
+	 * Check modify add request.
+	 *
+	 * @throws LdapException the ldap exception
+	 */
 	protected void checkModifyAddRequest() throws LdapException {
 		LOG.debug("checkModifyAddRequest()");
 		if (this.opContextEntry.get(this.memberOfAttributeName) == null
@@ -206,6 +245,11 @@ public class RelationshipChecker {
 
 	}
 
+	/**
+	 * Check modify replace.
+	 *
+	 * @throws LdapException the ldap exception
+	 */
 	protected void checkModifyReplace() throws LdapException {
 		if (this.opContextEntry.get(this.memberOfAttributeName).size() != 1) {
 			throw new LdapException(
@@ -234,6 +278,13 @@ public class RelationshipChecker {
 		}
 	}
 
+	/**
+	 * Checks if is entry of ou.
+	 *
+	 * @param entry the entry
+	 * @param rdnName the rdn name
+	 * @return true, if is entry of ou
+	 */
 	private static boolean isEntryOfOU(final Entry entry, final String rdnName) {
 		if (entry.getDn().getRdn(1).getName().equals(rdnName)) {
 			return true;
@@ -241,6 +292,13 @@ public class RelationshipChecker {
 		return false;
 	}
 
+	/**
+	 * Checks if is community.
+	 *
+	 * @param entry the entry
+	 * @return true, if is community
+	 * @throws LdapInvalidAttributeValueException the ldap invalid attribute value exception
+	 */
 	private boolean isCommunity(Entry entry)
 			throws LdapInvalidAttributeValueException {
 		if (entry.get(this.catAttrName) != null
@@ -253,14 +311,11 @@ public class RelationshipChecker {
 
 	/**
 	 * Returns the owner of a relationship based on the relationship dn.
-	 * 
-	 * @param value
-	 *            Value containing the dn of the relationship.
+	 *
+	 * @param value            Value containing the dn of the relationship.
 	 * @return the owner entry of the relationship.
-	 * @throws LdapException
-	 *             thrown on invalid value.
-	 * @throws LdapInvalidDnException
-	 *             thrown on invalid value.
+	 * @throws LdapInvalidDnException             thrown on invalid value.
+	 * @throws LdapException             thrown on invalid value.
 	 */
 
 	private Entry getOwnerOfRelationship(final Value<?> value)

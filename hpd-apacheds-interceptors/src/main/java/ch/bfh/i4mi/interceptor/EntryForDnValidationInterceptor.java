@@ -35,7 +35,7 @@ public class EntryForDnValidationInterceptor extends BaseInterceptor {
     private static final Logger LOG = LoggerFactory
             .getLogger(EntryForDnValidationInterceptor.class);
 
-    /**
+	/**
      * Initialize the registries, normalizers.
      * @param aDirectoryService The DirectoryService for this interceptor
      * @throws LdapException thrown if an exception happens
@@ -54,20 +54,20 @@ public class EntryForDnValidationInterceptor extends BaseInterceptor {
     }
 
     @Override
-    public final void add(final AddOperationContext addOperationContext) throws LdapException {
-        this.operationContext = addOperationContext;
-        Entry entry = addOperationContext.getEntry();
+    public final void add(final AddOperationContext addOpContext) throws LdapException {
+        this.operationContext = addOpContext;
+        final Entry entry = addOpContext.getEntry();
         LOG.debug(">> DnValidationOperation : AddContext for Dn '"
                 + this.operationContext.getEntry().getDn() + "'");
 
-        for (String attributeNameToCheck : this.arrAttributeNamesToCheck) {
-            Attribute attribute = entry.get(attributeNameToCheck);
+        for (final String attributeNameToCheck : this.arrAttributeNamesToCheck) {
+            final Attribute attribute = entry.get(attributeNameToCheck);
             if (attribute != null) {
                 checkAttributeValue(attribute);
             }
         }
         LOG.debug("<< DnValidationOperation : successful");
-        next(addOperationContext);
+        next(addOpContext);
     }
 
     @Override
@@ -78,14 +78,14 @@ public class EntryForDnValidationInterceptor extends BaseInterceptor {
         LOG.debug(">> DnValidationOperation : ModifyContext for Dn '"
                 + this.operationContext.getEntry().getDn() + "'");
 
-        List<Modification> items = modifyOperationContext.getModItems();
+        final List<Modification> items = modifyOperationContext.getModItems();
 
-        for (String attributeNameToCheck : this.arrAttributeNamesToCheck) {
-            for (Modification modification : items) {
-                ModificationOperation operation = modification.getOperation();
+        for (final String attributeNameToCheck : this.arrAttributeNamesToCheck) {
+            for (final Modification modification : items) {
+                final ModificationOperation operation = modification.getOperation();
                 if (operation == ModificationOperation.ADD_ATTRIBUTE
                         || operation == ModificationOperation.REPLACE_ATTRIBUTE) {
-                    Attribute attribute = modification.getAttribute();
+                    final Attribute attribute = modification.getAttribute();
                     if (attribute.getUpId().equalsIgnoreCase(
                             attributeNameToCheck)) {
                         checkAttributeValue(attribute);
@@ -103,7 +103,7 @@ public class EntryForDnValidationInterceptor extends BaseInterceptor {
      * @throws LdapException thrown if an exception happens
      */
     protected final void checkAttributeValue(final Attribute attribute) throws LdapException {
-        Dn dn = new Dn(attribute.getString());
+        final Dn dn = new Dn(attribute.getString());
         
 //        LOG.debug("test: " + attribute.getString());
         
