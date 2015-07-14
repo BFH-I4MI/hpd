@@ -44,9 +44,6 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
-			<!-- <resource> <directory>src/main/java/ch/bfh/i4mi/interceptor</directory> 
-				<excludes> <exclude>**/*</exclude> </excludes> <filtering>false</filtering> 
-				</resource> -->
 			<resource>
 				<directory>src/main/resources</directory>
 				<includes>
@@ -65,8 +62,6 @@
 			<!-- Plugins with managed versions in parent project -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<!-- <configuration> <excludes> <exclude>**/ch/bfh/i4mi/interceptor/*</exclude> 
-					</excludes> </configuration> -->
 			</plugin>
 			<plugin>
 				<groupId>org.jvnet.jax-ws-commons</groupId>
@@ -129,7 +124,6 @@
 							*;scope=provided;type=!pom;groupId=commons-pool;artifactId=commons-pool;inline=false
 						</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
-						<!-- <Private-Package> !ch.bfh.i4mi.interceptor </Private-Package> -->
 						<Import-Package>
 							bsh.*;
 							resolution:=optional,
@@ -272,38 +266,6 @@
 			<version>${activemq.version}</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- Apache DS
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-core-api</artifactId>
-			<version>2.0.0-M19</version>
-		</dependency> -->
-
-	<!-- <dependency>
-			<groupId>org.apache.directory.api</groupId>
-			<artifactId>api-ldap-codec-core</artifactId>
-			<version>1.0.0-M30</version>
-		</dependency>
-<dependency>
-    <groupId>org.apache.geronimo.specs</groupId>
-    <artifactId>geronimo-jta_1.1_spec</artifactId>
-    <version>1.1.1</version>
-</dependency>
-
-<dependency>
-    <groupId>org.apache.cxf</groupId>
-    <artifactId>cxf-rt-transports-http</artifactId>
-    <version>3.1.1</version>
-</dependency>
-
-<dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>servlet-api</artifactId>
-    <version>2.5</version>
-</dependency>-->
-
-
 
 		<!-- ActiveMQ -->
 		<dependency>
@@ -574,7 +536,6 @@
 						<artifactId>karaf-maven-plugin</artifactId>
 						<extensions>true</extensions>
 						<configuration>
-						<!-- <aggregateFeatures>false</aggregateFeatures>-->
 						<aggregateFeatures>true</aggregateFeatures>
 							<includeTransitiveDependency>true</includeTransitiveDependency>
 						</configuration>
@@ -623,19 +584,5 @@
 				</plugins>
 			</build>
 		</profile>
-
-
-		<!-- <profile> <id>interceptors</id> <dependencies> Apache DS <dependency> 
-			<groupId>org.apache.directory.server</groupId> <artifactId>apacheds-core-api</artifactId> 
-			<version>2.0.0-M19</version> </dependency> </dependencies> <build> <plugins> 
-			<plugin> <artifactId>maven-compiler-plugin</artifactId> <configuration> <includes> 
-			<include>**/ch/bfh/i4mi/interceptor/*</include> </includes> </configuration> 
-			</plugin> <plugin> <artifactId>maven-surefire-plugin</artifactId> <configuration> 
-			<skip>true</skip> </configuration> </plugin> <plugin> <artifactId>maven-jar-plugin</artifactId> 
-			<executions> <execution> <phase>package</phase> <goals> <goal>jar</goal> 
-			</goals> <configuration> <classifier>interceptors</classifier> <includes> 
-			<include>ch/bfh/i4mi/interceptor/**</include> </includes> </configuration> 
-			</execution> </executions> </plugin> </plugins> </build> </profile> -->
 	</profiles>
-
 </project>
