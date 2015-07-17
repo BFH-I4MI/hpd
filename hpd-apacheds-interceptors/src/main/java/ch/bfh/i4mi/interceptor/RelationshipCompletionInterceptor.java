@@ -24,6 +24,9 @@ import org.slf4j.LoggerFactory;
 /**
  * This interceptor keeps the member attribute of relationships in
  * sync with the memberOf attribute from an HPI or HOI.
+ * 
+ * ATTENTION: This interceptor is not in sync with the webservice. Changes made to the LDAP
+ * through interceptors are not published to the update queue.
  *
  * @author Kevin Tippenhauer, Berner Fachhochschule
  */
@@ -32,12 +35,12 @@ public class RelationshipCompletionInterceptor extends BaseInterceptor {
 	/**
 	 * Name of the attribute to check.
 	 */
-	private final static String ATTRIBUTE_NAME = "memberof";
+	private static final String ATTRIBUTE_NAME = "memberof";
 	
 	/**
 	 * The operation context.
 	 */
-	OperationContext opContext;
+	private OperationContext opContext;
 
 	/**
 	 * The entry to which the operation context belongs to.
@@ -53,7 +56,7 @@ public class RelationshipCompletionInterceptor extends BaseInterceptor {
 	 * 
 	 * @param aDirectoryService
 	 *            the DirectoryService to initialize the parent.
-	 * @throws LdapException
+	 * @throws LdapException thrown exception on error.
 	 */
 	public final void init(final DirectoryService aDirectoryService)
 			throws LdapException {
@@ -61,6 +64,9 @@ public class RelationshipCompletionInterceptor extends BaseInterceptor {
 		super.init(aDirectoryService);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.apache.directory.server.core.api.interceptor.BaseInterceptor#add(org.apache.directory.server.core.api.interceptor.context.AddOperationContext)
+	 */
 	@Override
 	public final void add(final AddOperationContext addOperationContext)
 			throws LdapException {
@@ -85,6 +91,9 @@ public class RelationshipCompletionInterceptor extends BaseInterceptor {
 		next(addOperationContext);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.apache.directory.server.core.api.interceptor.BaseInterceptor#modify(org.apache.directory.server.core.api.interceptor.context.ModifyOperationContext)
+	 */
 	@Override
 	public final void modify(final ModifyOperationContext modifyOperationContext)
 			throws LdapException {
@@ -139,6 +148,9 @@ public class RelationshipCompletionInterceptor extends BaseInterceptor {
 		next(modifyOperationContext);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.apache.directory.server.core.api.interceptor.BaseInterceptor#delete(org.apache.directory.server.core.api.interceptor.context.DeleteOperationContext)
+	 */
 	@Override
 	public final void delete(final DeleteOperationContext deleteOperationContext)
 			throws LdapException {

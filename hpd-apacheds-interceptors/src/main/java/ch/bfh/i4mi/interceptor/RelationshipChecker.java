@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The Class RelationshipChecker checks if a change on the relationships is valid.
+ * 
+ * @author Kevin Tippenhauer, Berner Fachhochschule
  */
 public class RelationshipChecker {
 	/**
@@ -63,11 +65,11 @@ public class RelationshipChecker {
 	 * @param anAttribute the an attribute
 	 * @throws LdapException the ldap exception
 	 */
-	RelationshipChecker(String anOwnerAttributeName,
-			String aMemberOfAttributeName, String aCatAttrName,
-			String aCatValueForCommunity, String anOuHealthOrgRdn,
-			String ouHeathProRdn, OperationContext anOperationContext,
-			Entry anOpContextEntry, Attribute anAttribute) throws LdapException {
+	RelationshipChecker(final String anOwnerAttributeName,
+			final String aMemberOfAttributeName, final String aCatAttrName,
+			final String aCatValueForCommunity, final String anOuHealthOrgRdn,
+			final String ouHeathProRdn, final OperationContext anOperationContext,
+			final Entry anOpContextEntry, final Attribute anAttribute) throws LdapException {
 
 			this.ownerAttributeName = anOwnerAttributeName;
 			this.memberOfAttributeName = aMemberOfAttributeName;
@@ -85,7 +87,7 @@ public class RelationshipChecker {
 	 *
 	 * @throws LdapException the ldap exception
 	 */
-	protected void checkAddRequest() throws LdapException {
+	protected final void checkAddRequest() throws LdapException {
 		if (this.opContextEntry.get(this.memberOfAttributeName).size() > 1) {
 			// Multiple memberOf values
 
@@ -151,7 +153,7 @@ public class RelationshipChecker {
 	 *
 	 * @throws LdapException the ldap exception
 	 */
-	protected void checkModifyAddRequest() throws LdapException {
+	protected final void checkModifyAddRequest() throws LdapException {
 		LOG.debug("checkModifyAddRequest()");
 		if (this.opContextEntry.get(this.memberOfAttributeName) == null
 				|| this.opContextEntry.get(this.memberOfAttributeName).size() < 1) {
@@ -249,7 +251,7 @@ public class RelationshipChecker {
 	 *
 	 * @throws LdapException the ldap exception
 	 */
-	protected void checkModifyReplace() throws LdapException {
+	protected final void checkModifyReplace() throws LdapException {
 		if (this.opContextEntry.get(this.memberOfAttributeName).size() != 1) {
 			throw new LdapException(
 					"RelationshipInterceptor.ReplaceWrongNoOfAttr");
@@ -298,7 +300,7 @@ public class RelationshipChecker {
 	 * @return true, if is community
 	 * @throws LdapInvalidAttributeValueException the ldap invalid attribute value exception
 	 */
-	private boolean isCommunity(Entry entry)
+	private boolean isCommunity(final Entry entry)
 			throws LdapInvalidAttributeValueException {
 		if (entry.get(this.catAttrName) != null
 				&& entry.get(this.catAttrName).getString()

@@ -27,17 +27,17 @@ public class RelationshipDeletionInterceptor extends BaseInterceptor {
 	/**
 	 * Name of the organization unit with the entries to check.
 	 */
-	private final static String OU_NAME = "ou=Relationship";
+	private static final String OU_NAME = "ou=Relationship";
 
 	/**
 	 * Name of the attribute to check.
 	 */
-	private final static String ATTRIBUTE_NAME = "hpdProviderStatus";
+	private static final String ATTRIBUTE_NAME = "hpdProviderStatus";
 
 	/**
 	 * The operation context.
 	 */
-	OperationContext opContext;
+	private OperationContext opContext;
 
 	/**
 	 * The entry to which the operation context belongs to.
@@ -53,7 +53,7 @@ public class RelationshipDeletionInterceptor extends BaseInterceptor {
 	 * 
 	 * @param aDirectoryService
 	 *            the DirectoryService to initialize the parent.
-	 * @throws LdapException
+	 * @throws LdapException exception thrown on error.
 	 */
 	public final void init(final DirectoryService aDirectoryService)
 			throws LdapException {
@@ -61,6 +61,9 @@ public class RelationshipDeletionInterceptor extends BaseInterceptor {
 		super.init(aDirectoryService);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.apache.directory.server.core.api.interceptor.BaseInterceptor#delete(org.apache.directory.server.core.api.interceptor.context.DeleteOperationContext)
+	 */
 	@Override
 	public final void delete(final DeleteOperationContext deleteOperationContext)
 			throws LdapException {
@@ -84,6 +87,9 @@ public class RelationshipDeletionInterceptor extends BaseInterceptor {
 		next(deleteOperationContext);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.apache.directory.server.core.api.interceptor.BaseInterceptor#modify(org.apache.directory.server.core.api.interceptor.context.ModifyOperationContext)
+	 */
 	@Override
 	public final void modify(final ModifyOperationContext modifyOperationContext)
 			throws LdapException {

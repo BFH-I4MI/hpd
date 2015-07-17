@@ -2,6 +2,8 @@ package ch.bfh.i4mi.interceptor;
 
 /**
  * The Class HPDAttributeSettings represents the special HPD settings for an attribute.
+ * 
+ * @author Kevin Tippenhauer, Berner Fachhochschule
  */
 public class HPDAttributeSettings {
 	
@@ -27,8 +29,8 @@ public class HPDAttributeSettings {
 	 * @param anAttributeName the new attribute name
 	 * @throws IllegalArgumentException the exception thrown if the arguments are illegal
 	 */
-	public void setAttributeName(String anAttributeName) throws IllegalArgumentException {
-		if(anAttributeName == null || anAttributeName.isEmpty()) {
+	public final void setAttributeName(final String anAttributeName) throws IllegalArgumentException {
+		if (anAttributeName == null || anAttributeName.isEmpty()) {
 			throw new IllegalArgumentException();
 		}
 		this.attributeName = anAttributeName;
@@ -40,8 +42,8 @@ public class HPDAttributeSettings {
 	 * @param anIsSingleValue the new checks if is single value
 	 * @throws IllegalArgumentException the exception thrown if the arguments are illegal
 	 */
-	public void setIsSingleValue(Boolean anIsSingleValue) throws IllegalArgumentException {
-		if(anIsSingleValue == null) {
+	public final void setIsSingleValue(final Boolean anIsSingleValue) throws IllegalArgumentException {
+		if (anIsSingleValue == null) {
 			throw new IllegalArgumentException();
 		}
 		this.isSingleValue = anIsSingleValue;
@@ -53,8 +55,8 @@ public class HPDAttributeSettings {
 	 * @param anIsOptional the new checks if is optional
 	 * @throws IllegalArgumentException the exception thrown if the arguments are illegal
 	 */
-	public void setIsOptional(Boolean anIsOptional) throws IllegalArgumentException {
-		if(anIsOptional == null) {
+	public final void setIsOptional(final Boolean anIsOptional) throws IllegalArgumentException {
+		if (anIsOptional == null) {
 			throw new IllegalArgumentException();
 		}
 		this.isOptional = anIsOptional;
@@ -67,9 +69,9 @@ public class HPDAttributeSettings {
 	 * @param max the maximal occurrence
 	 * @throws IllegalArgumentException the exception thrown if the arguments are illegal
 	 */
-	public void setMinMaxOccurence(int min, int max) throws IllegalArgumentException {
+	public final void setMinMaxOccurence(final int min, final int max) throws IllegalArgumentException {
 		
-		if(min < 0) {
+		if (min < 0) {
 			throw new IllegalArgumentException("'min' is lesser than 0!");
 		} else if (max < 1) {
 			throw new IllegalArgumentException("'max' is lesser than 1!");
@@ -85,7 +87,7 @@ public class HPDAttributeSettings {
 	 *
 	 * @return the attribute name
 	 */
-	public String getAttributeName() {
+	public final String getAttributeName() {
 		return attributeName;
 	}
 	
@@ -94,7 +96,7 @@ public class HPDAttributeSettings {
 	 *
 	 * @return True, if the attribute is single
 	 */
-	public Boolean isSingleValue() {
+	public final Boolean isSingleValue() {
 		return isSingleValue;
 	}
 	
@@ -103,7 +105,7 @@ public class HPDAttributeSettings {
 	 *
 	 * @return True, if the attribute is optional
 	 */
-	public Boolean isOptional() {
+	public final Boolean isOptional() {
 		return isOptional;
 	}
 	
@@ -112,7 +114,7 @@ public class HPDAttributeSettings {
 	 *
 	 * @return the number of min occurence
 	 */
-	public int getNumberOfMinOccurence() {
+	public final int getNumberOfMinOccurence() {
 		return numberOfMinOccurence;
 	}
 	
@@ -121,7 +123,7 @@ public class HPDAttributeSettings {
 	 *
 	 * @return the number of max occurence
 	 */
-	public int getNumberOfMaxOccurence() {
+	public final int getNumberOfMaxOccurence() {
 		return numberOfMaxOccurence;
 	}
 	
@@ -135,11 +137,11 @@ public class HPDAttributeSettings {
 	 * @param aNumberOfMaxOccurence the a number of max occurence
 	 * @throws IllegalArgumentException the illegal argument exception
 	 */
-	public HPDAttributeSettings(String anAttributeName,
-						Boolean anIsSingleValue,
-						Boolean anIsOptional,
-						int aNumberOfMinOccurence,
-						int aNumberOfMaxOccurence) throws IllegalArgumentException {
+	public HPDAttributeSettings(final String anAttributeName,
+						final Boolean anIsSingleValue,
+						final Boolean anIsOptional,
+						final int aNumberOfMinOccurence,
+						final int aNumberOfMaxOccurence) throws IllegalArgumentException {
 		
 		this.setAttributeName(anAttributeName);
 		this.setIsSingleValue(anIsSingleValue);

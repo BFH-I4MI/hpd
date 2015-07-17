@@ -35,11 +35,7 @@ public class EntryForDnValidationInterceptor extends BaseInterceptor {
     private static final Logger LOG = LoggerFactory
             .getLogger(EntryForDnValidationInterceptor.class);
 
-	/**
-     * Initialize the registries, normalizers.
-     * @param aDirectoryService The DirectoryService for this interceptor
-     * @throws LdapException thrown if an exception happens
-     */
+    @Override
     public final void init(final DirectoryService aDirectoryService) throws LdapException {
         LOG.debug("Initialiazing the EntryForDnValidationInterceptor");
         super.init(aDirectoryService);
@@ -113,13 +109,7 @@ public class EntryForDnValidationInterceptor extends BaseInterceptor {
         }
     }
 
-    /**
-     * Checks if the entry from the HasEntryOperationContext exists.
-     *
-     * @param hasEntryContext the context for the entry validation
-     * @return true, if the entry exists
-     * @throws LdapException thrown if an exception happens
-     */
+    @Override
     public final boolean hasEntry(final HasEntryOperationContext hasEntryContext)
             throws LdapException {
         hasEntryContext.getDn().apply(this.schemaManager);

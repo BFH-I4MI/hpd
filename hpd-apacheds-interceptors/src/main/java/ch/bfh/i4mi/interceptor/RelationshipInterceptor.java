@@ -16,7 +16,6 @@ import org.apache.directory.server.core.api.interceptor.context.OperationContext
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * This interceptor keeps the member attribute of relationships in sync with the
  * memberOf attribute from an HPI or HOI.
@@ -25,30 +24,28 @@ import org.slf4j.LoggerFactory;
  */
 public class RelationshipInterceptor extends BaseInterceptor {
 
-	/**
-	 * The name of the attribute 'owner'
-	 */
-	private final static String OWNER_ATTR_NAME = "owner";
+	/** The name of the attribute 'owner'. */
+	private static final String OWNER_ATTR_NAME = "owner";
 
-	/** The name of the attribute 'memberOf' */
-	private final static String MEMBER_OF_ATTR_NAME = "memberOf";
+	/** The name of the attribute 'memberOf'. */
+	private static final String MEMBER_OF_ATTR_NAME = "memberOf";
 
-	/** The name of the attribute 'businessCategory' */
-	private final static String CAT_ATTR_NAME = "businessCategory";
+	/** The name of the attribute 'businessCategory'. */
+	private static final String CAT_ATTR_NAME = "businessCategory";
 
-	/** The value for a community in 'businessCategory' */
-	private final static String CAT_VALUE_FOR_COM = "community";
+	/** The value for a community in 'businessCategory'. */
+	private static final String CAT_VALUE_FOR_COM = "community";
 
-	/** RDN for the OU for 'HCRegulatedOrganization' */
-	private final static String OU_HEALTH_ORG = "ou=HCRegulatedOrganization";
+	/** RDN for the OU for 'HCRegulatedOrganization'. */
+	private static final String OU_HEALTH_ORG = "ou=HCRegulatedOrganization";
 
-	/** RDN for the OU for 'HCProfessional' */
-	private final static String OU_HEALTH_PRO = "ou=HCProfessional";
+	/** RDN for the OU for 'HCProfessional'. */
+	private static final String OU_HEALTH_PRO = "ou=HCProfessional";
 
 	/**
 	 * The operation context.
 	 */
-	OperationContext opContext;
+	private OperationContext opContext;
 
 	/**
 	 * The entry to which the operation context belongs to.
@@ -62,7 +59,7 @@ public class RelationshipInterceptor extends BaseInterceptor {
 	/**
 	 * Initialize the registers, normalizers.
 	 *
-	 * @param aDirectoryService            the DirectoryService to initialize the parent.
+	 * @param aDirectoryService the DirectoryService to initialize the parent.
 	 * @throws LdapException the ldap exception
 	 */
 	public final void init(final DirectoryService aDirectoryService)
@@ -75,55 +72,61 @@ public class RelationshipInterceptor extends BaseInterceptor {
 	 * @see org.apache.directory.server.core.api.interceptor.BaseInterceptor#add(org.apache.directory.server.core.api.interceptor.context.AddOperationContext)
 	 */
 	@Override
-	public final void add(final AddOperationContext addOperationContext)
+	public final void add(final AddOperationContext addOpContext)
 			throws LdapException {
-		this.opContext = addOperationContext;
-		this.opContextEntry = addOperationContext.getEntry();
+		this.opContext = addOpContext;
+		this.opContextEntry = addOpContext.getEntry();
 
-		Attribute attribute = this.opContextEntry.get(MEMBER_OF_ATTR_NAME);
+		final Attribute attribute = this.opContextEntry.get(MEMBER_OF_ATTR_NAME);
 		// Only check if the relationship is valid when a memberOf value is here.
 		if (attribute != null) {
-			RelationshipChecker rc = new RelationshipChecker(OWNER_ATTR_NAME,
-					MEMBER_OF_ATTR_NAME, CAT_ATTR_NAME, CAT_VALUE_FOR_COM,
-					OU_HEALTH_ORG, OU_HEALTH_PRO, this.opContext,
-					this.opContextEntry, attribute);
+			RelationshipChecker relChecker;
 
+			// Has a memberOf value, check if it is:
+			//  - A community -> No checks at all, root must be is the sender of the request.
+			//  - Not a community and is a HCProfessional -> Relationship checking is necessary.
+			//  - Not a community and is a HCOrganization -> Relationship checking is necessary.
 			if (!isCommunity(this.opContextEntry)
 					&& (isEntryOfOU(this.opContextEntry, OU_HEALTH_ORG) || isEntryOfOU(
 							this.opContextEntry, OU_HEALTH_PRO))) {
-				rc.checkAddRequest();
+				relChecker = new RelationshipChecker(OWNER_ATTR_NAME,
+						MEMBER_OF_ATTR_NAME, CAT_ATTR_NAME, CAT_VALUE_FOR_COM,
+						OU_HEALTH_ORG, OU_HEALTH_PRO, this.opContext,
+						this.opContextEntry, attribute);
+				relChecker.checkAddRequest();
 			}
 		}
 
 		LOG.debug("<< AddEntryRelationshipOperation : successful");
-		next(addOperationContext);
+		next(addOpContext);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.apache.directory.server.core.api.interceptor.BaseInterceptor#modify(org.apache.directory.server.core.api.interceptor.context.ModifyOperationContext)
 	 */
 	@Override
-	public final void modify(final ModifyOperationContext modifyOperationContext)
+	public final void modify(final ModifyOperationContext modifyOpContext)
 			throws LdapException {
-		this.opContext = modifyOperationContext;
-		this.opContextEntry = modifyOperationContext.getEntry();
-		List<Modification> items = modifyOperationContext.getModItems();
+		this.opContext = modifyOpContext;
+		this.opContextEntry = modifyOpContext.getEntry();
+		final List<Modification> items = modifyOpContext.getModItems();
 
-		for (Modification modification : items) {
-			ModificationOperation operation = modification.getOperation();
-			Attribute attribute = modification.getAttribute();
-			RelationshipChecker rc = new RelationshipChecker(OWNER_ATTR_NAME,
+		for (final Modification modification : items) {
+			final ModificationOperation operation = modification.getOperation();
+			final Attribute attribute = modification.getAttribute();
+			
+			RelationshipChecker relChecker = new RelationshipChecker(OWNER_ATTR_NAME,
 					MEMBER_OF_ATTR_NAME, CAT_ATTR_NAME, CAT_VALUE_FOR_COM,
 					OU_HEALTH_ORG, OU_HEALTH_PRO, this.opContext,
 					this.opContextEntry, attribute);
 
 			if (operation == ModificationOperation.ADD_ATTRIBUTE) {
 				if (attribute.getUpId().equalsIgnoreCase(MEMBER_OF_ATTR_NAME)) {
-					rc.checkModifyAddRequest();
+					relChecker.checkModifyAddRequest();
 				}
 			} else if (operation == ModificationOperation.REMOVE_ATTRIBUTE) {
 				int minNumberOfValues = 2;
-				if(modification.getAttribute() != null) {
+				if (modification.getAttribute() != null) {
 					minNumberOfValues = modification.getAttribute().size() + 1;
 				}
 				
@@ -136,12 +139,12 @@ public class RelationshipInterceptor extends BaseInterceptor {
 				}
 			} else if (operation == ModificationOperation.REPLACE_ATTRIBUTE) {
 				if (attribute.getUpId().equalsIgnoreCase(MEMBER_OF_ATTR_NAME)) {
-					rc.checkModifyReplace();
+					relChecker.checkModifyReplace();
 				}
 			}
 		}
 		LOG.debug("<< ModifyEntryRelationshipOperation : successful");
-		next(modifyOperationContext);
+		next(modifyOpContext);
 	}
 
 	/**
@@ -151,7 +154,7 @@ public class RelationshipInterceptor extends BaseInterceptor {
 	 * @return true, if is community
 	 * @throws LdapInvalidAttributeValueException the LDAP invalid attribute value exception
 	 */
-	private static boolean isCommunity(Entry entry)
+	private static boolean isCommunity(final Entry entry)
 			throws LdapInvalidAttributeValueException {
 		if (entry.get(CAT_ATTR_NAME) != null
 				&& entry.get(CAT_ATTR_NAME).getString()

@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class AttributeConditionsInterceptor checks if the special rules for the
  * HPD are fulfilled on an request.
+ * 
+ * @author Kevin Tippenhauer, Berner Fachhochschule
  */
 public class AttributeConditionsInterceptor extends BaseInterceptor {
 
