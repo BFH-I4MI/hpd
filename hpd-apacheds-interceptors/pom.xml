@@ -10,7 +10,11 @@
 		<name>Berner Fachhochschule - Institute for Medical Informatics</name>
 		<url>http://www.ti.bfh.ch/de/bachelor/medizininformatik.html</url>
 	</organization>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 	<build>
 		<plugins>
@@ -23,188 +27,24 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.10</version>
-				<executions>
-					<execution>
-						<id>unpack</id>
-						<phase>package</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<!-- configure the plugin here -->
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 
 	<dependencies>
-
-		<!--<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-bootstrap-extract</artifactId>
-			<version>1.5.5</version>
-		</dependency>-->
 		<dependency>
-		  <groupId>org.apache.directory.server</groupId>
-		  <artifactId>apacheds-core-api</artifactId>
-		  <version>2.0.0-M19</version>
-		</dependency>
-		      <dependency>
-          <groupId>org.apache.directory.api</groupId>
-          <artifactId>api-ldap-model</artifactId>
-          <version>1.0.0-M26</version>
-        </dependency>		
-		<!--<dependency>
 			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-bootstrap-partition</artifactId>
-			<version>1.5.5</version>
-		</dependency>
-	 	<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-core</artifactId>
+			<artifactId>apacheds-core-api</artifactId>
 			<version>2.0.0-M19</version>
-		</dependency> 
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-core-avl</artifactId>
-			<version>2.0.0-M19</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-core-entry</artifactId>
-			<version>1.5.7</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-core-jndi</artifactId>
-			<version>2.0.0-M19</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-core-shared</artifactId>
-			<version>2.0.0-M19</version>
-		</dependency>
-	 	<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-jdbm</artifactId>
-			<version>2.0.0-M5</version>
-		</dependency> 
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-jdbm-store</artifactId>
-			<version>1.5.7</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-protocol-ldap</artifactId>
-			<version>2.0.0-M19</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-protocol-shared</artifactId>
-			<version>2.0.0-M19</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-schema-bootstrap</artifactId>
-			<version>1.5.5</version>
-		</dependency>
-	 	<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-schema-registries</artifactId>
-			<version>1.5.5</version>
-		</dependency> 
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-utils</artifactId>
-			<version>1.5.7</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-xdbm-base</artifactId>
-			<version>1.5.7</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-xdbm-search</artifactId>
-			<version>1.5.7</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-collections4</artifactId>
-			<version>4.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.3.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.mina</groupId>
-			<artifactId>mina-core</artifactId>
-			<version>3.0.0-M2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.mina</groupId>
-			<artifactId>mina-filter-ssl</artifactId>
-			<version>1.1.7</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.directory.shared</groupId>
-			<artifactId>shared-asn1</artifactId>
-			<version>0.9.19</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.directory.shared</groupId>
-			<artifactId>shared-asn1-codec</artifactId>
-			<version>0.9.19</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.directory.shared</groupId>
-			<artifactId>shared-ldap</artifactId>
-			<version>1.0.0-M1</version>
-		</dependency>
-	 	<dependency>
-			<groupId>org.apache.directory.shared</groupId>
-			<artifactId>shared-ldap-constants</artifactId>
-			<version>0.9.19</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.directory.api</groupId>
-			<artifactId>api-all</artifactId>
-			<version>1.0.0-M28</version>
-		</dependency>-->
-
+			<artifactId>api-ldap-model</artifactId>
+			<version>1.0.0-M26</version>
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.10</version>
 		</dependency>
-	<!--	<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.10</version>
-		</dependency>
-	 	<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>antlr</artifactId>
-			<version>3.5.2</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-		</dependency>-->
 	</dependencies>
 </project>
