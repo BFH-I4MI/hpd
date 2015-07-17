@@ -146,9 +146,4 @@ public class HPDAttributeSettings {
 		this.setIsOptional(anIsOptional);
 		this.setMinMaxOccurence(aNumberOfMinOccurence, aNumberOfMaxOccurence);
 	}
-	
-	
-	
-	
-
 }

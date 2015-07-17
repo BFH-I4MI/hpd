@@ -115,7 +115,6 @@ public class RelationshipCompletionInterceptor extends BaseInterceptor {
 						 * one from the OperationContext.
 						 */
 
-						// LOG.debug("memberOfAttr.get() == null");
 						for (Attribute attr : this.opContext.getEntry()
 								.getAttributes()) {
 							if (attr.getUpId().equalsIgnoreCase(ATTRIBUTE_NAME)) {

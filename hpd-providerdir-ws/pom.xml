@@ -4,7 +4,7 @@
 
 	<artifactId>hpd-providerdir-ws</artifactId>
 	<packaging>bundle</packaging>
-	<version>1.0.4-SNAPSHOT</version>
+	<version>1.0.5-SNAPSHOT</version>
 	<name>HPD - Provider Information Directory</name>
 	<description>IHE Provider Information Directory Actor implementation.
 	</description>
@@ -512,6 +512,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-transports-http</artifactId>
+			<version>2.7.6</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>org.apache.servicemix.bundles</groupId>
 			<artifactId>org.apache.servicemix.bundles.wsdl4j</artifactId>
 			<version>1.6.3_1</version>
@@ -536,7 +543,7 @@
 						<artifactId>karaf-maven-plugin</artifactId>
 						<extensions>true</extensions>
 						<configuration>
-						<aggregateFeatures>true</aggregateFeatures>
+							<aggregateFeatures>true</aggregateFeatures>
 							<includeTransitiveDependency>true</includeTransitiveDependency>
 						</configuration>
 						<executions>

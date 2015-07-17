@@ -13,49 +13,55 @@ import de.fhdo.terminologie.ws.search.ListCodeSystemConceptsResponse;
 import de.fhdo.terminologie.ws.search.ListCodeSystemsRequestType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemsResponse;
 import de.fhdo.terminologie.ws.search.Search;
+import de.fhdo.terminologie.ws.search.SearchType;
 import de.fhdo.terminologie.ws.search.Search_Service;
 
 public class AttributeValidator {
-	
+
 	private AttributeValidatorSettings attributeValidatorSettings;
-	
-	public AttributeValidator(AttributeValidatorSettings anAttributeValidatorSettings) {
+
+	public AttributeValidator(
+			AttributeValidatorSettings anAttributeValidatorSettings) {
 		this.setAttributeValidatorSettings(anAttributeValidatorSettings);
 	}
-	
-	public void setAttributeValidatorSettings(AttributeValidatorSettings anAttributeValidatorSettings) {
+
+	public void setAttributeValidatorSettings(
+			AttributeValidatorSettings anAttributeValidatorSettings) {
 		this.attributeValidatorSettings = anAttributeValidatorSettings;
 	}
-	
+
 	/**
 	 * Returns the current version as long number for a code system.
-	 * @param codeSystemName the name of the code system which current version should be looked up
-	 * @return returns -1l if no matching code system was found on the terminology server otherwise
-	 * 		   the current version as long value
+	 * 
+	 * @param codeSystemName
+	 *            the name of the code system which current version should be
+	 *            looked up
+	 * @return returns -1l if no matching code system was found on the
+	 *         terminology server otherwise the current version as long value
 	 * @throws SOAPException
 	 */
-	public long getCurrentCodeSystemVersion(String codeSystemName) throws SOAPException {
-			// create webservice reference and port
-			Search_Service service = new Search_Service();
-			Search port = service.getSearchPort();
+	public long getCurrentCodeSystemVersion(String codeSystemName)
+			throws SOAPException {
+		// create webservice reference and port
+		Search_Service service = new Search_Service();
+		Search port = service.getSearchPort();
 
-			// define parameter
-			ListCodeSystemsRequestType request = new ListCodeSystemsRequestType();
-			CodeSystem codeSystem = new CodeSystem();
-			codeSystem.setName(codeSystemName);
-			request.setCodeSystem(codeSystem);
+		// define parameter
+		ListCodeSystemsRequestType request = new ListCodeSystemsRequestType();
+		CodeSystem codeSystem = new CodeSystem();
+		codeSystem.setName(codeSystemName);
+		request.setCodeSystem(codeSystem);
 
-			// invoke method
-			ListCodeSystemsResponse.Return response = port
-					.listCodeSystems(request);
-			if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.search.Status.OK) {
-				if(response.getReturnInfos().getCount() > 0) {
-					return response.getCodeSystem().get(0).getCurrentVersionId();
-				}
-				return -1l;
-			} else {
-				throw new SOAPException(response.getReturnInfos().toString());
+		// invoke method
+		ListCodeSystemsResponse.Return response = port.listCodeSystems(request);
+		if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.search.Status.OK) {
+			if (response.getReturnInfos().getCount() > 0) {
+				return response.getCodeSystem().get(0).getCurrentVersionId();
 			}
+			return -1l;
+		} else {
+			throw new SOAPException(response.getReturnInfos().toString());
+		}
 	}
 
 	public CodeSystemConcept currentConceptCodeFilter(String codeSystemName,
@@ -65,6 +71,12 @@ public class AttributeValidator {
 
 		// define parameter
 		ListCodeSystemConceptsRequestType request = new ListCodeSystemConceptsRequestType();
+
+		SearchType searchType = new SearchType();
+		searchType.setWholeWords(true);
+		request.setSearchParameter(searchType);
+		request.getSearchParameter().setWholeWords(true);
+
 		CodeSystemVersion csvRequest = new CodeSystemVersion();
 		csvRequest.setVersionId(getCurrentCodeSystemVersion(codeSystemName));
 
@@ -98,8 +110,10 @@ public class AttributeValidator {
 						.getCodeSystemEntity()) {
 					for (CodeSystemEntityVersion responseCsev : responseCse
 							.getCodeSystemEntityVersions()) {
+						
 						if (responseCsev.getVersionId().compareTo(
 								responseCse.getCurrentVersionId()) == 0) {
+
 							return responseCsev.getCodeSystemConcepts().get(0);
 						}
 					}
@@ -112,27 +126,42 @@ public class AttributeValidator {
 			throw new SOAPException(response.getReturnInfos().toString());
 		}
 	}
-	
-	public boolean checkTerminology(String anAttrName, String anAttrValue) throws SOAPException {
-		// The value 'community' can only be set by the user 'root'. The value is not in the terminology.
-		if(anAttrName.equalsIgnoreCase("businessCategory") && anAttrValue.equalsIgnoreCase("community")) {
-			return true;
+
+	public boolean checkTerminology(String anAttrName, String anAttrValue)
+			throws SOAPException {
+		boolean isLegalValue = true;
+
+		// The value 'community' can only be set by the user 'root'. The value
+		// is not in the terminology.
+		if (!(anAttrName.equalsIgnoreCase("businessCategory") && anAttrValue
+				.equalsIgnoreCase("community"))) {
+
+			String indexServerAttrName = attributeValidatorSettings
+					.getTranslation(anAttrName);
+			if (indexServerAttrName == null) {
+				// If there is no translation, there is no code system for the
+				// attribute.
+				// If true, no exception occurs if it's a invalid attribute
+				// name.
+				isLegalValue = true;
+			} else if (indexServerAttrName.equalsIgnoreCase("NoCodeSystem")) {
+				// There is no code system for the attribute but its a valid
+				// attribute name.
+				isLegalValue = true;
+			} else {
+				CodeSystemConcept resultCsc = this.currentConceptCodeFilter(
+						indexServerAttrName, anAttrValue);
+
+				if (resultCsc == null
+						|| !resultCsc.getCode().equalsIgnoreCase(anAttrValue)) {
+					// In the code system for anAttrName was no value exactly
+					// equals anAttrValue
+					isLegalValue = false;
+				}
+			}
 		}
-		
-		String indexServerAttrName = attributeValidatorSettings.getTranslation(anAttrName);
-		if(indexServerAttrName == null) {
-			// If there is no translation, there is no code system for the attribute.
-			// If true, no exception occurs if it's a invalid attribute name.
-			return true;
-		} else if(indexServerAttrName.equalsIgnoreCase("NoCodeSystem")) {
-			// There is no code system for the attribute but its a valid attribute name.
-			return true;
-		} else if (this.currentConceptCodeFilter(
-				indexServerAttrName, anAttrValue) == null) {
-			// In the code system for anAttrName was no value equals anAttrValue
-			return false;
-		}
-		// A concept was found for the value of anAttrValue in the code system anAttrName
-		return true;
+		// A concept was found for the value of anAttrValue in the code system
+		// anAttrName
+		return isLegalValue;
 	}
 }

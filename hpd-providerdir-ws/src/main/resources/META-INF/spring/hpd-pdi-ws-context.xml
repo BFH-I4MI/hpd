@@ -16,6 +16,19 @@
         http://camel.apache.org/schema/spring-security http://camel.apache.org/schema/spring-security/camel-spring-security.xsd
         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
+	<!-- tuk1 look: http://stackoverflow.com/questions/14530533/camel-route-using-spring-ws-client-occasionally-throws-javax-xml-transform-stax -->
+	<bean id="baseCamelMarshallerWSTemplate" class="org.springframework.ws.client.core.WebServiceTemplate"
+		scope="prototype">
+		<constructor-arg ref="messageFactory" />
+		<property name="messageSender">
+			<ref bean="httpSender" />
+		</property>
+		<property name="checkConnectionForError" value="true" />
+		<property name="transformerFactoryClass"
+			value="com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl" />
+	</bean>
+
+	<!-- /tuk1 -->
 	<!-- JAXP Utility bean -->
 	<bean id="jaxpUtil" class="ch.vivates.tools.jaxp.JaxpUtil"
 		init-method="printInfo" lazy-init="false" />
@@ -185,7 +198,7 @@
 		<property name="orgRdn" value="${hpd.pid.ldap.org_rdn}" />
 		<property name="hpRdn" value="${hpd.pid.ldap.hp_rdn}" />
 		<!-- added by tuk1 -->
-        <property name="attributeValidator" ref="attrValidator" />
+		<property name="attributeValidator" ref="attrValidator" />
 	</bean>
 
 	<csec:authorizationPolicy id="scope" access="SCOPE"

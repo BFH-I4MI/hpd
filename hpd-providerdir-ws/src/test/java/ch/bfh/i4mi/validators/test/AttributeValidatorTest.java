@@ -52,8 +52,9 @@ public class AttributeValidatorTest {
 	public void testCheckTerminology() throws SOAPException {
 		assertTrue(av.checkTerminology("HcSpecialisation", "260049"));
 		assertTrue(av.checkTerminology("businessCategory", "190005"));
+		assertTrue(av.checkTerminology("asdf", "asdf")); // Not in properties file
+		assertTrue(av.checkTerminology("hcIdentifier", "asdf"));  // In properties file with NoCodeSystem
 		assertFalse(av.checkTerminology("HcSpecialisation", "190005"));
-		assertTrue(av.checkTerminology("asdf", "asdf"));
-		assertTrue(av.checkTerminology("hcIdentifier", "asdf"));
+		assertFalse(av.checkTerminology("HcSpecialisation", "26"));
 	}
 }

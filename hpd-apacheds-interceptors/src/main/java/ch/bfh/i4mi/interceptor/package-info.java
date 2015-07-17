@@ -1,5 +1,5 @@
 /**
- * Contains the interceptors which validate the change requests sent to ApacheDS.
+ * Contains the interceptors to validate change requests sent to ApacheDS.
  * 
  * @author  Kevin Tippenhauer
  */

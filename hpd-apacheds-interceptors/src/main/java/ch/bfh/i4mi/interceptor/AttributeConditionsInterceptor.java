@@ -363,5 +363,4 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 		}
 		return isEntryOfOU;
 	}
-
 }

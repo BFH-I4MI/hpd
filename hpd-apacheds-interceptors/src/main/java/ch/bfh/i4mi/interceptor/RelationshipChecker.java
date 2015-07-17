@@ -12,7 +12,6 @@ import org.apache.directory.server.core.api.interceptor.context.OperationContext
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RelationshipChecker checks if a change on the relationships is valid.
  */

@@ -3,14 +3,14 @@ package ch.bfh.i4mi.validators;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 
 public class AttributeValidatorSettings {
 	
 	private BufferedInputStream bufferedInputStream;
-	private Map<String, String> translationDictionary = new HashMap<String, String>();
+	private Map<String, String> translationDictionary = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 
 	public AttributeValidatorSettings(BufferedInputStream aBufferedInputStream) {
 		this.bufferedInputStream = aBufferedInputStream;

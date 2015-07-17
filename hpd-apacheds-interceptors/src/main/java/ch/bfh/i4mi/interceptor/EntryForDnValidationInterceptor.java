@@ -105,8 +105,6 @@ public class EntryForDnValidationInterceptor extends BaseInterceptor {
     protected final void checkAttributeValue(final Attribute attribute) throws LdapException {
         final Dn dn = new Dn(attribute.getString());
         
-//        LOG.debug("test: " + attribute.getString());
-        
         // check if the entry already exists
         if (dn.isEmpty() || !hasEntry(new HasEntryOperationContext(
                 this.operationContext.getSession(), dn))) {

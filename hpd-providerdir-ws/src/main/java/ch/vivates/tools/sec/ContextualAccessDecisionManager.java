@@ -181,7 +181,6 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 					// ***************** tuk1 *****************
 					for (DsmlAttr attr : addRequest.getAttr()) {
 						for (String value : attr.getValue()) {
-							LOG.info("Attrname: " + attr.getName() + " value: " + value);
 								if (!attributeValidator.checkTerminology(attr.getName(), value)) {
 									throw new AuthorizationException(
 											"[INVALID FEED REQ] Attribute: '" + attr.getName() + "' value: '" + value + "' does not match with the terminology.");
@@ -200,12 +199,10 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 							throw new AuthorizationException("[INVALID FEED REQ] Use REMOVE operation to remove attributes.");
 						}
 						// ***************** tuk1 *****************
-					/*	if (dsmlMod.getOperation().equalsIgnoreCase("replace")
+						if (dsmlMod.getOperation().equalsIgnoreCase("replace")
 								|| dsmlMod.getOperation().equalsIgnoreCase(
 										"add")) {
 							for (String value : dsmlMod.getValue()) {
-								LOG.info("Attrname: " + dsmlMod.getName()
-										+ " value: " + value);
 								if (!attributeValidator.checkTerminology(
 										dsmlMod.getName(), value)) {
 									throw new AuthorizationException(
@@ -216,7 +213,7 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 													+ "' does not match with the terminology.");
 								}
 							}
-						}*/
+						}
 						// ***************** /tuk1 *****************
 					}
 					Map<String, DsmlModification> modificationsMap = getModificationsMap(modRequest);

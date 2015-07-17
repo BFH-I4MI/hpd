@@ -16,6 +16,7 @@ import org.apache.directory.server.core.api.interceptor.context.OperationContext
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
  * This interceptor keeps the member attribute of relationships in sync with the
  * memberOf attribute from an HPI or HOI.
@@ -25,21 +26,24 @@ import org.slf4j.LoggerFactory;
 public class RelationshipInterceptor extends BaseInterceptor {
 
 	/**
-	 * Name of the attribute to check.
+	 * The name of the attribute 'owner'
 	 */
 	private final static String OWNER_ATTR_NAME = "owner";
 
+	/** The name of the attribute 'memberOf' */
 	private final static String MEMBER_OF_ATTR_NAME = "memberOf";
 
+	/** The name of the attribute 'businessCategory' */
 	private final static String CAT_ATTR_NAME = "businessCategory";
 
+	/** The value for a community in 'businessCategory' */
 	private final static String CAT_VALUE_FOR_COM = "community";
 
+	/** RDN for the OU for 'HCRegulatedOrganization' */
 	private final static String OU_HEALTH_ORG = "ou=HCRegulatedOrganization";
 
+	/** RDN for the OU for 'HCProfessional' */
 	private final static String OU_HEALTH_PRO = "ou=HCProfessional";
-
-	// private final static String OU_HEALTH_RS = "ou=Relationship";
 
 	/**
 	 * The operation context.
@@ -57,10 +61,9 @@ public class RelationshipInterceptor extends BaseInterceptor {
 
 	/**
 	 * Initialize the registers, normalizers.
-	 * 
-	 * @param aDirectoryService
-	 *            the DirectoryService to initialize the parent.
-	 * @throws LdapException
+	 *
+	 * @param aDirectoryService            the DirectoryService to initialize the parent.
+	 * @throws LdapException the ldap exception
 	 */
 	public final void init(final DirectoryService aDirectoryService)
 			throws LdapException {
@@ -68,6 +71,9 @@ public class RelationshipInterceptor extends BaseInterceptor {
 		super.init(aDirectoryService);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.apache.directory.server.core.api.interceptor.BaseInterceptor#add(org.apache.directory.server.core.api.interceptor.context.AddOperationContext)
+	 */
 	@Override
 	public final void add(final AddOperationContext addOperationContext)
 			throws LdapException {
@@ -93,6 +99,9 @@ public class RelationshipInterceptor extends BaseInterceptor {
 		next(addOperationContext);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.apache.directory.server.core.api.interceptor.BaseInterceptor#modify(org.apache.directory.server.core.api.interceptor.context.ModifyOperationContext)
+	 */
 	@Override
 	public final void modify(final ModifyOperationContext modifyOperationContext)
 			throws LdapException {
@@ -135,6 +144,13 @@ public class RelationshipInterceptor extends BaseInterceptor {
 		next(modifyOperationContext);
 	}
 
+	/**
+	 * Checks if the entry is a community.
+	 *
+	 * @param entry the entry
+	 * @return true, if is community
+	 * @throws LdapInvalidAttributeValueException the LDAP invalid attribute value exception
+	 */
 	private static boolean isCommunity(Entry entry)
 			throws LdapInvalidAttributeValueException {
 		if (entry.get(CAT_ATTR_NAME) != null
@@ -145,6 +161,13 @@ public class RelationshipInterceptor extends BaseInterceptor {
 		return false;
 	}
 
+	/**
+	 * Checks if is entry of ou.
+	 *
+	 * @param entry the entry
+	 * @param rdnName the rdn name
+	 * @return true, if is entry of ou
+	 */
 	private static boolean isEntryOfOU(final Entry entry, final String rdnName) {
 		if (entry.getDn().getRdn(1).getName().equals(rdnName)) {
 			return true;
