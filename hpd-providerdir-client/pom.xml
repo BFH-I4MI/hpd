@@ -6,12 +6,20 @@
 	<name>HPD - Provider Directory Client</name>
 	<description>Basic client example for the HPD prototype</description>
 	<version>0.0.2-SNAPSHOT</version>
+	<organization>
+		<name>Berner Fachhochschule - Institute for Medical Informatics</name>
+		<url>http://www.ti.bfh.ch/de/bachelor/medizininformatik.html</url>
+	</organization>
 
-	<!-- <parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.2.4.RELEASE</version>
-	</parent>-->
+	<parent>
+		<groupId>ch.bfh.i4mi</groupId>
+		<artifactId>hpd</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 	<build>
 		<plugins>
@@ -29,7 +37,6 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>1.2.4.RELEASE</version>
 			</plugin>
-			<!-- tag::wsdl[] -->
 			<plugin>
 				<groupId>org.jvnet.jaxb2.maven2</groupId>
 				<artifactId>maven-jaxb2-plugin</artifactId>
@@ -53,21 +60,6 @@
 					</schemas>
 				</configuration>
 			</plugin>
-			<!--<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>unpack</id>
-						<phase>package</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>-->
 		</plugins>
 	</build>
 
@@ -80,100 +72,22 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-oxm</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>4.0.9.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot</artifactId>
-			<version>1.2.4.RELEASE</version>
+			<version>1.2.5.RELEASE</version>
 		</dependency>
-	<!-- <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency> -->
 		<dependency>
 			<groupId>org.springframework.ws</groupId>
 			<artifactId>spring-ws-core</artifactId>
 			<version>2.2.1.RELEASE</version>
 		</dependency>
-	<!--	<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-		</dependency> 
 		<dependency>
-			<groupId>org.apache.servicemix.bundles</groupId>
-			<artifactId>org.apache.servicemix.bundles.opensaml</artifactId>
-			<version>2.6.2_2</version>
-			<exclusions>
-				<exclusion>
-					<groupId>xalan</groupId>
-					<artifactId>xalan</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>xalan</groupId>
-					<artifactId>serializer</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>xerces</groupId>
-					<artifactId>xercesImpl</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.xerces</groupId>
-					<artifactId>xercesImpl</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.xerces</groupId>
-					<artifactId>xml-apis</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>xml-resolver</groupId>
-					<artifactId>xml-resolver</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.xerces</groupId>
-					<artifactId>serializer</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>commons-httpclient</groupId>
-					<artifactId>commons-httpclient</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>commons-collections</groupId>
-					<artifactId>commons-collections</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>commons-codec</groupId>
-					<artifactId>commons-codec</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>jul-to-slf4j</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>log4j-over-slf4j</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>-->
-	<!-- 	<dependency>
-    <groupId>org.opensaml</groupId>
-    <artifactId>openws</artifactId>
-    <version>1.5.4</version>
-</dependency>-->
-		<dependency>
-    <groupId>org.opensaml</groupId>
-    <artifactId>opensaml-soap-impl</artifactId>
-    <version>3.1.1</version>
-</dependency>
-		
+			<groupId>org.opensaml</groupId>
+			<artifactId>openws</artifactId>
+			<version>1.5.4</version>
+		</dependency>
 	</dependencies>
-	<groupId>ch.bfh.i4mi</groupId>
-	<organization>
-		<name>Berner Fachhochschule - Institute for Medical Informatics</name>
-		<url>http://www.ti.bfh.ch/de/bachelor/medizininformatik.html</url>
-	</organization>
 </project>
