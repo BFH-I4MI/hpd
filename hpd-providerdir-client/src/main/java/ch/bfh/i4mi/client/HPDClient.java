@@ -28,7 +28,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.opensaml.ws.wssecurity.WSSecurityConstants;
+import org.opensaml.soap.wssecurity.WSSecurityConstants;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.SoapHeader;
@@ -43,7 +43,6 @@ import org.xml.sax.SAXException;
 import ch.vivates.ihe.hpd.pid.model.cs.BatchRequest;
 import ch.vivates.ihe.hpd.pid.model.cs.BatchResponse;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class HPDClient represents a client for the HPD web service.
  */
