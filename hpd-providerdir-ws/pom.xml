@@ -77,7 +77,7 @@
 								<wsdlUrl>http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl
 								</wsdlUrl>
 							</wsdlUrls>
-							<sourceDestDir>${basedir}/target/generated-sources/termserver
+							<sourceDestDir>${basedir}/target/generated-sources/jaxb
 							</sourceDestDir>
 							<!-- Needed with JAXP 1.5, see https://netbeans.org/bugzilla/show_bug.cgi?id=241570#c2 -->
 							<vmArgs>
@@ -578,7 +578,7 @@
 										<wsdlUrl>http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl
 										</wsdlUrl>
 									</wsdlUrls>
-									<sourceDestDir>${basedir}/target/generated-sources/termserver
+									<sourceDestDir>${basedir}/target/generated-sources/jaxb
 									</sourceDestDir>
 									<!-- Needed with JAXP 1.5, see https://netbeans.org/bugzilla/show_bug.cgi?id=241570#c2 -->
 									<vmArgs>
