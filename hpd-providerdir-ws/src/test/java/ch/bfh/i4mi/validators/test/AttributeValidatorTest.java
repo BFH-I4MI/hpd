@@ -15,11 +15,24 @@ import types.termserver.fhdo.de.CodeSystemConcept;
 import ch.bfh.i4mi.validators.AttributeValidator;
 import ch.bfh.i4mi.validators.AttributeValidatorSettings;
 
+/**
+ * The Class AttributeValidatorTest.
+ * 
+ * @author Kevin Tippenhauer, Berner Fachhochschule, javadoc
+ */
 public class AttributeValidatorTest {
 	
+	/** The attribute validator settings */
 	AttributeValidatorSettings avs;
+	
+	/** The attribute validator */
 	AttributeValidator av;
 
+	/**
+	 * Creates the needed objects for the tests.
+	 *
+	 * @throws FileNotFoundException the file not found exception
+	 */
 	@Before
 	public void setUp() throws FileNotFoundException {
 		avs = new AttributeValidatorSettings(new BufferedInputStream(new FileInputStream(
@@ -27,6 +40,11 @@ public class AttributeValidatorTest {
 		av = new AttributeValidator(avs);
 	}
 
+	/**
+	 * Test get current code system version method.
+	 *
+	 * @throws SOAPException the SOAP exception
+	 */
 	@Test
 	public void testGetCurrentCodeSystemVersion() throws SOAPException {
 		// Positive test
@@ -36,6 +54,11 @@ public class AttributeValidatorTest {
 		assertEquals(av.getCurrentCodeSystemVersion("author_Specialty"), -1l);
 	}
 
+	/**
+	 * Test list code system concepts method.
+	 *
+	 * @throws SOAPException the SOAP exception
+	 */
 	@Test
 	public void testListCodeSystemConcepts() throws SOAPException {
 		// Positive test
@@ -48,6 +71,11 @@ public class AttributeValidatorTest {
 		assertNull(csc);
 	}
 	
+	/**
+	 * Test check terminology method.
+	 *
+	 * @throws SOAPException the SOAP exception
+	 */
 	@Test
 	public void testCheckTerminology() throws SOAPException {
 		assertTrue(av.checkTerminology("HcSpecialisation", "260049"));

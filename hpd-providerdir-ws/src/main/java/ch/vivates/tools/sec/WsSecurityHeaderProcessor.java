@@ -34,12 +34,23 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.w3c.dom.Element;
 
+/**
+ * The Class WsSecurityHeaderProcessor processes the web service security header.
+ * 
+ * @author Federico Marmory, Post CH, major development
+ * @author Kevin Tippenhauer, Berner Fachhochschule, javadoc
+ */
 public class WsSecurityHeaderProcessor implements Processor {
 
+	/** The Logger */
 	private static final Logger LOG = LoggerFactory.getLogger(WsSecurityHeaderProcessor.class);
 
+	/** The debug enabled trigger. */
 	private boolean debugEnabled;
 
+	/* (non-Javadoc)
+	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
+	 */
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		// Extract the user info from the SAML and add it to the exchange
@@ -59,6 +70,13 @@ public class WsSecurityHeaderProcessor implements Processor {
 		exchange.getIn().setHeader("principal", (principalName != null && !principalName.isEmpty() ? principalName : "unknown"));
 	}
 
+	/**
+	 * Extracts the principal from a SoapHeaderElement.
+	 *
+	 * @param securityHeader the security header
+	 * @return the principal
+	 * @throws Exception the exception
+	 */
 	private Principal extractPrincipal(final SoapHeaderElement securityHeader) throws Exception {
 		if (securityHeader != null) {
 			logSecurityHeader(securityHeader);
@@ -93,6 +111,13 @@ public class WsSecurityHeaderProcessor implements Processor {
 		throw createSOAPFaultException("Access denied: Unable to detect a valid authentication token.", null);
 	}
 
+	/**
+	 * Creates the soap fault exception.
+	 *
+	 * @param faultString the fault string
+	 * @param cause the cause
+	 * @return the SOAP fault exception
+	 */
 	private SOAPFaultException createSOAPFaultException(String faultString, Exception cause) {
 		LOG.debug(faultString, cause);
 		try {
@@ -105,6 +130,11 @@ public class WsSecurityHeaderProcessor implements Processor {
 		}
 	}
 
+	/**
+	 * Logs the security header.
+	 *
+	 * @param securityHeader the security header
+	 */
 	private void logSecurityHeader(SoapHeaderElement securityHeader) {
 		try {
 			if (LOG.isDebugEnabled()) {
@@ -124,6 +154,11 @@ public class WsSecurityHeaderProcessor implements Processor {
 		}
 	}
 
+	/**
+	 * Sets the debug enabled.
+	 *
+	 * @param debugEnabled true, to enable debug mode.
+	 */
 	public void setDebugEnabled(boolean debugEnabled) {
 		this.debugEnabled = debugEnabled;
 	}

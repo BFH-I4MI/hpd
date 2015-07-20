@@ -20,14 +20,33 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+/**
+ * The Class JaxpUtil contains information output methods used for JAXB implementation.
+ * 
+ * @author Federico Marmory, Post CH, major development
+ * @author Kevin Tippenhauer, Berner Fachhochschule, javadoc
+ */
 public class JaxpUtil {
 	
+	/** The Logger. */
 	private static final Logger LOG = LoggerFactory.getLogger(JaxpUtil.class);
 	
+	/**
+	 * Prints the info.
+	 *
+	 * @throws DatatypeConfigurationException the data type configuration exception
+	 * @throws SAXException the SAX exception
+	 */
 	public void printInfo() throws DatatypeConfigurationException, SAXException {
 		OutputJaxpImplementationInfo();
 	}
 		
+	/**
+	 * Output JAXP implementation information.
+	 *
+	 * @throws DatatypeConfigurationException the data type configuration exception
+	 * @throws SAXException the SAX exception
+	 */
 	private static void OutputJaxpImplementationInfo() throws DatatypeConfigurationException, SAXException {
 		LOG.debug(getJaxpImplementationInfo("DocumentBuilderFactory", DocumentBuilderFactory.newInstance().getClass()));
 		LOG.debug(getJaxpImplementationInfo("XPathFactory", XPathFactory.newInstance().getClass()));
@@ -41,6 +60,14 @@ public class JaxpUtil {
 		LOG.debug(getJaxpImplementationInfo("XMLReaderFactory", XMLReaderFactory.createXMLReader().getClass()));
 	}
 
+	/**
+	 * Gets the JAXP implementation information.
+	 *
+	 * @param <T> the generic type
+	 * @param componentName the component name
+	 * @param componentClass the component class
+	 * @return the JAXP implementation information
+	 */
 	private static <T> String getJaxpImplementationInfo(String componentName, Class<T> componentClass) {
 	    CodeSource source = componentClass.getProtectionDomain().getCodeSource();
 	    return MessageFormat.format(

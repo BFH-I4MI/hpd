@@ -22,10 +22,27 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+/**
+ * The Class TransactionsHistoryItemExtractor.
+ * 
+ * @author Federico Marmory, Post CH, major development
+ * @author Kevin Tippenhauer, Berner Fachhochschule, javadoc
+ */
 public class TransactionsHistoryItemExtractor {
 	
+	/** The Constant SDF containing the SimpleDateFormat. */
 	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
+	/**
+	 * Converts the transactions items into a map.
+	 *
+	 * @param trDate the transaction date
+	 * @param trID the transaction id
+	 * @param trContentStream the transaction content stream
+	 * @param principal the principal
+	 * @return the map with the items
+	 * @throws Exception the exception
+	 */
 	public Map<String, Object> convert(@Header("HpdPidInDate") String trDate, @Header("breadcrumbId") String trID,
 			@Body InputStream trContentStream, @Header("principal") String principal) throws Exception {
 		Map<String, Object> items = new HashMap<String, Object>();
@@ -36,6 +53,14 @@ public class TransactionsHistoryItemExtractor {
 		return items;
 	}
 	
+	/**
+	 * Inject auth request node.
+	 *
+	 * @param is the input stream
+	 * @param principal the principal
+	 * @return the input stream with the injected authentication request node
+	 * @throws Exception the exception
+	 */
 	private InputStream injectAuthRequestNode(InputStream is, String principal) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();

@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * This class checks if the value of an attribute is a valid dn or not.
  * In case of an non-valid dn an exception is thrown.
  *
- * @author Kevin Tippenhauer
+ * @author Kevin Tippenhauer, Berner Fachhochschule
  */
 public class EntryForDnValidationInterceptor extends BaseInterceptor {
 

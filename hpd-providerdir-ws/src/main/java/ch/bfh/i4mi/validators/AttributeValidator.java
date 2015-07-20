@@ -16,15 +16,31 @@ import de.fhdo.terminologie.ws.search.Search;
 import de.fhdo.terminologie.ws.search.SearchType;
 import de.fhdo.terminologie.ws.search.Search_Service;
 
+/**
+ * The Class AttributeValidator validates if a transmitted code is valid or not.
+ * 
+ * @author Kevin Tippenhauer, Berner Fachhochschule
+ */
 public class AttributeValidator {
 
+	/** The attribute validator settings. */
 	private AttributeValidatorSettings attributeValidatorSettings;
 
+	/**
+	 * Instantiates a new attribute validator.
+	 *
+	 * @param anAttributeValidatorSettings an attribute validator settings object
+	 */
 	public AttributeValidator(
 			AttributeValidatorSettings anAttributeValidatorSettings) {
 		this.setAttributeValidatorSettings(anAttributeValidatorSettings);
 	}
 
+	/**
+	 * Sets the attribute validator settings.
+	 *
+	 * @param anAttributeValidatorSettings the new attribute validator settings
+	 */
 	public void setAttributeValidatorSettings(
 			AttributeValidatorSettings anAttributeValidatorSettings) {
 		this.attributeValidatorSettings = anAttributeValidatorSettings;
@@ -32,13 +48,12 @@ public class AttributeValidator {
 
 	/**
 	 * Returns the current version as long number for a code system.
-	 * 
-	 * @param codeSystemName
-	 *            the name of the code system which current version should be
+	 *
+	 * @param codeSystemName            the name of the code system which current version should be
 	 *            looked up
 	 * @return returns -1l if no matching code system was found on the
 	 *         terminology server otherwise the current version as long value
-	 * @throws SOAPException
+	 * @throws SOAPException the SOAP exception
 	 */
 	public long getCurrentCodeSystemVersion(String codeSystemName)
 			throws SOAPException {
@@ -64,6 +79,14 @@ public class AttributeValidator {
 		}
 	}
 
+	/**
+	 * Current concept code filter.
+	 *
+	 * @param codeSystemName the code system name
+	 * @param code the code
+	 * @return the current code system concept
+	 * @throws SOAPException the SOAP exception
+	 */
 	public CodeSystemConcept currentConceptCodeFilter(String codeSystemName,
 			String code) throws SOAPException {
 		Search_Service service = new Search_Service();
@@ -127,6 +150,14 @@ public class AttributeValidator {
 		}
 	}
 
+	/**
+	 * Checks if an attribute value is part of the terminology for an attribute name.
+	 *
+	 * @param anAttrName an attribute name
+	 * @param anAttrValue an attribute value
+	 * @return true, if the attribute value is legal
+	 * @throws SOAPException the SOAP exception
+	 */
 	public boolean checkTerminology(String anAttrName, String anAttrValue)
 			throws SOAPException {
 		boolean isLegalValue = true;

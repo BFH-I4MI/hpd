@@ -1,5 +1,5 @@
 /**
- * Contains the validators of the HPD project. 
+ * Contains the validators used by the HPD project. 
  *
  * @author  Kevin Tippenhauer
  */

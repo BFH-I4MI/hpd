@@ -1,5 +1,5 @@
 /**
- * Contains the exceptions of the provider information directory service. 
+ * Contains the exceptions used by the provider information directory service. 
  *
  * @author  Federico Marmori
  */

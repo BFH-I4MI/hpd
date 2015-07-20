@@ -37,24 +37,47 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
+/**
+ * The Class ExtendedAuthenticationManager.
+ * 
+ * @author Federico Marmory, Post CH, major development
+ * @author Kevin Tippenhauer, Berner Fachhochschule, javadoc
+ */
 public class ExtendedAuthenticationManager implements AuthenticationManager {
 	
+	/** The Logger */
 	private static final Logger LOG = LoggerFactory.getLogger(ExtendedAuthenticationManager.class);
 	
+	/** The grace period max value. */
 	private final long GRACE_PERIOD_MAX_VALUE = 10000l;
 	
+	/** The data source. */
 	private DataSource dataSource;
 	
+	/** The grace period. */
 	private long gracePeriod;
+	
+	/** The verify conditions. */
 	private boolean verifyConditions;
+	
+	/** The verify signature. */
 	private boolean verifySignature;
 	
+	/** The keystorepath. */
 	private String keystorepath;
+	
+	/** The keystorepass. */
 	private String keystorepass;
+	
+	/** The keystore aliases. */
 	private String keystoreAliases;
 
+	/** The certificate store. */
 	private CertificateStore certificateStore;
 	
+	/* (non-Javadoc)
+	 * @see org.springframework.security.authentication.AuthenticationManager#authenticate(org.springframework.security.core.Authentication)
+	 */
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		if (authentication == null) {
@@ -74,6 +97,13 @@ public class ExtendedAuthenticationManager implements AuthenticationManager {
 		}
 	}
 	
+	/**
+	 * Authenticates a UsernamePasswordAuthenticationToken
+	 *
+	 * @param authToken the UsernamePasswordAuthenticationToken
+	 * @return the Authentication
+	 * @throws SOAPFaultException the SOAP fault exception
+	 */
 	public Authentication authenticate(UsernamePasswordAuthenticationToken authToken) throws SOAPFaultException {
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -107,6 +137,13 @@ public class ExtendedAuthenticationManager implements AuthenticationManager {
 		}
 	}
 	
+	/**
+	 * Authenticates a SAMLPrincipal.
+	 *
+	 * @param authToken the SAMLPrincipal
+	 * @return the Authentication
+	 * @throws SOAPFaultException the SOAP fault exception
+	 */
 	public Authentication authenticate(SAMLPrincipal authToken) throws SOAPFaultException {
 		Assertion assertion = authToken.getCredentials();
 		
@@ -170,6 +207,11 @@ public class ExtendedAuthenticationManager implements AuthenticationManager {
 		}
 	}
 	
+	/**
+	 * Initializes the ExtendedAutheticationManager.
+	 *
+	 * @throws SAMLException the SAML exception
+	 */
 	public void init() throws SAMLException {
 		try {
 			DefaultBootstrap.bootstrap();
@@ -183,6 +225,13 @@ public class ExtendedAuthenticationManager implements AuthenticationManager {
 		certificateStore = new CertificateStore(keystorepath, keystorepass, keystoreAliases);
 	}
 	
+	/**
+	 * Creates the soap fault exception.
+	 *
+	 * @param faultString the fault string
+	 * @param cause the cause as Exception
+	 * @return the SOAP fault exception
+	 */
 	private SOAPFaultException createSOAPFaultException(String faultString, Exception cause) {
 		LOG.debug(faultString, cause);
 		try {
@@ -195,6 +244,12 @@ public class ExtendedAuthenticationManager implements AuthenticationManager {
 		}
 	}
 	
+	/**
+	 * Verifies a signature.
+	 *
+	 * @param signature the Signature
+	 * @throws SOAPFaultException the SOAP fault exception
+	 */
 	private void verifySignature(Signature signature) throws SOAPFaultException {
 		// step #1
 		if (signature == null) {
@@ -239,30 +294,65 @@ public class ExtendedAuthenticationManager implements AuthenticationManager {
 		}
 	}
 
+	/**
+	 * Sets the data source.
+	 *
+	 * @param dataSource the new DataSource
+	 */
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
+	/**
+	 * Sets the grace period.
+	 *
+	 * @param gracePeriod the new grace period as long
+	 */
 	public void setGracePeriod(long gracePeriod) {
 		this.gracePeriod = Math.min(gracePeriod, GRACE_PERIOD_MAX_VALUE);
 	}
 
+	/**
+	 * Sets if the Conditions of the Authentication should be verified.
+	 *
+	 * @param verifyConditions true, if the conditions should be verified.
+	 */
 	public void setVerifyConditions(boolean verifyConditions) {
 		this.verifyConditions = verifyConditions;
 	}
 
+	/**
+	 * Sets if the Signature of the Authentication should be verified.
+	 *
+	 * @param verifySignature true, if the signature should be verified.
+	 */
 	public void setVerifySignature(boolean verifySignature) {
 		this.verifySignature = verifySignature;
 	}
 
+	/**
+	 * Sets the keystorepath.
+	 *
+	 * @param keystorepath the new keystorepath
+	 */
 	public void setKeystorepath(String keystorepath) {
 		this.keystorepath = keystorepath;
 	}
 
+	/**
+	 * Sets the keystorepass.
+	 *
+	 * @param keystorepass the new keystorepass
+	 */
 	public void setKeystorepass(String keystorepass) {
 		this.keystorepass = keystorepass;
 	}
 
+	/**
+	 * Sets the keystore aliases.
+	 *
+	 * @param keystoreAliases the new keystore aliases
+	 */
 	public void setKeystoreAliases(String keystoreAliases) {
 		this.keystoreAliases = keystoreAliases;
 	}

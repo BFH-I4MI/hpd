@@ -20,39 +20,55 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-
+/**
+ * The Class CertificateStore.
+ * 
+ * @author Federico Marmory, Post CH, major development, javadoc
+ * @author Kevin Tippenhauer, Berner Fachhochschule, javadoc
+ */
 public class CertificateStore {
 
+	/** The Logger */
 	private static final Logger LOG = LoggerFactory.getLogger(CertificateStore.class);
 
+	/** The Constant ALIAS_DELIMITER. */
 	protected static final String ALIAS_DELIMITER = ",";
 
+	/** The Constant JAVA_KEYSTORE. */
 	protected static final String JAVA_KEYSTORE = "jks";
 
+	/** The aliases. */
 	private String[] aliases;
 
+	/** The credentials. */
 	private ConcurrentMap<String, Credential> credentials;
 
+	/** The keystore path and type. */
 	private String keystorePath, keystoreType;
 
+	/** The keystore passwd. */
 	private char[] keystorePasswd;
 
 	/**
-	 * @param keystorePath
-	 * @param keystorePasswd
-	 * @param keystoreAliases
-	 * @throws SAMLException
+	 * Instantiates a new certificate store with keystore type "jks".
+	 *
+	 * @param keystorePath the keystore path
+	 * @param keystorePasswd the keystore passwd
+	 * @param keystoreAliases the keystore aliases
+	 * @throws SAMLException the SAML exception
 	 */
 	protected CertificateStore(String keystorePath, String keystorePasswd, String keystoreAliases) throws SAMLException {
 		this(keystorePath, keystorePasswd, null, keystoreAliases);
 	}
 
 	/**
-	 * @param keystorePath
-	 * @param keystorePasswd
-	 * @param keystoreType
-	 * @param keystoreAliases
-	 * @throws SAMLException
+	 * Instantiates a new certificate store.
+	 *
+	 * @param keystorePath the keystore path
+	 * @param keystorePasswd the keystore passwd
+	 * @param keystoreType the keystore type
+	 * @param keystoreAliases the keystore aliases
+	 * @throws SAMLException the SAML exception
 	 */
 	protected CertificateStore(String keystorePath, String keystorePasswd, String keystoreType, String keystoreAliases)
 			throws SAMLException {
@@ -88,7 +104,9 @@ public class CertificateStore {
 	}
 
 	/**
-	 * @throws SAMLException
+	 * Initializes the certificate store.
+	 *
+	 * @throws SAMLException the SAML exception
 	 */
 	private void initialize() throws SAMLException {
 		FileInputStream fis = null;
@@ -151,15 +169,19 @@ public class CertificateStore {
 	}
 
 	/**
-	 * @param alias
-	 * @return
+	 * Gets the credential based on an alias.
+	 *
+	 * @param alias the alias
+	 * @return the credential
 	 */
 	protected Credential getCredential(String alias) {
 		return credentials.get(alias);
 	}
 
 	/**
-	 * @return
+	 * Gets the credentials.
+	 *
+	 * @return the credentials
 	 */
 	protected Map<String, Credential> getCredentials() {
 		return credentials;

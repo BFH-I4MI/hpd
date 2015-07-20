@@ -1,7 +1,7 @@
 /**
- * Contains the processors of the HPD project. 
+ * Contains the processors used by the HPD project. 
  *
- * @author  Kevin Tippenhauer
+ * @author Kevin Tippenhauer, Berner Fachhochschule
  */
 
 package ch.bfh.i4mi.processors;

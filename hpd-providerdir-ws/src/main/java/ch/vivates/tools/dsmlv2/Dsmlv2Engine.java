@@ -60,28 +60,64 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParserException;
 
+/**
+ * The Class Dsmlv2Engine processes the DSML Message.
+ * 
+ * @author Federico Marmory, Post CH, major development
+ * @author Kevin Tippenhauer, Berner Fachhochschule, javadoc
+ */
 public class Dsmlv2Engine {
 
+	/** The grammar. */
 	private final Dsmlv2Grammar grammar = new Dsmlv2Grammar();
 
+	/** The LDAP connection pool. */
 	private LdapConnectionPool ldapConnectionPool;
 
+	/** The Constant LOG. */
 	private static final Logger LOG = LoggerFactory.getLogger(Dsmlv2Engine.class);
 
+	/**
+	 * Sets the LDAP connection pool.
+	 *
+	 * @param ldapConnectionPool the new LDAP connection pool
+	 */
 	public void setLdapConnectionPool(LdapConnectionPool ldapConnectionPool) {
 		this.ldapConnectionPool = ldapConnectionPool;
 	}
 
+	/**
+	 * Processes the DSML based on InputStream and OutputStream.
+	 *
+	 * @param inputStream the InputStream
+	 * @param out the OutputStream
+	 * @throws Exception the exception
+	 */
 	public void processDSML(InputStream inputStream, OutputStream out) throws Exception {
 		processDSML(inputStream, "UTF-8", out);
 	}
 
+	/**
+	 * Processes the DSML based on InputStream, input encoding and OutputStream.
+	 *
+	 * @param inputStream the InputStream
+	 * @param inputEncoding the input encoding as String
+	 * @param out the OutputStream
+	 * @throws Exception the exception
+	 */
 	public void processDSML(InputStream inputStream, String inputEncoding, OutputStream out) throws Exception {
 		Dsmlv2Parser parser = new Dsmlv2Parser(grammar);
 		parser.setInput(inputStream, inputEncoding);
 		processDSML(out, parser);
 	}
 
+	/**
+	 * Processes the DSML based on OutputStream and Dsmlv2Parser.
+	 *
+	 * @param outStream the OutputStream
+	 * @param parser the Dsmlv2Parser
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void processDSML(OutputStream outStream, Dsmlv2Parser parser) throws IOException {
 		BufferedWriter respWriter = null;
 
@@ -246,6 +282,13 @@ public class Dsmlv2Engine {
 		}
 	}
 
+	/**
+	 * Writes the response.
+	 *
+	 * @param respWriter the response BufferedWriter
+	 * @param respDsml the response DSML
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void writeResponse(BufferedWriter respWriter, DsmlDecorator<?> respDsml) throws IOException {
 		if (respWriter != null) {
 			Element xml = respDsml.toDsml(null);
@@ -253,6 +296,15 @@ public class Dsmlv2Engine {
 		}
 	}
 
+	/**
+	 * Processes DSML request.
+	 *
+	 * @param request the request
+	 * @param respWriter the response writer
+	 * @param batchResponse the batch response
+	 * @return the ResultCodeEnum
+	 * @throws Exception the exception
+	 */
 	protected ResultCodeEnum processRequest(DsmlDecorator<? extends Request> request, BufferedWriter respWriter,
 			BatchResponseDsml batchResponse) throws Exception {
 		ResultCodeEnum resultCode = null;

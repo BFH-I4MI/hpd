@@ -17,34 +17,67 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+/**
+ * The Class EndpointAwareWsdlDefinitionHttpHandler.
+ * 
+ * @author Federico Marmory, Post CH, major development
+ * @author Kevin Tippenhauer, Berner Fachhochschule, javadoc
+ */
 @SuppressWarnings("restriction")
-public class EndpointAwareWsdlDefinitionHttpHandler extends TransformerObjectSupport  implements HttpHandler, InitializingBean {
+public class EndpointAwareWsdlDefinitionHttpHandler extends TransformerObjectSupport implements HttpHandler, InitializingBean {
 
+    /** The Constant CONTENT_TYPE. */
     private static final String CONTENT_TYPE = "text/xml";
 
+    /** The WSDL definition. */
     private WsdlDefinition definition;
     
+    /** The service endpoint. */
     private String serviceEndpoint;
 
+    /**
+     * Instantiates a new endpoint aware wsdl definition http handler.
+     */
     public EndpointAwareWsdlDefinitionHttpHandler() {
     }
 
+    /**
+     * Instantiates a new endpoint aware wsdl definition http handler.
+     *
+     * @param definition the definition
+     */
     public EndpointAwareWsdlDefinitionHttpHandler(WsdlDefinition definition) {
         this.definition = definition;
     }
 
+    /**
+     * Sets the definition.
+     *
+     * @param definition the new definition
+     */
     public void setDefinition(WsdlDefinition definition) {
         this.definition = definition;
     }
 
+	/**
+	 * Sets the service endpoint.
+	 *
+	 * @param serviceEndpoint the new service endpoint
+	 */
 	public void setServiceEndpoint(String serviceEndpoint) {
 		this.serviceEndpoint = serviceEndpoint;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+	 */
 	public void afterPropertiesSet() throws Exception {
         Assert.notNull(definition, "'definition' is required");
     }
 
+    /* (non-Javadoc)
+     * @see com.sun.net.httpserver.HttpHandler#handle(com.sun.net.httpserver.HttpExchange)
+     */
     public void handle(HttpExchange httpExchange) throws IOException {
         try {
             if (HttpTransportConstants.METHOD_GET.equals(httpExchange.getRequestMethod())) {

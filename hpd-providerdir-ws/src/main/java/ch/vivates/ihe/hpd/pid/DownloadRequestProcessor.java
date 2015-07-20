@@ -24,10 +24,28 @@ import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.w3c.dom.Document;
 
+/**
+ * The Class DownloadRequestProcessor.
+ * 
+ * @author Federico Marmory, Post CH, major development
+ * @author Kevin Tippenhauer, Berner Fachhochschule, javadoc
+ */
 public class DownloadRequestProcessor {
 
+	/** The from month limit. */
 	private int fromMonthLimit = 12;
 
+	/**
+	 * Extracts the parameters from the download request.
+	 *
+	 * @param requestID the request id
+	 * @param fromDateStr the from date string
+	 * @param toDateStr the to date string
+	 * @param filterMyTransactions the filter my transactions tag
+	 * @param principal the principal tag
+	 * @return a map with the request parameters
+	 * @throws ParseException the parse exception
+	 */
 	public Map<String, Object> extractParams(
 			@XPath(value = "/cs:downloadRequest/@requestID", namespaces = @NamespacePrefix(prefix = "cs", uri = "urn:ehealth-suisse:names:tc:CS:1"), resultType = String.class) String requestID,
 			@XPath(value = "/cs:downloadRequest/@fromDate", namespaces = @NamespacePrefix(prefix = "cs", uri = "urn:ehealth-suisse:names:tc:CS:1"), resultType = String.class) String fromDateStr,
@@ -47,6 +65,13 @@ public class DownloadRequestProcessor {
 		return requestParamsMap;
 	}
 
+	/**
+	 * Processes the response for a download request.
+	 *
+	 * @param results the results of the request
+	 * @return the response as byte array.
+	 * @throws Exception the exception
+	 */
 	public byte[] processResponse(@Body List<Map<String, Object>> results) throws Exception {
 		StringBuilder sb = new StringBuilder(results.size() * 2000);
 
@@ -70,10 +95,25 @@ public class DownloadRequestProcessor {
 
 	}
 
+	/**
+	 * Sets the from month limit.
+	 *
+	 * @param fromMonthLimit the new from month limit
+	 */
 	public void setFromMonthLimit(int fromMonthLimit) {
 		this.fromMonthLimit = fromMonthLimit;
 	}
 
+	/**
+	 * Returns the later date between to dates.
+	 *
+	 * @param d1 the d1
+	 * @param d2 the d2
+	 * @return - null, if d1 and d2 are null.
+	 *         - d2 if d1 is null.
+	 *         - d1 if d2 is null.
+	 *         - the date after the other date if none of the parameters is null.
+	 */
 	public static Date max(Date d1, Date d2) {
 		if (d1 == null && d2 == null)
 			return null;
