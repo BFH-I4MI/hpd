@@ -21,7 +21,7 @@ import ch.vivates.ihe.hpd.pid.model.cs.SearchRequest;
 /**
  * The Class Application.
  */
-public final class Application {
+public class Application {
 
 	/**
 	 * Instantiates a new application.
@@ -42,18 +42,18 @@ public final class Application {
 	 */
 	public static void main(final String... args) throws SOAPException {
 
-		final ApplicationContext ctx = SpringApplication.run(
+		ApplicationContext ctx = SpringApplication.run(
 				ClientConfiguration.class, args);
 
-		final HPDClient hpdClient = ctx.getBean(HPDClient.class);
+		HPDClient hpdClient = ctx.getBean(HPDClient.class);
 
-		final AttributeDescription attrDesc = new AttributeDescription();
+		AttributeDescription attrDesc = new AttributeDescription();
 		attrDesc.setName("objectClass");
 
-		final Filter filter = new Filter();
+		Filter filter = new Filter();
 		filter.setPresent(attrDesc);
 
-		final SearchRequest searchRequest = new ObjectFactory()
+		SearchRequest searchRequest = new ObjectFactory()
 				.createSearchRequest();
 		searchRequest.setDn("ou=HCProfessional,dc=HPD,o=ehealth-suisse,c=ch");
 		searchRequest.setRequestID("01");
@@ -64,24 +64,17 @@ public final class Application {
 		searchRequest.setTypesOnly(false);
 		searchRequest.setFilter(filter);
 
-		final BatchRequest batchRequest = new BatchRequest();
+		BatchRequest batchRequest = new BatchRequest();
 
 		batchRequest.setRequestID("0001");
 		batchRequest.setProcessing("sequential");
 		batchRequest.setResponseOrder("sequential");
 		batchRequest.setOnError("exit");
 		batchRequest.getBatchRequests().add(searchRequest);
+		
+		Jaxb2Marshaller marshaller = ctx.getBean(Jaxb2Marshaller.class);
 
-		final ConcurrentHashMap<String, Object> map = new ConcurrentHashMap<String, Object>();
-		map.put(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-		final Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-		marshaller.setPackagesToScan("ch.vivates.ihe.hpd.pid.model.cs");
-		marshaller.setSupportJaxbElementClass(true);
-		marshaller.setMarshallerProperties(map);
-		marshaller.setUnmarshallerProperties(map);
-
-		final BatchResponse batchResponse = hpdClient
+		BatchResponse batchResponse = hpdClient
 				.getBatchResponse(batchRequest);
 
 		if (batchResponse != null) {

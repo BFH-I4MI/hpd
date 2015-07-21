@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ClientConfiguration contains the configuration for the HPDClient
  * class.
@@ -15,10 +14,10 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 public class ClientConfiguration {
 	
 	/** The Constant USERNAME provides the username used by the HPDClient. */
-	private static final String USERNAME = "test";
+	private static final String USERNAME = "com_zh";
 	
 	/** The Constant PASSWORD provides the password used by the HPDClient.*/
-	private static final String PASSWORD = "test";
+	private static final String PASSWORD = "com";
 	
 	
 	/**
@@ -34,11 +33,11 @@ public class ClientConfiguration {
 	 * @return the jaxb2 marshaller
 	 */
 	@Bean
-	public final Jaxb2Marshaller marshaller() {
+	public Jaxb2Marshaller marshaller() {
 
-		final Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
 		marshaller.setCheckForXmlRootElement(false);
-		final HashMap<String, Boolean> map = new HashMap<String, Boolean>();
+		HashMap<String, Boolean> map = new HashMap<String, Boolean>();
 		map.put(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		marshaller.setMarshallerProperties(map);
 		marshaller.setContextPath("ch.vivates.ihe.hpd.pid.model.cs");
@@ -55,9 +54,9 @@ public class ClientConfiguration {
 	 * @throws Exception when HPDClient can not be created.
 	 */
 	@Bean
-	public final HPDClient hpdClient(final Jaxb2Marshaller marshaller) throws Exception {
-		final HPDClient client = new HPDClient(USERNAME, PASSWORD);
-		client.setDefaultUri("http://147.87.117.79:8080/hpd-ws/"
+	public HPDClient hpdClient(final Jaxb2Marshaller marshaller) throws Exception {
+		HPDClient client = new HPDClient(USERNAME, PASSWORD);
+		client.setDefaultUri("http://epdhpd.i4mi.bfh.ch:8080/hpd-ws/"
 				+ "ProviderInformationDirectoryService");
 		client.setMarshaller(marshaller);
 		client.setUnmarshaller(marshaller);

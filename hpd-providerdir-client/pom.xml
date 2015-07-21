@@ -12,6 +12,20 @@
 		<url>http://www.ti.bfh.ch/de/bachelor/medizininformatik.html</url>
 	</organization>
 
+	<developers>
+		<developer>
+			<id>tuk1</id>
+			<name>Kevin Tippenhauer</name>
+			<organization>Berner Fachhochschule</organization>
+			<email>kevin.tippenhauer@bfh.ch</email>
+			<organizationUrl>http://www.i4mi.ti.bfh.ch</organizationUrl>
+			<timezone>+1</timezone>
+			<roles>
+				<role>EPD-Prototype adaption</role>
+			</roles>
+		</developer>
+	</developers>
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

@@ -25,7 +25,7 @@ public class AttributeValidatorSettings {
 	 *
 	 * @param aBufferedInputStream the a buffered input stream to load the settings
 	 */
-	public AttributeValidatorSettings(final BufferedInputStream aBufferedInputStream) {
+	public AttributeValidatorSettings(BufferedInputStream aBufferedInputStream) {
 		this.bufferedInputStream = aBufferedInputStream;
 		try {
 			loadSettings();
@@ -54,7 +54,7 @@ public class AttributeValidatorSettings {
 	 * @param akey a key
 	 * @return the translation for the key
 	 */
-	public final String getTranslation(final String akey) {
+	public String getTranslation(String akey) {
 		String result = translationDictionary.get(akey);
 		return result;
 	}

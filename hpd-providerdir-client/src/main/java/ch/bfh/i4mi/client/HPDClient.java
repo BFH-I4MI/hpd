@@ -75,7 +75,7 @@ public class HPDClient extends WebServiceGatewaySupport {
 	 * @throws SOAPException
 	 *             the SOAP exception
 	 */
-	public final BatchResponse getBatchResponse(final BatchRequest batchRequest)
+	public BatchResponse getBatchResponse(final BatchRequest batchRequest)
 			throws SOAPException {
 
 		SaajSoapMessageFactory saajSoapMessageFactory = 
@@ -93,8 +93,7 @@ public class HPDClient extends WebServiceGatewaySupport {
 				batchRequest);
 
 		SoapActionCallback soapActionCallback = new SoapActionCallback(
-				"http://epdhpd.i4mi.bfh.ch:8080/hpd-ws/"
-						+ "ProviderInformationDirectoryService") {
+				"http://147.87.117.79:8080/hpd-ws/ProviderInformationDirectoryService") {
 			@Override
 			public void doWithMessage(final WebServiceMessage message)
 					throws IOException {
