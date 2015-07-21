@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.bfh.i4mi</groupId>
 	<artifactId>hpd</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>HPD - Project</name>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>HPD-Project</name>
 	<description>Maven project containing the HPD parts</description>
 	<packaging>pom</packaging>
 	<organization>

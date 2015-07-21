@@ -4,10 +4,38 @@
 
 	<artifactId>hpd-providerdir-ws</artifactId>
 	<packaging>bundle</packaging>
-	<version>1.0.5-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<name>HPD - Provider Information Directory</name>
 	<description>IHE Provider Information Directory Actor implementation.
 	</description>
+
+<!-- ***** DEVELOPERS ***** -->
+
+    <developers>
+        <developer>
+            <id>marmorife</id>
+            <name>Federico Marmori</name>
+            <organization>Vivates</organization>
+            <email>federico.marmori@vivates.ch</email>
+            <organizationUrl>http://www.vivates.ch</organizationUrl>
+            <timezone>+1</timezone>
+            <roles>
+                <role>Principal Architect</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>tuk1</id>
+            <name>Kevin Tippenhauer</name>
+            <organization>Berner Fachhochschule</organization>
+            <email>kevin.tippenhauer@bfh.ch</email>
+            <organizationUrl>http://www.i4mi.ti.bfh.ch</organizationUrl>
+            <timezone>+1</timezone>
+            <roles>
+                <role>EPD-Prototype adaption</role>
+            </roles>
+        </developer>
+    </developers>
+
 
 	<parent>
 		<groupId>ch.vivates.hpd</groupId>
@@ -30,6 +58,10 @@
 		<mysql.version>5.1.33</mysql.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.1.2</logback.version>
+		<!-- added by tuk1 -->
+		<jaxws-plugin.version>2.3</jaxws-plugin.version>
+		<apache-cxf.version>2.7.6</apache-cxf.version>
+		<!-- /added by tuk1 -->
 	</properties>
 	<build>
 		<resources>
@@ -52,21 +84,24 @@
 				<filtering>false</filtering>
 			</resource>
 		</resources>
+		<!-- added by tuk1 -->
 		<testResources>
 			<testResource>
 				<directory>src/test/resources</directory>
 				<filtering>true</filtering>
 			</testResource>
 		</testResources>
+		<!-- /added by tuk1 -->
 		<plugins>
 			<!-- Plugins with managed versions in parent project -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 			</plugin>
+			<!-- added by tuk1 -->
 			<plugin>
 				<groupId>org.jvnet.jax-ws-commons</groupId>
 				<artifactId>jaxws-maven-plugin</artifactId>
-				<version>2.3</version>
+				<version>${jaxws-plugin.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -87,6 +122,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- /added by tuk1 -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jaxb2-maven-plugin</artifactId>
@@ -504,17 +540,18 @@
 			<version>${camel.version}</version>
 			<scope>test</scope>
 		</dependency>
-
+		
+<!-- added by tuk1 -->
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-frontend-jaxws</artifactId>
-			<version>2.7.6</version>
+			<version>${apache-cxf.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-transports-http</artifactId>
-			<version>2.7.6</version>
+			<version>${apache-cxf.version}</version>
 		</dependency>
 
 
@@ -523,7 +560,7 @@
 			<artifactId>org.apache.servicemix.bundles.wsdl4j</artifactId>
 			<version>1.6.3_1</version>
 		</dependency>
-
+<!-- /added by tuk1 -->
 		<!-- Command-line tools -->
 		<!-- <dependency> -->
 		<!-- <groupId>ch.vivates.hpd</groupId> -->
@@ -559,7 +596,7 @@
 				</plugins>
 			</build>
 		</profile>
-
+<!-- added by tuk1 -->
 		<profile>
 			<id>Metro</id>
 			<build>
@@ -591,5 +628,6 @@
 				</plugins>
 			</build>
 		</profile>
+<!-- /added by tuk1 -->
 	</profiles>
 </project>

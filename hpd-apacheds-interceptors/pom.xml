@@ -10,7 +10,7 @@
 		<name>Berner Fachhochschule - Institute for Medical Informatics</name>
 		<url>http://www.ti.bfh.ch/de/bachelor/medizininformatik.html</url>
 	</organization>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

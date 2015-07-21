@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Kevin Tippenhauer, Berner Fachhochschule
  */
-public class EntryForDnValidationInterceptor extends BaseInterceptor {
+public class DnValidationInterceptor extends BaseInterceptor {
 
     /** The names of the attributes to check for valid dn. */
     private String[] arrAttributeNamesToCheck = {"memberOf", "member", "owner"};
@@ -33,11 +33,11 @@ public class EntryForDnValidationInterceptor extends BaseInterceptor {
 
     /** logger used by this class. */
     private static final Logger LOG = LoggerFactory
-            .getLogger(EntryForDnValidationInterceptor.class);
+            .getLogger(DnValidationInterceptor.class);
 
     @Override
     public final void init(final DirectoryService aDirectoryService) throws LdapException {
-        LOG.debug("Initialiazing the EntryForDnValidationInterceptor");
+        LOG.debug("Initialiazing the DnValidationInterceptor");
         super.init(aDirectoryService);
     }
 

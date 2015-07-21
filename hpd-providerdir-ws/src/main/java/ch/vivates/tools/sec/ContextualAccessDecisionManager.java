@@ -35,7 +35,6 @@ import ch.bfh.i4mi.validators.AttributeValidator;
 import ch.vivates.ihe.hpd.pid.exceptions.AuthorizationException;
 import ch.vivates.ihe.hpd.pid.model.cs.AddRequest;
 import ch.vivates.ihe.hpd.pid.model.cs.BatchRequest;
-import ch.vivates.ihe.hpd.pid.model.cs.DelRequest;
 import ch.vivates.ihe.hpd.pid.model.cs.DsmlAttr;
 import ch.vivates.ihe.hpd.pid.model.cs.DsmlMessage;
 import ch.vivates.ihe.hpd.pid.model.cs.DsmlModification;
@@ -273,7 +272,7 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 						if (dsmlMod.getValue() == null
 								|| dsmlMod.getValue().isEmpty()) {
 							throw new AuthorizationException(
-									"[INVALID FEED REQ] Use REMOVE operation to remove attributes.");
+									"[INVALID FEED REQ] Use modify delete operation to remove attributes.");
 						}
 						// ***************** tuk1 *****************
 						// Terminology check
@@ -382,39 +381,49 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 					break;
 
 				case "DelRequest":
-					DelRequest delRequest = (DelRequest) op;
-					String targetDelDn = delRequest.getDn();
-
-					// DEL-ORG: Is in community
-					if (targetDelDn.contains(orgRdn)) {
-						verifyCommunityLink(targetDelDn, communityUID,
-								connection);
-					}
-
-					// DEL-HP: Has no relationships
-					if (targetDelDn.contains(hpRdn)) {
-						SearchRequest searchRequest = new SearchRequestImpl();
-						searchRequest.setBase(new Dn(relRdn + "," + basePath));
-						searchRequest.setFilter("(objectClass=groupOfNames)");
-						searchRequest.setScope(SearchScope.ONELEVEL);
-						searchRequest.addAttributes("member=" + targetDelDn);
-
-						if (!connection.search(searchRequest).available()) {
-							throw new AuthorizationException(
-									"[INVALID FEED REQ] HP has relationsips. Before removing a HP, remove all his relationships.");
-						}
-					}
-
-					// DEL-REL: Current owner ORG is in community
-					if (targetDelDn.contains(relRdn)) {
-						Entry existingRel = connection.lookup(targetDelDn);
-						verifyCommunityLink(existingRel.get("owner")
-								.getString(), communityUID, connection);
-					}
-
-					break;
+					
+//					Commented out by tuk1 because delete is not allowed in this prototype
+//					
+//					
+//					DelRequest delRequest = (DelRequest) op;
+//					String targetDelDn = delRequest.getDn();
+//
+//					// DEL-ORG: Is in community
+//					if (targetDelDn.contains(orgRdn)) {
+//						verifyCommunityLink(targetDelDn, communityUID,
+//								connection);
+//					}
+//
+//					// DEL-HP: Has no relationships
+//					if (targetDelDn.contains(hpRdn)) {
+//						SearchRequest searchRequest = new SearchRequestImpl();
+//						searchRequest.setBase(new Dn(relRdn + "," + basePath));
+//						searchRequest.setFilter("(objectClass=groupOfNames)");
+//						searchRequest.setScope(SearchScope.ONELEVEL);
+//						searchRequest.addAttributes("member=" + targetDelDn);
+//
+//						if (!connection.search(searchRequest).available()) {
+//							throw new AuthorizationException(
+//									"[INVALID FEED REQ] HP has relationsips. Before removing a HP, remove all his relationships.");
+//						}
+//					}
+//
+//					// DEL-REL: Current owner ORG is in community
+//					if (targetDelDn.contains(relRdn)) {
+//						Entry existingRel = connection.lookup(targetDelDn);
+//						verifyCommunityLink(existingRel.get("owner")
+//								.getString(), communityUID, connection);
+//					}
+//
+					// ***************** tuk1 *****************
+					throw new AuthorizationException(
+							"[INVALID FEED REQ] Delete elements is forbidden, set elements inactive with a modify request.");
+					
+					// ***************** /tuk1 *****************
+//					break;
 
 				case "ModifyDNRequest":
+					
 					ModifyDNRequest modDnRequest = (ModifyDNRequest) op;
 
 					// MOD-DN-ORG: No new superior
@@ -422,10 +431,21 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 					// MOD-DN-REL: No new superior
 					if (!StringUtils.isBlank(modDnRequest.getNewSuperior())) {
 						throw new AuthorizationException(
-								"[INVALID FEED REQ] Moving elements is forbidden. 'NewSuperior' attribute in ModifyDNRequest muss not be set.");
+								"[INVALID FEED REQ] Moving elements is forbidden. 'NewSuperior' attribute in ModifyDNRequest must not be set.");
 					}
-
+					
 					break;
+					
+				case "CompareRequest":
+					throw new AuthorizationException(
+							"[INVALID FEED REQ] CompareRequest is not supported by this version.");
+				case "AbandonRequest":
+					throw new AuthorizationException(
+							"[INVALID FEED REQ] AbandonRequest is not supported by this version.");
+					
+				case "ExtendedRequest":
+					throw new AuthorizationException(
+							"[INVALID FEED REQ] ExtendedRequest is not supported by this version.");
 
 				default:
 

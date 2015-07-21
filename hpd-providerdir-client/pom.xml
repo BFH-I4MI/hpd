@@ -1,21 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<groupId>ch.bfh.i4mi</groupId>
 	<artifactId>hpd-providerdir-client</artifactId>
 	<packaging>jar</packaging>
-	<name>HPD - Provider Directory Client</name>
+	<name>HPD - Java Client</name>
 	<description>Basic client example for the HPD prototype</description>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<organization>
 		<name>Berner Fachhochschule - Institute for Medical Informatics</name>
 		<url>http://www.ti.bfh.ch/de/bachelor/medizininformatik.html</url>
 	</organization>
-
-	<parent>
-		<groupId>ch.bfh.i4mi</groupId>
-		<artifactId>hpd</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

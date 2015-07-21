@@ -25,7 +25,13 @@ public class AttributeValidator {
 
 	/** The attribute validator settings. */
 	private AttributeValidatorSettings attributeValidatorSettings;
+	
+	/** The search service */
+	private Search_Service service;
 
+	/** The search port */
+	private Search port;
+	
 	/**
 	 * Instantiates a new attribute validator.
 	 *
@@ -34,6 +40,10 @@ public class AttributeValidator {
 	public AttributeValidator(
 			AttributeValidatorSettings anAttributeValidatorSettings) {
 		this.setAttributeValidatorSettings(anAttributeValidatorSettings);
+		
+		// create webservice reference and port
+		this.service = new Search_Service();
+		this.port = service.getSearchPort();
 	}
 
 	/**
@@ -57,10 +67,7 @@ public class AttributeValidator {
 	 */
 	public long getCurrentCodeSystemVersion(String codeSystemName)
 			throws SOAPException {
-		// create webservice reference and port
-		Search_Service service = new Search_Service();
-		Search port = service.getSearchPort();
-
+		
 		// define parameter
 		ListCodeSystemsRequestType request = new ListCodeSystemsRequestType();
 		CodeSystem codeSystem = new CodeSystem();
@@ -89,8 +96,7 @@ public class AttributeValidator {
 	 */
 	public CodeSystemConcept currentConceptCodeFilter(String codeSystemName,
 			String code) throws SOAPException {
-		Search_Service service = new Search_Service();
-		Search port = service.getSearchPort();
+
 
 		// define parameter
 		ListCodeSystemConceptsRequestType request = new ListCodeSystemConceptsRequestType();
