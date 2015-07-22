@@ -16,7 +16,9 @@
         http://camel.apache.org/schema/spring-security http://camel.apache.org/schema/spring-security/camel-spring-security.xsd
         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
+    <!-- tuk1 -->
     <!-- Explanation: http://stackoverflow.com/questions/14530533/camel-route-using-spring-ws-client-occasionally-throws-javax-xml-transform-stax -->
+    <!-- Do not move this bean, placing it to low leads to errors -->
     <bean id="baseCamelMarshallerWSTemplate" class="org.springframework.ws.client.core.WebServiceTemplate"
         scope="prototype">
         <constructor-arg ref="messageFactory" />
@@ -27,6 +29,7 @@
         <property name="transformerFactoryClass"
             value="com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl" />
     </bean>
+    <!-- /tuk1 -->
 
 
 	<!-- JAXP Utility bean -->

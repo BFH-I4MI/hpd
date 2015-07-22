@@ -207,7 +207,7 @@ public class HPDClient extends WebServiceGatewaySupport {
 	 */
 	public static void printDocument(final Document doc, final OutputStream out)
 			throws IOException, TransformerException {
-		TransformerFactory tf = TransformerFactory.newInstance();
+		TransformerFactory tf = TransformerFactory.newInstance("com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl",null);
 		Transformer transformer = tf.newTransformer();
 		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
 		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
