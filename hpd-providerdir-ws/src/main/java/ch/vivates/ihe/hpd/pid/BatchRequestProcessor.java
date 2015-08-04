@@ -62,7 +62,7 @@ public class BatchRequestProcessor {
 	 */
 	public InputStream prepareFeedRequest(@Body InputStream dsmlFeed, @Header("requestID") String requestID, @Header("processing") String processing,
 			@Header("responseOrder") String responseOrder, @Header("onError") String onError) throws Exception {
-		return injectBachRequestNode(dsmlFeed, requestID, processing, responseOrder, onError);
+		return injectBatchRequestNode(dsmlFeed, requestID, processing, responseOrder, onError);
 	}
 	
 	/**
@@ -119,7 +119,7 @@ public class BatchRequestProcessor {
 	 * @return the new input stream with injected BatchRequest
 	 * @throws Exception the exception
 	 */
-	private InputStream injectBachRequestNode(InputStream is, String requestID, String processing, String responseOrder, String onError) throws Exception {
+	private InputStream injectBatchRequestNode(InputStream is, String requestID, String processing, String responseOrder, String onError) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
 
