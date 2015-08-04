@@ -90,6 +90,21 @@
 	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
 		<property name="configuration" ref="jmsConfig" />
 	</bean>
+	
+<!-- added by tuk1 -->
+    <bean id="logQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="log_entries" />
+    </bean>
+   
+    <bean id="logJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="pooledConnectionFactory" />
+        <property name="defaultDestination" ref="logQueue" />
+    </bean> 
+   
+    <bean id="exceptionProcessor" class="ch.bfh.i4mi.processors.ExceptionProcessor">
+      <property name="jmsTemplate" ref="logJmsTemplate" />
+   </bean>
+<!-- /added by tuk1 -->
 
 	<!-- Database connection -->
 	<!-- this is the JDBC data source which uses an in-memory only Apache Derby database -->
@@ -267,6 +282,9 @@
 						<simple>${body[resultCode]} != '0'</simple>
 						<log message="Error executing transaction. ResultCode: $simple{body[resultCode]} Error message:\n$simple{body[errorMessage]}"
 							loggingLevel="ERROR" logName="routeTracer" />
+							<!-- added by tuk1 -->
+	                           <process ref="exceptionProcessor" />
+							<!-- /added by tuk1 -->
 						<setBody>
 							<simple>${header[originalBody]}</simple>
 						</setBody>
