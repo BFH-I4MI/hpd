@@ -4,7 +4,7 @@
 
 	<artifactId>hpd-providerdir-ws</artifactId>
 	<packaging>bundle</packaging>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.0.4-SNAPSHOT</version>
 	<name>HPD - Provider Information Directory</name>
 	<description>IHE Provider Information Directory Actor implementation.
 	</description>
@@ -30,8 +30,6 @@
 		<mysql.version>5.1.33</mysql.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.1.2</logback.version>
-		<!-- tuk1 <cxf.version>3.1.0</cxf.version> -->
-		<!-- /tuk1 -->
 	</properties>
 	<build>
 		<resources>
@@ -45,6 +43,13 @@
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/java/ch/bfh/i4mi/interceptor</directory>
+				<excludes>
+					<exclude>**/*</exclude>
+				</excludes>
+				<filtering>false</filtering>
 			</resource>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -64,6 +69,32 @@
 			<!-- Plugins with managed versions in parent project -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<!-- <configuration> <excludes> <exclude>**/ch/bfh/i4mi/interceptor/*</exclude> 
+					</excludes> </configuration> -->
+			</plugin>
+			<plugin>
+				<groupId>org.jvnet.jax-ws-commons</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+						<configuration>
+							<wsdlUrls>
+								<wsdlUrl>http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl
+								</wsdlUrl>
+							</wsdlUrls>
+							<sourceDestDir>${basedir}/target/generated-sources/termserver
+							</sourceDestDir>
+							<!-- Needed with JAXP 1.5, see https://netbeans.org/bugzilla/show_bug.cgi?id=241570#c2 -->
+							<vmArgs>
+								<vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+							</vmArgs>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -102,6 +133,9 @@
 							*;scope=provided;type=!pom;groupId=commons-pool;artifactId=commons-pool;inline=false
 						</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
+						<Private-Package>
+							!ch.bfh.i4mi.interceptor
+						</Private-Package>
 						<Import-Package>
 							bsh.*;
 							resolution:=optional,
@@ -193,13 +227,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
-			<!-- <plugin> <groupId>org.apache.cxf</groupId> <artifactId>cxf-codegen-plugin</artifactId> 
-				<version>${cxf.version}</version> <executions> <execution> <id>generate-sources</id> 
-				<phase>generate-sources</phase> <configuration> <sourceRoot>${project.build.directory}/generated-sources/termserver 
-				</sourceRoot> <wsdlOptions> <wsdlOption> <wsdl>http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl 
-				</wsdl> </wsdlOption> </wsdlOptions> </configuration> <goals> <goal>wsdl2java</goal> 
-				</goals> </execution> </executions> </plugin> -->
 		</plugins>
 	</build>
 	<dependencies>
@@ -250,6 +277,13 @@
 			<artifactId>activemq-camel</artifactId>
 			<version>${activemq.version}</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<!-- Apache DS -->
+		<dependency>
+			<groupId>org.apache.directory.server</groupId>
+			<artifactId>apacheds-core-api</artifactId>
+			<version>2.0.0-M19</version>
 		</dependency>
 
 		<!-- ActiveMQ -->
@@ -495,12 +529,12 @@
 			<artifactId>cxf-rt-frontend-jaxws</artifactId>
 			<version>2.7.6</version>
 		</dependency>
-		
+
 		<dependency>
-    <groupId>org.apache.servicemix.bundles</groupId>
-    <artifactId>org.apache.servicemix.bundles.wsdl4j</artifactId>
-    <version>1.6.3_1</version>
-</dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.wsdl4j</artifactId>
+			<version>1.6.3_1</version>
+		</dependency>
 
 		<!-- Command-line tools -->
 		<!-- <dependency> -->
@@ -538,22 +572,8 @@
 			</build>
 		</profile>
 
-		<!-- Added by tuk1 <profile> <id>CXF</id> <activation> <activeByDefault>true</activeByDefault> 
-			</activation> <build> <plugins> <plugin> <groupId>org.apache.cxf</groupId> 
-			<artifactId>cxf-codegen-plugin</artifactId> <version>${cxf.version}</version> 
-			<executions> <execution> <configuration> <sourceRoot> ${basedir}/target/generated-sources/termserver 
-			</sourceRoot> <wsdlOptions> <wsdlOption> <wsdl> http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl 
-			</wsdl> <wsdlLocation>http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl 
-			</wsdlLocation> </wsdlOption> </wsdlOptions> </configuration> <goals> <goal>wsdl2java</goal> 
-			</goals> </execution> </executions> </plugin> </plugins> </build> </profile> -->
-		<!-- / Added by tuk1 -->
-
 		<profile>
 			<id>Metro</id>
-			<dependencies>
-				<!-- <dependency> <groupId>org.glassfish.metro</groupId> <artifactId>webservices-rt</artifactId> 
-					<version>2.3</version> </dependency> -->
-			</dependencies>
 			<build>
 				<plugins>
 					<plugin>
@@ -584,6 +604,53 @@
 			</build>
 		</profile>
 
+
+		<profile>
+			<id>interceptors</id>
+			<dependencies>
+				<!-- Apache DS -->
+				<dependency>
+					<groupId>org.apache.directory.server</groupId>
+					<artifactId>apacheds-core-api</artifactId>
+					<version>2.0.0-M19</version>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<includes>
+								<include>**/ch/bfh/i4mi/interceptor/*</include>
+							</includes>
+						</configuration>
+					</plugin>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
+					<plugin>
+						<artifactId>maven-jar-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<configuration>
+									<classifier>interceptors</classifier>
+									<includes>
+										<include>ch/bfh/i4mi/interceptor/**</include>
+									</includes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
 </project>
