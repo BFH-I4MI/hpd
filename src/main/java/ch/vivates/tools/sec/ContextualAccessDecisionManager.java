@@ -141,6 +141,27 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 						throw new AuthorizationException(
 								"[INVALID FEED REQ] Missing auxiliary element class: HCRegulatedOrganization elements require auxiliary object classes: 'hpdProvider' and 'naturalPerson'");
 					}
+					
+					// ***************** tuk1 *****************
+					if (attributesMap.get("objectClass").contains(
+							"businessCategory")) {
+						for (DsmlAttr attr : addRequest.getAttr()) {
+							// Checks if:
+							//  - the attribute is 'businessCategory'
+							//  - the value of the attribute is 'community'
+							//  - the executing user is not the user 'root'
+							if (attr.getName().equalsIgnoreCase(
+									"businessCategory")
+									&& attr.getValue().get(0)
+											.equalsIgnoreCase("community")
+									&& !authentication.getName()
+											.equalsIgnoreCase("root")) {
+								throw new AuthorizationException(
+										"[INVALID FEED REQ] Community creation allowed only to 'root'");
+							}
+						}
+					}
+					// ***************** /tuk1 *****************
 
 					// ADD-REL: New owner ORG in community
 					if (targetAddDn.contains(relRdn)) {
