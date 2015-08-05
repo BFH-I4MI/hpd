@@ -1,0 +1,102 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ch.bfh.i4mi</groupId>
+	<artifactId>hpd-providerdir-client</artifactId>
+	<packaging>jar</packaging>
+	<name>HPD - Java Client</name>
+	<description>Basic client example for the HPD prototype</description>
+	<version>1.0.0-SNAPSHOT</version>
+	<organization>
+		<name>Berner Fachhochschule - Institute for Medical Informatics</name>
+		<url>http://www.ti.bfh.ch/de/bachelor/medizininformatik.html</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>tuk1</id>
+			<name>Kevin Tippenhauer</name>
+			<organization>Berner Fachhochschule</organization>
+			<email>kevin.tippenhauer@bfh.ch</email>
+			<organizationUrl>http://www.i4mi.ti.bfh.ch</organizationUrl>
+			<timezone>+1</timezone>
+			<roles>
+				<role>EPD-Prototype adaption</role>
+			</roles>
+		</developer>
+	</developers>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>1.2.4.RELEASE</version>
+			</plugin>
+			<plugin>
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
+				<version>0.12.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<schemaLanguage>WSDL</schemaLanguage>
+					<generatePackage>ch.vivates.ihe.hpd.pid.model.cs
+					</generatePackage>
+					<schemas>
+						<schema>
+							<url>http://epdhpd.i4mi.bfh.ch:8080/hpd-ws/ProviderInformationDirectoryService.wsdl
+							</url>
+						</schema>
+					</schemas>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>4.1.6.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+			<version>4.0.9.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot</artifactId>
+			<version>1.2.5.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-ws-core</artifactId>
+			<version>2.2.1.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>openws</artifactId>
+			<version>1.5.4</version>
+		</dependency>
+	</dependencies>
+</project>
