@@ -1,7 +1,5 @@
 package ch.bfh.i4mi.client;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;

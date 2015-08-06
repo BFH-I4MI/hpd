@@ -46,29 +46,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>1.2.4.RELEASE</version>
 			</plugin>
-			<plugin>
-				<groupId>org.jvnet.jaxb2.maven2</groupId>
-				<artifactId>maven-jaxb2-plugin</artifactId>
-				<version>0.12.3</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<schemaLanguage>WSDL</schemaLanguage>
-					<generatePackage>ch.vivates.ihe.hpd.pid.model.cs
-					</generatePackage>
-					<schemas>
-						<schema>
-							<url>http://epdhpd.i4mi.bfh.ch:8080/hpd-ws/ProviderInformationDirectoryService.wsdl
-							</url>
-						</schema>
-					</schemas>
-				</configuration>
-			</plugin>
+			
 		</plugins>
 	</build>
 
@@ -99,4 +77,39 @@
 			<version>1.5.4</version>
 		</dependency>
 	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>CXF</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jvnet.jaxb2.maven2</groupId>
+						<artifactId>maven-jaxb2-plugin</artifactId>
+						<version>0.12.3</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>generate</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<forceRegenerate>false</forceRegenerate>
+							<schemaLanguage>WSDL</schemaLanguage>
+							<generatePackage>ch.vivates.ihe.hpd.pid.model.cs
+							</generatePackage>
+							<schemas>
+								<schema>
+									<url>http://epdhpd.i4mi.bfh.ch:8080/hpd-ws/ProviderInformationDirectoryService.wsdl
+									</url>
+								</schema>
+							</schemas>
+							<forceRegenerate>false</forceRegenerate>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
