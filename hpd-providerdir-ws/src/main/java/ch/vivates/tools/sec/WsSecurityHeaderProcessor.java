@@ -77,7 +77,7 @@ public class WsSecurityHeaderProcessor implements Processor {
 	 * @return the principal
 	 * @throws Exception the exception
 	 */
-	private Principal extractPrincipal(final SoapHeaderElement securityHeader) throws Exception {
+	private Principal extractPrincipal(SoapHeaderElement securityHeader) throws Exception {
 		if (securityHeader != null) {
 			logSecurityHeader(securityHeader);
 			Element securityElement = (Element) ((DOMSource) securityHeader.getSource()).getNode();

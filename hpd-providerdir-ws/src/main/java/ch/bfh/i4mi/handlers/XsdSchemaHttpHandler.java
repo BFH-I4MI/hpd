@@ -1,4 +1,4 @@
-package ch.vivates.tools;
+package ch.bfh.i4mi.handlers;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,68 +10,54 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.transport.http.HttpTransportConstants;
-import org.springframework.ws.wsdl.WsdlDefinition;
 import org.springframework.xml.transform.TransformerObjectSupport;
+import org.springframework.xml.xsd.XsdSchema;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 /**
- * The Class EndpointAwareWsdlDefinitionHttpHandler replaces the SERVICE_ENDPOINT_PLACEHOLDER
- * in the WSDL-File on a GET-Request and sends it as response.
+ * The Class XsdSchemaHttpHandler returns a XsdSchema on a GET-Request.
  * 
- * @author Federico Marmory, Post CH, major development
- * @author Kevin Tippenhauer, Berner Fachhochschule, xsd folder placeholder, javadoc
+ * @author Kevin Tippenhauer, Berner Fachhochschule
  */
 @SuppressWarnings("restriction")
-public class EndpointAwareWsdlDefinitionHttpHandler extends TransformerObjectSupport implements HttpHandler, InitializingBean {
+public class XsdSchemaHttpHandler extends TransformerObjectSupport implements HttpHandler, InitializingBean {
 
     /** The Constant CONTENT_TYPE. */
     private static final String CONTENT_TYPE = "text/xml";
 
-    /** The WSDL definition. */
-    private WsdlDefinition definition;
-    
-    /** The service endpoint. */
-    private String serviceEndpoint;
-    
+    /** The XSD Schema. */
+    private XsdSchema schema;
+
     /** The xsdSchemaFolder. */
     private String xsdFolder;
-
+    
     /**
-     * Instantiates a new endpoint aware wsdl definition http handler.
+     * Instantiates a new XsdSchemaHttpHandler.
      */
-    public EndpointAwareWsdlDefinitionHttpHandler() {
+    public XsdSchemaHttpHandler() {
     }
 
     /**
-     * Instantiates a new endpoint aware wsdl definition http handler.
+     * Instantiates a new XsdSchemaHttpHandler.
      *
-     * @param definition the definition
+     * @param schema the schema
      */
-    public EndpointAwareWsdlDefinitionHttpHandler(WsdlDefinition definition) {
-        this.definition = definition;
+    public XsdSchemaHttpHandler(XsdSchema schema) {
+        this.schema = schema;
     }
 
     /**
-     * Sets the definition.
+     * Sets the schema.
      *
-     * @param definition the new definition
+     * @param schema the new schema
      */
-    public void setDefinition(WsdlDefinition definition) {
-        this.definition = definition;
+    public void setSchema(XsdSchema schema) {
+        this.schema = schema;
     }
-
-	/**
-	 * Sets the service endpoint.
-	 *
-	 * @param serviceEndpoint the new service endpoint
-	 */
-	public void setServiceEndpoint(String serviceEndpoint) {
-		this.serviceEndpoint = serviceEndpoint;
-	}
-	
+    
 	/**
 	 * Sets the location for the XSD Folder.
 	 *
@@ -81,11 +67,12 @@ public class EndpointAwareWsdlDefinitionHttpHandler extends TransformerObjectSup
 		this.xsdFolder = xsdFolder;
 	}
 
+
 	/* (non-Javadoc)
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() throws Exception {
-        Assert.notNull(definition, "'definition' is required");
+        Assert.notNull(schema, "'schema' is required");
     }
 
     /* (non-Javadoc)
@@ -97,9 +84,8 @@ public class EndpointAwareWsdlDefinitionHttpHandler extends TransformerObjectSup
                 Headers headers = httpExchange.getResponseHeaders();
                 headers.set(HttpTransportConstants.HEADER_CONTENT_TYPE, CONTENT_TYPE);
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
-                transform(definition.getSource(), new StreamResult(os));
+                transform(schema.getSource(), new StreamResult(os));
                 String oss = new String(os.toByteArray());
-                oss = oss.replace("[[SERVICE_ENDPOINT_PLACEHOLDER]]", serviceEndpoint);
                 byte[] buf = oss.replace("[[XSD_FOLDER_PLACEHOLDER]]", xsdFolder).getBytes();
                 httpExchange.sendResponseHeaders(HttpTransportConstants.STATUS_OK, buf.length);
                 FileCopyUtils.copy(buf, httpExchange.getResponseBody());
