@@ -19,13 +19,9 @@ import javax.xml.ws.soap.SOAPFaultException;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.opensaml.common.SAMLException;
 import org.opensaml.common.xml.SAMLConstants;
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.ws.wssecurity.WSSecurityConstants;
-import org.opensaml.xml.Configuration;
-import org.opensaml.xml.io.Unmarshaller;
-import org.opensaml.xml.io.UnmarshallingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -47,6 +43,9 @@ public class WsSecurityHeaderProcessor implements Processor {
 
 	/** The debug enabled trigger. */
 	private boolean debugEnabled;
+	
+	/** The saml helper. */
+	private SamlHelper samlHelper;
 
 	/* (non-Javadoc)
 	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
@@ -83,17 +82,8 @@ public class WsSecurityHeaderProcessor implements Processor {
 			Element securityElement = (Element) ((DOMSource) securityHeader.getSource()).getNode();
 			Element assertionElement = (Element) securityElement.getElementsByTagNameNS(SAMLConstants.SAML20_NS, "Assertion").item(0);
 			if (assertionElement != null) {
-				Unmarshaller unmarshaller = Configuration.getUnmarshallerFactory().getUnmarshaller(assertionElement);
-				if (unmarshaller == null) {
-					throw new SAMLException("Unable to retrieve unmarshaller by DOM Element");
-				}
-
-				try {
-					Assertion assertion = (Assertion) unmarshaller.unmarshall(assertionElement);
-					return new SAMLPrincipal(assertion);
-				} catch (UnmarshallingException ex) {
-					throw new SAMLException("Could not unmarshall SAML Assertion", ex);
-				}
+				Assertion assertion = samlHelper.unmarshall(assertionElement);
+				return new SAMLPrincipal(assertion);
 
 			} else {
 				Element usernameTokenElement = (Element) securityElement.getElementsByTagNameNS(WSSecurityConstants.WSSE_NS,
@@ -161,6 +151,15 @@ public class WsSecurityHeaderProcessor implements Processor {
 	 */
 	public void setDebugEnabled(boolean debugEnabled) {
 		this.debugEnabled = debugEnabled;
+	}
+	
+	/**
+	 * Sets the saml helper.
+	 *
+	 * @param samlHelper the new SamlHelper.
+	 */
+	public void setSamlHelper(SamlHelper samlHelper) {
+		this.samlHelper = samlHelper;
 	}
 
 }

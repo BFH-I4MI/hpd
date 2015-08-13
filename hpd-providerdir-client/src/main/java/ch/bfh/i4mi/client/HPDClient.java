@@ -28,6 +28,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import oasis.names.tc.dsml._2._0.core.BatchRequest;
+import oasis.names.tc.dsml._2._0.core.BatchResponse;
+
 import org.opensaml.ws.wssecurity.WSSecurityConstants;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
@@ -40,8 +43,6 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import ch.vivates.ihe.hpd.pid.model.cs.BatchRequest;
-import ch.vivates.ihe.hpd.pid.model.cs.BatchResponse;
 
 /**
  * The Class HPDClient represents a client for the HPD web service.

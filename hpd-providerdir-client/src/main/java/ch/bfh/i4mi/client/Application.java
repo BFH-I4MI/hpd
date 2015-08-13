@@ -5,16 +5,16 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.stream.StreamResult;
 
+import oasis.names.tc.dsml._2._0.core.AttributeDescription;
+import oasis.names.tc.dsml._2._0.core.BatchRequest;
+import oasis.names.tc.dsml._2._0.core.BatchResponse;
+import oasis.names.tc.dsml._2._0.core.Filter;
+import oasis.names.tc.dsml._2._0.core.ObjectFactory;
+import oasis.names.tc.dsml._2._0.core.SearchRequest;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-
-import ch.vivates.ihe.hpd.pid.model.cs.AttributeDescription;
-import ch.vivates.ihe.hpd.pid.model.cs.BatchRequest;
-import ch.vivates.ihe.hpd.pid.model.cs.BatchResponse;
-import ch.vivates.ihe.hpd.pid.model.cs.Filter;
-import ch.vivates.ihe.hpd.pid.model.cs.ObjectFactory;
-import ch.vivates.ihe.hpd.pid.model.cs.SearchRequest;
 
 /**
  * The Class Application.

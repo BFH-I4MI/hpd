@@ -4,7 +4,7 @@
 
 	<artifactId>hpd-providerdir-ws</artifactId>
 	<packaging>bundle</packaging>
-	<version>1.1.1-SNAPSHOT</version>
+	<version>1.1.2-SNAPSHOT</version>
 	<name>HPD - Provider Information Directory</name>
 	<description>IHE Provider Information Directory Actor implementation.
 	</description>
@@ -161,6 +161,8 @@
 						</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
 						<Import-Package>
+						    javax.xml.*;
+						    resolution:=optional,
 							bsh.*;
 							resolution:=optional,
 							com.sun.*;
@@ -322,11 +324,58 @@
 			<artifactId>org.apache.servicemix.bundles.antlr</artifactId>
 			<version>2.7.7_5</version>
 		</dependency>
+		
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.xerces</artifactId>
+            <version>2.9.1_5</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>           
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.xmlresolver</artifactId>
+            <version>1.2_5</version>
+        </dependency>
+        
+        
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.xalan</artifactId>
+            <version>2.7.1_1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xalan</groupId>
+                    <artifactId>serializer</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>                            
+            </exclusions>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.xalan-serializer</artifactId>
+            <version>2.7.1_1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>                            
+            </exclusions>           
+        </dependency>
 
 		<dependency>
 			<groupId>org.apache.servicemix.bundles</groupId>
 			<artifactId>org.apache.servicemix.bundles.opensaml</artifactId>
-			<version>2.6.2_2</version>
+			<version>2.6.1_3</version>
 			<exclusions>
 				<exclusion>
 					<groupId>xalan</groupId>
