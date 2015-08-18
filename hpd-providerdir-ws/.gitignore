@@ -8,8 +8,5 @@
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
-# Logfiles
-*.log
-
 # Java Keystores
 /keystore/
