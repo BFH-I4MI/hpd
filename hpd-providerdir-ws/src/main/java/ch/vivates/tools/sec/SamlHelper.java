@@ -86,8 +86,8 @@ public class SamlHelper {
 	}
 
 	/**
-	 * Verifies an Assertion and its Signature. Throws an exception when assertion, signature
-	 * or username/SPProvidedID is invalid.
+	 * Verifies an Assertion and its Signature. Throws an exception when the conditions or
+	 * the signature is invalid.
 	 *
 	 * @param assertion the assertion to verify
 	 * @throws SAMLException the SAML exception

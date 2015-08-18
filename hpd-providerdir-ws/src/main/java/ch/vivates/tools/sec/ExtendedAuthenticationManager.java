@@ -105,7 +105,7 @@ public class ExtendedAuthenticationManager implements AuthenticationManager {
 	}
 	
 	/**
-	 * Authenticates a SAMLPrincipal.
+	 * Authenticates a SAMLPrincipal and checks if the user is in the mysql database.
 	 *
 	 * @param authToken the SAMLPrincipal
 	 * @return the Authentication
