@@ -129,7 +129,6 @@ public class ExtendedAuthenticationManager implements AuthenticationManager {
 			
 			ResultSet results = statement.executeQuery();
 			if (!results.first()) {
-				LOG.info("Name: " + name.getValue() + " token: " + name.getSPProvidedID());
 				throw createSOAPFaultException("Access denied: invalid username/password!", null);
 			} else {
 				authToken.setDetails(results.getString(1));
