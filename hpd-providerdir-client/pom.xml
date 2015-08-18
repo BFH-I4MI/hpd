@@ -25,7 +25,7 @@
 			</roles>
 		</developer>
 	</developers>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -46,7 +46,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>1.2.4.RELEASE</version>
 			</plugin>
-			
+
 		</plugins>
 	</build>
 
@@ -76,37 +76,42 @@
 			<artifactId>openws</artifactId>
 			<version>1.5.4</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jvnet.jaxb2_commons</groupId>
+			<artifactId>jaxb2-basics</artifactId>
+			<version>0.6.4</version>
+		</dependency>
 	</dependencies>
 
 	<profiles>
 		<profile>
-			<id>CXF</id>
+			<id>WSDL</id>
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.jvnet.jaxb2.maven2</groupId>
-						<artifactId>maven-jaxb2-plugin</artifactId>
-						<version>0.12.3</version>
+						<groupId>org.jvnet.jax-ws-commons</groupId>
+						<artifactId>jaxws-maven-plugin</artifactId>
+						<version>2.3</version>
 						<executions>
 							<execution>
 								<goals>
-									<goal>generate</goal>
+									<goal>wsimport</goal>
 								</goals>
+								<configuration>
+									<extension>true</extension>
+									<implementation>true</implementation>
+									<wsdlUrls>
+										<wsdlUrl>http://epdhpd.i4mi.bfh.ch:8080/hpd-ws/ProviderInformationDirectoryService.wsdl</wsdlUrl>
+									</wsdlUrls>
+									<sourceDestDir>${basedir}/target/generated-sources/xjc
+									</sourceDestDir>
+									<xadditionalHeaders>true</xadditionalHeaders>
+									<vmArgs>
+										<vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+									</vmArgs>
+								</configuration>
 							</execution>
 						</executions>
-						<configuration>
-							<forceRegenerate>false</forceRegenerate>
-							<schemaLanguage>WSDL</schemaLanguage>
-							<generatePackage>ch.vivates.ihe.hpd.pid.model.cs
-							</generatePackage>
-							<schemas>
-								<schema>
-									<url>http://epdhpd.i4mi.bfh.ch:8080/hpd-ws/ProviderInformationDirectoryService.wsdl
-									</url>
-								</schema>
-							</schemas>
-							<forceRegenerate>false</forceRegenerate>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>

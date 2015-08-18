@@ -210,18 +210,25 @@
 	<bean id="downloadRequestProcessor" class="ch.vivates.ihe.hpd.pid.DownloadRequestProcessor">
 		<property name="fromMonthLimit" value="${hpd.pid.ws.download_limit_months}" />
 	</bean>
+	
+	<bean id="samlHelper" class="ch.vivates.tools.sec.SamlHelper">
+		<constructor-arg value="${hpd.pid.ws.ts.path}" />
+		<constructor-arg value="${hpd.pid.ws.ts.passwd}" />
+		<constructor-arg value="" />
+		<constructor-arg value="${hpd.pid.ws.saml.grace.millis}" />
+		<constructor-arg value="${hpd.pid.ws.saml.signature}" />
+		<constructor-arg value="${hpd.pid.ws.saml.conditions}" />
+	</bean>
+	
 
 	<!-- WS security -->
 	<bean id="identityExtractor" class="ch.vivates.tools.sec.WsSecurityHeaderProcessor">
 		<property name="debugEnabled" value="${hpd.pid.ws.debug_mode_enabled}" />
+		<property name="samlHelper" ref="samlHelper" />
 	</bean>
 
 	<bean id="authenticationManager" class="ch.vivates.tools.sec.ExtendedAuthenticationManager">
-		<property name="keystorepath" value="${hpd.pid.ws.ts.path}" />
-		<property name="keystorepass" value="${hpd.pid.ws.ts.passwd}" />
-		<property name="gracePeriod" value="${hpd.pid.ws.saml.grace.millis}" />
-		<property name="verifySignature" value="${hpd.pid.ws.saml.signature}" />
-		<property name="verifyConditions" value="${hpd.pid.ws.saml.conditions}" />
+		<property name="samlHelper" ref="samlHelper" />
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
