@@ -327,6 +327,9 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 								// owner is a granted failure
 
 							// ***************** tuk1 *****************
+							// NOTE: This part is not necessary because of the attribute validation with the
+							// terminology server.
+							//
 							// Check that only root can create a new community
 							//
 							// if(ownerModification.getValue().get(0).equals(targetModDn))
