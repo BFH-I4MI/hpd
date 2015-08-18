@@ -46,7 +46,31 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>1.2.4.RELEASE</version>
 			</plugin>
-
+			<plugin>
+				<groupId>org.jvnet.jax-ws-commons</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+						<configuration>
+							<extension>true</extension>
+							<implementation>true</implementation>
+							<wsdlUrls>
+								<wsdlUrl>http://epdhpd.i4mi.bfh.ch:8080/hpd-ws/ProviderInformationDirectoryService.wsdl</wsdlUrl>
+							</wsdlUrls>
+							<sourceDestDir>${basedir}/target/generated-sources/xjc
+							</sourceDestDir>
+							<xadditionalHeaders>true</xadditionalHeaders>
+							<vmArgs>
+								<vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+							</vmArgs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -82,39 +106,4 @@
 			<version>0.6.4</version>
 		</dependency>
 	</dependencies>
-
-	<profiles>
-		<profile>
-			<id>WSDL</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.jvnet.jax-ws-commons</groupId>
-						<artifactId>jaxws-maven-plugin</artifactId>
-						<version>2.3</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>wsimport</goal>
-								</goals>
-								<configuration>
-									<extension>true</extension>
-									<implementation>true</implementation>
-									<wsdlUrls>
-										<wsdlUrl>http://epdhpd.i4mi.bfh.ch:8080/hpd-ws/ProviderInformationDirectoryService.wsdl</wsdlUrl>
-									</wsdlUrls>
-									<sourceDestDir>${basedir}/target/generated-sources/xjc
-									</sourceDestDir>
-									<xadditionalHeaders>true</xadditionalHeaders>
-									<vmArgs>
-										<vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-									</vmArgs>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>
