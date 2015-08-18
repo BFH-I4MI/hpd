@@ -9,7 +9,7 @@
 .classpath
 
 # Logfiles
-.log
+*.log
 
 # Java Keystores
-.jks
+*.jks
