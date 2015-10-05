@@ -1,5 +1,8 @@
 	package ch.vivates.tools.sec;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,6 +45,9 @@ public class ExtendedAuthenticationManager implements AuthenticationManager {
 	/** The saml helper. */
 	private SamlHelper samlHelper;
 	
+	/** The salt for passwords */
+	private String salt;
+	
 	/* (non-Javadoc)
 	 * @see org.springframework.security.authentication.AuthenticationManager#authenticate(org.springframework.security.core.Authentication)
 	 */
@@ -54,7 +60,12 @@ public class ExtendedAuthenticationManager implements AuthenticationManager {
 		if (authentication instanceof SAMLPrincipal) {
 			return authenticate((SAMLPrincipal)authentication);
 		} else if (authentication instanceof UsernamePasswordAuthenticationToken) {
-			return authenticate((UsernamePasswordAuthenticationToken)authentication);
+			try {
+				return authenticate((UsernamePasswordAuthenticationToken)authentication);
+			} catch (SOAPFaultException | NoSuchAlgorithmException
+					| UnsupportedEncodingException e) {
+				throw createSOAPFaultException("UsernamePasswordAuthentication failed.",e);
+			}
 		} else if (authentication instanceof TestingAuthenticationToken) {
 			authentication.setAuthenticated(true);
 			((TestingAuthenticationToken) authentication).setDetails("test-hospital-01");
@@ -70,22 +81,26 @@ public class ExtendedAuthenticationManager implements AuthenticationManager {
 	 * @param authToken the UsernamePasswordAuthenticationToken
 	 * @return the Authentication
 	 * @throws SOAPFaultException the SOAP fault exception
+	 * @throws UnsupportedEncodingException 
+	 * @throws NoSuchAlgorithmException 
 	 */
-	public Authentication authenticate(UsernamePasswordAuthenticationToken authToken) throws SOAPFaultException {
+	public Authentication authenticate(UsernamePasswordAuthenticationToken authToken) throws SOAPFaultException, NoSuchAlgorithmException, UnsupportedEncodingException {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet results = null;
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
-							"SELECT community_uid FROM auth_token WHERE token_type='PSWD' AND user_id='" + authToken.getName() + "' AND token_element='"+authToken.getCredentials()+"'");
+							"SELECT community_uid FROM auth_token WHERE token_type='PSWD' AND user_id='" + authToken.getName() +
+							"' AND token_element='" + createSHA256withSalt((String) authToken.getCredentials()) + "'");
 			results = statement.executeQuery();
 			if (!results.first()) {
 				MDC.put("hpd.username", "no-auth");
 				LOG.info("Authentication failed: access denied - invalid username/password");
 				throw createSOAPFaultException("Access denied: invalid username/password!", null);
 			} else {
-				UsernamePasswordAuthenticationToken grantedAuthentication = new UsernamePasswordAuthenticationToken(authToken.getName(), authToken.getCredentials(), null);
+				UsernamePasswordAuthenticationToken grantedAuthentication = new UsernamePasswordAuthenticationToken(authToken.getName(), 
+						createSHA256withSalt((String) authToken.getCredentials()), null);
 				grantedAuthentication.setDetails(results.getString(1));
 				MDC.put("hpd.username", grantedAuthentication.getName());
 				LOG.info("Username/Password authentication succeeded!");
@@ -177,6 +192,24 @@ public class ExtendedAuthenticationManager implements AuthenticationManager {
 	 */
 	public void setSamlHelper(SamlHelper samlHelper) {
 		this.samlHelper = samlHelper;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+	
+	private String createSHA256withSalt(String rawPassword) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		rawPassword = rawPassword + salt;
+		
+		MessageDigest digest = MessageDigest.getInstance("SHA-256");
+		digest.update(rawPassword.getBytes("UTF-8"));
+		
+	    StringBuilder sb = new StringBuilder();
+	    for (byte b : digest.digest()) {
+	        sb.append(String.format("%02X", b));
+	    }
+
+		return sb.toString();
 	}
 
 }

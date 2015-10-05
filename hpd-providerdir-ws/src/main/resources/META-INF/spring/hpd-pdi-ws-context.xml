@@ -230,6 +230,7 @@
 	<bean id="authenticationManager" class="ch.vivates.tools.sec.ExtendedAuthenticationManager">
 		<property name="samlHelper" ref="samlHelper" />
 		<property name="dataSource" ref="dataSource" />
+		<property name="salt" value="${hpd.pid.ws.salt}" />
 	</bean>
 
 	<bean id="accessDecisionManager" class="ch.vivates.tools.sec.ContextualAccessDecisionManager">
