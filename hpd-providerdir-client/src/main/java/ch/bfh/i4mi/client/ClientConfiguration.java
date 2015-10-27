@@ -14,10 +14,10 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 public class ClientConfiguration {
 	
 	/** The Constant USERNAME provides the username used by the HPDClient. */
-	private static final String USERNAME = "com_be";
+	private static final String USERNAME = "USERNAME";
 	
 	/** The Constant PASSWORD provides the password used by the HPDClient.*/
-	private static final String PASSWORD = "com";
+	private static final String PASSWORD = "PASSWORD";
 	
 	
 	/**
