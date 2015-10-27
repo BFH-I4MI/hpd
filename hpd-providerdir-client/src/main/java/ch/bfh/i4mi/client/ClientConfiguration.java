@@ -14,7 +14,7 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 public class ClientConfiguration {
 	
 	/** The Constant USERNAME provides the username used by the HPDClient. */
-	private static final String USERNAME = "com_zh";
+	private static final String USERNAME = "com_be";
 	
 	/** The Constant PASSWORD provides the password used by the HPDClient.*/
 	private static final String PASSWORD = "com";
@@ -40,7 +40,9 @@ public class ClientConfiguration {
 		HashMap<String, Boolean> map = new HashMap<String, Boolean>();
 		map.put(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		marshaller.setMarshallerProperties(map);
-		marshaller.setContextPath("ch.vivates.ihe.hpd.pid.model.cs");
+//		marshaller.setContextPath("ch.vivates.ihe.hpd.pid.model.cs");
+		marshaller.setContextPaths("oasis.names.tc.dsml._2._0.core",
+				"suisse.ehealth.names.tc.cs._1");
 		return marshaller;
 	}
 
@@ -56,7 +58,7 @@ public class ClientConfiguration {
 	@Bean
 	public HPDClient hpdClient(final Jaxb2Marshaller marshaller) throws Exception {
 		HPDClient client = new HPDClient(USERNAME, PASSWORD);
-		client.setDefaultUri("http://epdhpd.i4mi.bfh.ch:8080/hpd-ws/"
+		client.setDefaultUri("https://epdhpd.i4mi.bfh.ch/hpd-ws/"
 				+ "ProviderInformationDirectoryService");
 		client.setMarshaller(marshaller);
 		client.setUnmarshaller(marshaller);

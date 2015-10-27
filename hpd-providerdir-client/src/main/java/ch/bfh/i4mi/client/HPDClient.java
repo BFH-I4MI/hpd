@@ -94,7 +94,7 @@ public class HPDClient extends WebServiceGatewaySupport {
 				batchRequest);
 
 		SoapActionCallback soapActionCallback = new SoapActionCallback(
-				"http://147.87.117.79:8080/hpd-ws/ProviderInformationDirectoryService") {
+				"https://epdhpd.i4mi.bfh.ch/hpd-ws/ProviderInformationDirectoryService") {
 			@Override
 			public void doWithMessage(final WebServiceMessage message)
 					throws IOException {
@@ -184,12 +184,8 @@ public class HPDClient extends WebServiceGatewaySupport {
 			}
 		};
 
-		@SuppressWarnings("unchecked")
-		JAXBElement<BatchResponse> jaxbBatchResponse =
-		    (JAXBElement<BatchResponse>) getWebServiceTemplate()
+		BatchResponse response = (BatchResponse) getWebServiceTemplate()
 				.marshalSendAndReceive(jaxbBatchRequest, soapActionCallback);
-
-		BatchResponse response = (BatchResponse) jaxbBatchResponse.getValue();
 
 		return response;
 	}

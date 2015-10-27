@@ -139,6 +139,10 @@
 						<fork>false</fork>
 						<maxmem>512m</maxmem>
 						<meminitial>64m</meminitial>
+					<!-- 	<compilerArgs>
+							<arg>-Djavax.net.ssl.trustStore=${basedir}\keystore\cacerts</arg>
+							<arg>-Djavax.net.ssl.trustStorePassword=epdhpd.i4mi.bfh.ch</arg>
+						</compilerArgs>	-->	
 					</configuration>
 				</plugin>
 				<!-- ** Maven Deploy Plugin ** -->
@@ -166,6 +170,10 @@
 					<version>${maven.surefire.version}</version>
 					<configuration>
 						<argLine>-Xmx1024m</argLine>
+						<!--  added tuk1 -->
+<!-- 						<argLine>-Djavax.net.ssl.trustStore=${basedir}\keystore\cacerts</argLine> -->
+<!-- 						<argLine>-Djavax.net.ssl.trustStorePassword=epdhpd.i4mi.bfh.ch</argLine> -->
+						<!--  /added tuk1 -->
 					</configuration>
 				</plugin>
 				<!-- ** Maven Site Plugin ** -->

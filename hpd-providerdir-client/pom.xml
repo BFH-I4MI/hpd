@@ -59,7 +59,7 @@
 							<extension>true</extension>
 							<implementation>true</implementation>
 							<wsdlUrls>
-								<wsdlUrl>http://epdhpd.i4mi.bfh.ch:8080/hpd-ws/ProviderInformationDirectoryService.wsdl</wsdlUrl>
+								<wsdlUrl>https://epdhpd.i4mi.bfh.ch/hpd-ws/ProviderInformationDirectoryService.wsdl</wsdlUrl>
 							</wsdlUrls>
 							<sourceDestDir>${basedir}/target/generated-sources/xjc
 							</sourceDestDir>

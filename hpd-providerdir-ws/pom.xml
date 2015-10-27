@@ -4,7 +4,7 @@
 
 	<artifactId>hpd-providerdir-ws</artifactId>
 	<packaging>bundle</packaging>
-	<version>1.1.5-SNAPSHOT</version>
+	<version>1.1.6-SNAPSHOT</version>
 	<name>HPD - Provider Information Directory</name>
 	<description>IHE Provider Information Directory Actor implementation.
 	</description>
@@ -109,7 +109,7 @@
 						</goals>
 						<configuration>
 							<wsdlUrls>
-								<wsdlUrl>http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl
+								<wsdlUrl>https://epdhpd.i4mi.bfh.ch/TermServer/Search?wsdl
 								</wsdlUrl>
 							</wsdlUrls>
 							<sourceDestDir>${basedir}/target/generated-sources/jaxb
@@ -117,6 +117,8 @@
 							<!-- Needed with JAXP 1.5, see https://netbeans.org/bugzilla/show_bug.cgi?id=241570#c2 -->
 							<vmArgs>
 								<vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+<!-- 								<vmArg>-Djavax.net.ssl.trustStore=${basedir}\keystore\cacerts</vmArg> -->
+<!-- 								<vmArg>-Djavax.net.ssl.trustStorePassword=epdhpd.i4mi.bfh.ch</vmArg> -->
 							</vmArgs>
 						</configuration>
 					</execution>
@@ -161,6 +163,10 @@
 						</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
 						<Import-Package>
+							org.apache.xalan.*;
+							resolution:=optional,
+							org.apache.xerces.*;
+							resolution:=optional,
 							javax.xml.*;
 							resolution:=optional,
 							bsh.*;
@@ -335,7 +341,7 @@
 			<groupId>org.apache.servicemix.bundles</groupId>
 			<artifactId>org.apache.servicemix.bundles.antlr</artifactId>
 			<version>2.7.7_5</version>
-<!-- 			<version>3.5.2_1</version> -->
+			<!-- <version>3.5.2_1</version> -->
 		</dependency>
 
 		<dependency>
@@ -683,7 +689,7 @@
 								</goals>
 								<configuration>
 									<wsdlUrls>
-										<wsdlUrl>http://epdis.i4mi.bfh.ch:8080/TermServer/Search?wsdl
+										<wsdlUrl>https://epdhpd.i4mi.bfh.ch/TermServer/Search?wsdl
 										</wsdlUrl>
 									</wsdlUrls>
 									<sourceDestDir>${basedir}/target/generated-sources/jaxb
@@ -691,6 +697,8 @@
 									<!-- Needed with JAXP 1.5, see https://netbeans.org/bugzilla/show_bug.cgi?id=241570#c2 -->
 									<vmArgs>
 										<vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+<!-- 										<vmArg>-Djavax.net.ssl.trustStore=${basedir}\keystore\cacerts</vmArg> -->
+<!-- 										<vmArg>-Djavax.net.ssl.trustStorePassword=epdhpd.i4mi.bfh.ch</vmArg> -->
 									</vmArgs>
 								</configuration>
 							</execution>
