@@ -116,7 +116,7 @@
 	<bean id="csXsdHandler" class="ch.bfh.i4mi.handlers.XsdSchemaHttpHandler">
         <property name="schema" ref="csSchema" />
             <property name="xsdFolder"
-            value="${hpd.pid.ws.scheme}://${hpd.pid.ws.host}:${hpd.pid.ws.port}/${hpd.pid.ws.contextroot}/${hpd.pid.ws.xsd_folder_name}" />
+            value="${hpd.pid.ws.xsdScheme}://${hpd.pid.ws.xsdHost}:${hpd.pid.ws.xsdPort}/${hpd.pid.ws.xsdContextroot}/${hpd.pid.ws.xsd_folder_name}" />
     </bean>
     
     <bean id="dsmlv2XsdHandler" class="ch.bfh.i4mi.handlers.XsdSchemaHttpHandler">
