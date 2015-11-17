@@ -350,7 +350,7 @@ public class AttributeConditionsInterceptor extends BaseInterceptor {
 	}
 
 	/**
-	 * Checks if an entry is part of a OU.
+	 * Checks if an entry is part of an OU.
 	 *
 	 * @param entry
 	 *            the entry

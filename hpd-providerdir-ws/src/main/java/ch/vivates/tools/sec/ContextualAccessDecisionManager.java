@@ -56,7 +56,6 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 
 	/** The Constant SUPPORTED_POLICIES. */
 	private static final Set<ConfigAttribute> SUPPORTED_POLICIES = new HashSet<ConfigAttribute>();
-
 	{
 		SUPPORTED_POLICIES.add(new SecurityConfig("SCOPE"));
 		SUPPORTED_POLICIES.add(new SecurityConfig("PUBLIC"));
@@ -66,11 +65,14 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 	private String basePath;
 
 	/** The relationship RDN. */
+	// changed to uppercase from "ou=Relationship"
 	private String relRdn = "ou=Relationship";
-
+	
+	// changed to uppercase from "ou=HCRegulatedOrganization"
 	/** The organization RDN. */
 	private String orgRdn = "ou=HCRegulatedOrganization";
-
+	
+	// changed to uppercase from "ou=HCProfessional"
 	/** The health professional RDN. */
 	private String hpRdn = "ou=HCProfessional";
 
@@ -172,21 +174,21 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 					// ADD: Destination check
 					if (attributesMap.get("objectClass").contains(
 							"HCRegulatedOrganization")
-							&& !targetAddDn.endsWith(orgRdn + "," + basePath)) {
+							&& !targetAddDn.toUpperCase().endsWith(orgRdn.toUpperCase() + "," + basePath.toUpperCase())) {
 						throw new AuthorizationException(
 								"[INVALID FEED REQ] Wrong element location: HCRegulatedOrganization objects must go under: ["
 										+ orgRdn + "," + basePath + "]");
 					}
 					if (attributesMap.get("objectClass").contains(
 							"HCProfessional")
-							&& !targetAddDn.endsWith(hpRdn + "," + basePath)) {
+							&& !targetAddDn.toUpperCase().endsWith(hpRdn.toUpperCase() + "," + basePath.toUpperCase())) {
 						throw new AuthorizationException(
 								"[INVALID FEED REQ] Wrong element location: HCProfessional objects must go under: ["
 										+ hpRdn + "," + basePath + "]");
 					}
 					if (attributesMap.get("objectClass").contains(
 							"groupOfNames")
-							&& !targetAddDn.endsWith(relRdn + "," + basePath)) {
+							&& !targetAddDn.toUpperCase().endsWith(relRdn.toUpperCase() + "," + basePath.toUpperCase())) {
 						throw new AuthorizationException(
 								"[INVALID FEED REQ] Wrong element location: Relationship (groupOfNames) objects must go under: ["
 										+ relRdn + "," + basePath + "]");
@@ -233,7 +235,7 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 					// ADD-REL: New owner ORG in community
 					// If user is 'root' community link verification is
 					// deactivated
-					if (targetAddDn.contains(relRdn)
+					if (targetAddDn.toUpperCase().contains(relRdn)
 							&& !authentication.getName().equalsIgnoreCase(
 									"root")) {
 						String ownerDn = attributesMap.get("owner").get(0);
@@ -299,13 +301,13 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 
 					// MOD-ORG: Is in community
 					// MOD-HP: Is in community
-					if (targetModDn.contains(orgRdn)
-							|| targetModDn.contains(hpRdn)) {
+					if (targetModDn.toUpperCase().contains(orgRdn)
+							|| targetModDn.toUpperCase().contains(hpRdn)) {
 						verifyCommunityLink(targetModDn, communityUID,
 								connection);
 					}
 
-					if (targetModDn.contains(relRdn)) {
+					if (targetModDn.toUpperCase().contains(relRdn)) {
 						// MOD-REL: Current owner ORG is in community
 						Entry existingRel = connection.lookup(targetModDn);
 						if (existingRel != null) {
@@ -327,7 +329,7 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 								// owner is a granted failure
 
 							// ***************** tuk1 *****************
-							// NOTE: This part is not necessary because of the attribute validation with the
+							// NOTE: This part is not necessary anymore because of the attribute validation with the
 							// terminology server.
 							//
 							// Check that only root can create a new community
@@ -455,13 +457,13 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 				}
 			}
 		} catch (LdapException e) {
-			LOG.error("Unable authorize query for policy: SCOPE", e);
+			LOG.error("Unable authorize query for policy: SCOPE | " + e.getMessage(), e);
 			throw new AccessDeniedException(
-					"Unable authorize query for policy: SCOPE", e);
+					"Unable authorize query for policy: SCOPE | " + e.getMessage(), e);
 		} catch (SOAPException e) {
 			LOG.error("Invalid terminology", e);
 			throw new AccessDeniedException(
-					"Unable authorize query for policy: TERMINOLOGY", e);
+					"Unable authorize query for policy: TERMINOLOGY | " + e.getMessage(), e);
 		} finally {
 			if (connection != null) {
 				try {
@@ -702,11 +704,11 @@ public class ContextualAccessDecisionManager implements AccessDecisionManager {
 		public boolean contains(Object o) {
 			String paramStr = (String) o;
 			for (String s : this) {
-				if (paramStr.equalsIgnoreCase(s))
+				if (paramStr.equalsIgnoreCase(s)) {
 					return true;
+				}
 			}
 			return false;
 		}
 	}
-
 }

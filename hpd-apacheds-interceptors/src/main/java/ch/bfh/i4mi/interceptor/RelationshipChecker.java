@@ -9,8 +9,6 @@ import org.apache.directory.api.ldap.model.exception.LdapInvalidDnException;
 import org.apache.directory.api.ldap.model.name.Dn;
 import org.apache.directory.server.core.api.entry.ClonedServerEntry;
 import org.apache.directory.server.core.api.interceptor.context.OperationContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The Class RelationshipChecker checks if a change on the relationships is valid.
@@ -48,8 +46,8 @@ public class RelationshipChecker {
 	private Attribute attribute;
 
 	/** The Constant LOG. */
-	private static final Logger LOG = LoggerFactory
-			.getLogger(RelationshipInterceptor.class);
+//	private static final Logger LOG = LoggerFactory
+//			.getLogger(RelationshipChecker.class);
 
 	/**
 	 * Instantiates a new relationship checker.
@@ -124,10 +122,13 @@ public class RelationshipChecker {
 				throw new LdapException(
 						"Unexpected entry with multiple memberOf values.");
 			}
-		} else {
+		} else /*if (this.opContextEntry.get(this.memberOfAttributeName).size() == 1)*/ {
+			
+			
 			// Single memberOf value
 			Entry ownerOfRelationship = getOwnerOfRelationship(this.attribute
 					.get());
+			
 			if (isEntryOfOU(this.opContextEntry, this.ouHealthOrgRdn)) {
 				if (!isEntryOfOU(ownerOfRelationship, this.ouHealthOrgRdn)) {
 					// Entry is connected neither to a HO nor a community.
@@ -138,12 +139,10 @@ public class RelationshipChecker {
 			} else if (isEntryOfOU(this.opContextEntry, this.ouHealthProRdn)) {
 				if (!isEntryOfOU(ownerOfRelationship, this.ouHealthOrgRdn)) {
 					// Entry is connected neither to a HO nor a community.
-					throw new LdapException(
-							"HOs must be connected with a HO or communities.");
+					throw new LdapException("HPs must be connected with a HO or communities.");
 				}
 			} else {
-				throw new LdapException(
-						"Unexpected entry with a single memberOf values.");
+				throw new LdapException("Unexpected entry with a single memberOf values.");
 			}
 		}
 	}
@@ -154,10 +153,8 @@ public class RelationshipChecker {
 	 * @throws LdapException the ldap exception
 	 */
 	protected final void checkModifyAddRequest() throws LdapException {
-		LOG.debug("checkModifyAddRequest()");
 		if (this.opContextEntry.get(this.memberOfAttributeName) == null
 				|| this.opContextEntry.get(this.memberOfAttributeName).size() < 1) {
-			LOG.debug("size() < 1");
 			// Single memberOf value
 			Entry ownerOfRelationship = getOwnerOfRelationship(this.attribute
 					.get());
@@ -180,15 +177,11 @@ public class RelationshipChecker {
 						"Unexpected entry with a single memberOf values.");
 			}
 		} else if (this.opContextEntry.get(this.memberOfAttributeName).size() == 1) {
-			LOG.debug("size() == 1");
 			// 1. Check type of the opContextEntry
 			Entry ownerOfExistingRelationship = getOwnerOfRelationship(this.opContextEntry
 					.get(this.memberOfAttributeName).get());
 
-			LOG.debug("Owner of current R: "
-					+ ownerOfExistingRelationship.toString());
 			if (isCommunity(ownerOfExistingRelationship)) {
-				LOG.debug("Owner is Community");
 
 				// relationship with a community
 				Entry ownerOfNewRelationship = getOwnerOfRelationship(this.attribute
@@ -204,7 +197,6 @@ public class RelationshipChecker {
 									+ "other relationships.");
 				}
 			} else if (isEntryOfOU(this.opContextEntry, this.ouHealthOrgRdn)) {
-				LOG.debug("isEntryofOU");
 				// relationship is a HO
 				throw new LdapException(
 						"Sub-HO can only have one relationship to another Sub-HO or Root-HO");
@@ -221,13 +213,11 @@ public class RelationshipChecker {
 			// if (this.opContextEntry.get(this.memberOfAttributeName).size() >
 			// 1)
 			// Is already a multiple
-			LOG.debug("size() > 1");
 			Entry ownerOfRelationship = getOwnerOfRelationship(this.attribute
 					.get());
 
 			if (isEntryOfOU(this.opContextEntry, this.ouHealthOrgRdn)) {
 				// Is a Root-HO
-				LOG.debug("Is a Root-HO");
 				if (!isCommunity(ownerOfRelationship)) {
 					throw new LdapException(
 							"Root-HO must not contain any non community relationships.");
@@ -235,7 +225,6 @@ public class RelationshipChecker {
 
 			} else if (isEntryOfOU(this.opContextEntry, this.ouHealthProRdn)) {
 				// Is a HPProfessional
-				LOG.debug("Is a HPProfessional");
 				if (isCommunity(ownerOfRelationship)) {
 					throw new LdapException(
 							"Community relationship for HPs is only allowed when there are no "

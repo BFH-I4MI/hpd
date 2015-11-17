@@ -1,10 +1,12 @@
 package ch.vivates.tools.dsmlv2;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Scanner;
 
 import org.apache.directory.api.dsmlv2.DsmlDecorator;
 import org.apache.directory.api.dsmlv2.Dsmlv2Parser;
@@ -107,8 +109,43 @@ public class Dsmlv2Engine {
 	 */
 	public void processDSML(InputStream inputStream, String inputEncoding, OutputStream out) throws Exception {
 		Dsmlv2Parser parser = new Dsmlv2Parser(grammar);
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
+		String strBatchRequest = (scanner.hasNext() ? scanner.next() : "");
+		inputStream.reset();
+
+		int startBatchRequest = strBatchRequest.toUpperCase().indexOf("batchRequest ".toUpperCase());
+		String strRequestID = null;
+		if(startBatchRequest != -1) {
+			int end = strBatchRequest.indexOf(">", startBatchRequest) + 1; // + 1 to get the '>'
+			
+			String batchRequestTag = strBatchRequest.substring(startBatchRequest, end);
+			
+			int startRequestid = batchRequestTag.toUpperCase().indexOf(" requestID=\"".toUpperCase());
+
+			if(startRequestid != -1) {
+				startRequestid += 12; // + 12 to exclude " requestID=\""
+				int endRequestid = batchRequestTag.toUpperCase().indexOf("\"".toUpperCase(), startRequestid);
+				
+				strRequestID = batchRequestTag.substring(startRequestid, endRequestid);
+				
+				StringBuilder sb = new StringBuilder();
+				sb.append(strBatchRequest.substring(0, startBatchRequest + startRequestid));
+				sb.append(1);
+				sb.append(strBatchRequest.substring(startBatchRequest + endRequestid));
+				String newReq = sb.toString();				
+				
+				inputStream = new ByteArrayInputStream(newReq.getBytes(inputEncoding));
+				
+//				@SuppressWarnings("resource")
+//				Scanner scanner2 = new Scanner(inputStream).useDelimiter("\\A");
+//				String strBatchRequest2 = (scanner2.hasNext() ? scanner2.next() : "");
+//				LOG.info("SCANNER2: " + strBatchRequest2);
+//				inputStream.reset();
+			}
+		}
 		parser.setInput(inputStream, inputEncoding);
-		processDSML(out, parser);
+		processDSML(out, parser, strRequestID);
 	}
 
 	/**
@@ -118,7 +155,7 @@ public class Dsmlv2Engine {
 	 * @param parser the Dsmlv2Parser
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	protected void processDSML(OutputStream outStream, Dsmlv2Parser parser) throws IOException {
+	protected void processDSML(OutputStream outStream, Dsmlv2Parser parser, String strRequestID) throws IOException {
 		BufferedWriter respWriter = null;
 
 		BatchRequestDsml batchRequest = null;
@@ -179,7 +216,13 @@ public class Dsmlv2Engine {
 			sb.append(ParserUtils.XSI_NAMESPACE.asXML());
 
 			sb.append(" requestID=\"");
-			sb.append(batchRequest.getRequestID());
+			
+			if(strRequestID == null || strRequestID.isEmpty()) {
+				sb.append(batchRequest.getRequestID());
+			} else {
+				sb.append(strRequestID);
+			}
+			
 			sb.append("\">");
 
 			respWriter.write(sb.toString());

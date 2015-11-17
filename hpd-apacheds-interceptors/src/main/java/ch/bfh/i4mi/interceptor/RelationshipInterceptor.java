@@ -77,22 +77,31 @@ public class RelationshipInterceptor extends BaseInterceptor {
 		this.opContext = addOpContext;
 		this.opContextEntry = addOpContext.getEntry();
 
-		final Attribute attribute = this.opContextEntry.get(MEMBER_OF_ATTR_NAME);
-		// Only check if the relationship is valid when a memberOf value is here.
-		if (attribute != null) {
-			RelationshipChecker relChecker;
 
-			// Has a memberOf value, check if it is:
-			//  - A community -> No checks at all, root must be is the sender of the request.
-			//  - Not a community and is a HCProfessional -> Relationship checking is necessary.
-			//  - Not a community and is a HCOrganization -> Relationship checking is necessary.
-			if (!isCommunity(this.opContextEntry)
-					&& (isEntryOfOU(this.opContextEntry, OU_HEALTH_ORG) || isEntryOfOU(
-							this.opContextEntry, OU_HEALTH_PRO))) {
+		if(isEntryOfOU(this.opContextEntry, OU_HEALTH_ORG) || isEntryOfOU(
+				this.opContextEntry, OU_HEALTH_PRO)) {
+			
+			final Attribute attribute = this.opContextEntry.get(MEMBER_OF_ATTR_NAME);
+			// Only check if the relationship is valid when a memberOf value is here.
+			
+			if(attribute == null) {
+				if(!isCommunity(this.opContextEntry)) {
+					throw new LdapException(
+							"HOs and HPs must have at least one relationship.");
+				}
+			} else {
+				RelationshipChecker relChecker;
+	
+				// Has a memberOf value, check if it is:
+				//  - A community -> No checks at all, root must be is the sender of the request.
+				//  - Not a community and is a HCProfessional -> Relationship checking is necessary.
+				//  - Not a community and is a HCOrganization -> Relationship checking is necessary.
+				
 				relChecker = new RelationshipChecker(OWNER_ATTR_NAME,
 						MEMBER_OF_ATTR_NAME, CAT_ATTR_NAME, CAT_VALUE_FOR_COM,
 						OU_HEALTH_ORG, OU_HEALTH_PRO, this.opContext,
 						this.opContextEntry, attribute);
+				
 				relChecker.checkAddRequest();
 			}
 		}
@@ -156,6 +165,7 @@ public class RelationshipInterceptor extends BaseInterceptor {
 	 */
 	private static boolean isCommunity(final Entry entry)
 			throws LdapInvalidAttributeValueException {
+		
 		if (entry.get(CAT_ATTR_NAME) != null
 				&& entry.get(CAT_ATTR_NAME).getString()
 						.equalsIgnoreCase(CAT_VALUE_FOR_COM)) {
