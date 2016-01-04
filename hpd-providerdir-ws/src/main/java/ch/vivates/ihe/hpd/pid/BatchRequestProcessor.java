@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -45,6 +46,22 @@ public class BatchRequestProcessor {
 	 */
 	public byte[] processQueryRequest(@Body InputStream dsmlQuery) throws Exception  {
 		ByteArrayOutputStream response = new ByteArrayOutputStream();
+		
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(dsmlQuery).useDelimiter("\\A");
+		String strDsmlQuery = (scanner.hasNext() ? scanner.next() : "");
+		dsmlQuery.reset();
+		
+		if(strDsmlQuery.toLowerCase().contains("addrequest") ||
+		   strDsmlQuery.toLowerCase().contains("modifyrequest") ||
+		   strDsmlQuery.toLowerCase().contains("delrequest") ||
+		   strDsmlQuery.toLowerCase().contains("modifydnrequest") ||
+		   strDsmlQuery.toLowerCase().contains("comparerequest") ||
+		   strDsmlQuery.toLowerCase().contains("abandonrequest") ||
+		   strDsmlQuery.toLowerCase().contains("extendedrequest")) {
+			throw new Exception("Only SearchRequest is allowed for Action 'urn:ihe:iti:2010:ProviderInformationQuery'.");
+		}
+		
 		dsmlEngine.processDSML(dsmlQuery, response);
 		return  response.toByteArray();
 	}

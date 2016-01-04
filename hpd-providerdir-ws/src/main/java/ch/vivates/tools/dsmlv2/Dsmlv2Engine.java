@@ -109,6 +109,9 @@ public class Dsmlv2Engine {
 	 */
 	public void processDSML(InputStream inputStream, String inputEncoding, OutputStream out) throws Exception {
 		Dsmlv2Parser parser = new Dsmlv2Parser(grammar);
+
+// ***************** tuk1 *****************
+		// Allow string request ids even if the apacheds library only supports integer values.
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
 		String strBatchRequest = (scanner.hasNext() ? scanner.next() : "");
@@ -142,6 +145,7 @@ public class Dsmlv2Engine {
 //				String strBatchRequest2 = (scanner2.hasNext() ? scanner2.next() : "");
 //				LOG.info("SCANNER2: " + strBatchRequest2);
 //				inputStream.reset();
+// ***************** /tuk1 *****************
 			}
 		}
 		parser.setInput(inputStream, inputEncoding);
