@@ -35,6 +35,7 @@
 			<xsd:sequence>
 				<xsd:element ref="dsml:batchRequest" maxOccurs="unbounded" minOccurs="0" />
 			</xsd:sequence>
+			<xsd:attribute name="timestamp" type="xsd:dateTime" use="required" />
 			<xsd:attribute name="requestID" type="xsd:string" use="optional" />
 		</xsd:complexType>
 	</xsd:element>

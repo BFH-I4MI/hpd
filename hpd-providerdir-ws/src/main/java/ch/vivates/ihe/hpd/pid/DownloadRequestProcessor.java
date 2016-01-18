@@ -76,9 +76,10 @@ public class DownloadRequestProcessor {
 		StringBuilder sb = new StringBuilder(results.size() * 2000);
 
 		for (Map<String, Object> c : results) {
+			
 			sb.append(c.get("tr_body"));
 		}
-		String response = "<cs:downloadResponse xmlns:cs=\"urn:ehealth-suisse:names:tc:CS:1\">" + sb.toString() + "</cs:downloadResponse>";
+		String response = "<cs:downloadResponse xmlns:cs=\"urn:ehealth-suisse:names:tc:CS:1\" timestamp=\"" + DateTime.now().toString() + "\">" + sb.toString() + "</cs:downloadResponse>";
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
